@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  database:
+    image: postgres
+    ports:
+      - '127.0.0.1:5432:5432'
+    environment:
+      POSTGRES_USER: 'abi-management'
+      POSTGRES_PASSWORD: 'jqduv6zNgV2KUSwf'
+      POSTGRES_DATABASE: 'abi-management'
+      POSTGRES_SUPER_PASSWORD: '}GkUNKJfC#4kC<B>'
+
+volumes:
+  database:
+  mailpit:
