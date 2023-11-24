@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,9 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration {
+  @Value("${cors.allow-all-origins}")
+  private boolean corsAllowAllOrigins;
+
   @Bean
   SecurityFilterChain buildSecurityFilterChain(
     JwtAuthenticationFilter jwtAuthenticationFilter,
@@ -83,8 +87,7 @@ public class SecurityConfiguration {
   }
 
   private List<String> findAllowedOrigins() {
-    var allowAll = Boolean.parseBoolean(System.getenv("CORS_ALLOW_ALL_ORIGINS"));
-    if (allowAll) {
+    if (corsAllowAllOrigins) {
       return List.of("*");
     }
     return Lists.newArrayList(System.getenv("CORS_ALLOWED_ORIGINS").split(";"));
