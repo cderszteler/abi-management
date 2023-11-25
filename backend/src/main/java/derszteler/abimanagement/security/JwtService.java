@@ -4,16 +4,19 @@ import com.google.common.base.Preconditions;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
@@ -25,6 +28,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public final class JwtService {
   private final UserDetailsService detailsService;
   private final JwtParser jwtParser;
+  @Qualifier("development")
+  private final boolean development;
 
   public Optional<UserDetails> findValidDetailsByToken(String token) {
     try {
@@ -51,11 +56,20 @@ public final class JwtService {
   }
 
   private static final String header = AUTHORIZATION;
+  static final String cookieName = "auth-token";
 
   public Optional<String> filterForTokenInRequest(
     HttpServletRequest request
   ) {
     Preconditions.checkNotNull(request, "request");
+    if (development) {
+      return filterForTokenInHeader(request.getHeader(header)).or(() -> Arrays
+        .stream(request.getCookies())
+        .filter(cookie -> cookie.getName().equals(cookieName))
+        .findFirst()
+        .map(Cookie::getValue)
+      );
+    }
     return filterForTokenInHeader(request.getHeader(header));
   }
 

@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +44,8 @@ public class SecurityConfiguration {
   @Bean
   SecurityFilterChain buildSecurityFilterChain(
     JwtAuthenticationFilter jwtAuthenticationFilter,
+    FormLoginSuccessHandler formLoginSuccessHandler,
+    @Qualifier("development") boolean development,
     AuthenticationProvider provider,
     HttpSecurity builder
   ) throws Exception {
@@ -58,8 +61,6 @@ public class SecurityConfiguration {
         .permitAll()
         .requestMatchers(
           antMatcher("/api/v1/user/password/{requestToken}"),
-          antMatcher("/api/v1/billing/webhook"),
-          antMatcher("/api/v1/billing/create"),
           antMatcher("/api/v1/auth/**"),
           antMatcher(HttpMethod.POST, "/api/v1/user/password")
         )
@@ -67,6 +68,13 @@ public class SecurityConfiguration {
         .anyRequest()
         .authenticated()
       )
+      .formLogin(customizer -> {
+        if (!development) {
+          customizer.disable();
+          return;
+        }
+        customizer.successHandler(formLoginSuccessHandler);
+      })
       .sessionManagement(customizer -> customizer.sessionCreationPolicy(
         SessionCreationPolicy.STATELESS
       ))

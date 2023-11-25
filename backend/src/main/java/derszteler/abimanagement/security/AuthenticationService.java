@@ -44,8 +44,12 @@ public final class AuthenticationService {
     }
 
     return userRepository.findByUsername(request.username())
-      .map(user -> new TokenPair(createAccessToken(user), createRefreshToken(user)))
+      .map(this::createTokenPair)
       .orElseThrow(() -> invalidCredentials);
+  }
+
+  TokenPair createTokenPair(User user) {
+    return new TokenPair(createAccessToken(user), createRefreshToken(user));
   }
 
   private String createAccessToken(User user) {
