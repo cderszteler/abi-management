@@ -15,7 +15,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
 @Accessors(fluent = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +23,7 @@ import java.util.UUID;
 @Data
 @Table(
   name = "reset_tokens",
-  uniqueConstraints = @UniqueConstraint(columnNames = {"token", "user"})
+  uniqueConstraints = @UniqueConstraint(columnNames = {"token", "user_id"})
 )
 @Entity
 public class ResetToken {
