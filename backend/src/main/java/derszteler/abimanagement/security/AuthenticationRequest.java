@@ -1,8 +1,16 @@
 package derszteler.abimanagement.security;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public record AuthenticationRequest(
-  String username,
-  String password
+  @Schema(
+    description = "The username to authenticate with",
+    example = "christoph.derszteler"
+  ) String username,
+  @Schema(
+    description = "The password to authenticate with",
+    example = "D&Uy=(P@BaApA&fL"
+  ) String password
 ) {
   private static final String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]" +
     "+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)" +
