@@ -1,7 +1,7 @@
 # Abi Management
 
-This is the backend of the main application. It includes JWT authentication
-as well as REST endpoints to support core functionality.
+This is the backend of the main application developed with Spring Boot 3.
+It includes JWT authentication as well as REST endpoints to support core functionality.
 
 ## Environment variables
 
