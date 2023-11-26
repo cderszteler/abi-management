@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -64,7 +65,7 @@ public final class JwtService {
     Preconditions.checkNotNull(request, "request");
     if (development) {
       return filterForTokenInHeader(request.getHeader(header)).or(() -> Arrays
-        .stream(request.getCookies())
+        .stream(Objects.requireNonNullElse(request.getCookies(), new Cookie[0]))
         .filter(cookie -> cookie.getName().equals(cookieName))
         .findFirst()
         .map(Cookie::getValue)
