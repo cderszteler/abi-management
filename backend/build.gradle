@@ -42,10 +42,12 @@ dependencies {
   testCompileOnly 'org.projectlombok:lombok'
   testAnnotationProcessor 'org.projectlombok:lombok'
 
+  testRuntimeOnly 'com.h2database:h2:2.2.224'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
+test {
   useJUnitPlatform()
+  environment 'JWT_SECRET', '92423ed3a6f0594610131d06eb3d36c0ff8d096f9786ad85c2896dc04c5d6bce'
 }
