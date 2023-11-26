@@ -1,17 +1,19 @@
 package derszteler.abimanagement;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import java.util.Arrays;
 
 @Configuration
 public class ApplicationConfiguration {
   @Qualifier("development")
   @Bean
   public boolean setDevelopmentEnvironment(
-    @Value("${spring.profiles.active}") String activeProfile
+    Environment environment
   ) {
-    return activeProfile != null && activeProfile.equals("dev");
+    return Arrays.asList(environment.getActiveProfiles()).contains("dev");
   }
 }
