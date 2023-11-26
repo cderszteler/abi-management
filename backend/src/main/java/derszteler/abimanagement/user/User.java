@@ -7,15 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.id.IdentityGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Accessors(fluent = true)
 @AllArgsConstructor
@@ -37,12 +36,9 @@ public final class User implements UserDetails {
   @Column(nullable = false)
   private String password;
 
-  /* TODO: Custom entity */
+  @ColumnDefault("false")
   @Column
-  private UUID resetToken;
-
-  @Column
-  private LocalDateTime resetTokenRequested;
+  private boolean disabled;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -66,7 +62,7 @@ public final class User implements UserDetails {
 
   @Override
   public boolean isAccountNonLocked() {
-    return true;
+    return !disabled;
   }
 
   @Override
@@ -76,6 +72,6 @@ public final class User implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return !disabled;
   }
 }
