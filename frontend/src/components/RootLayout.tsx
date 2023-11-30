@@ -1,6 +1,6 @@
 'use client'
 
-import {
+import React, {
   createContext,
   useContext,
   useEffect,
@@ -82,7 +82,8 @@ function Header({
         </Link>
         <div className="flex items-center gap-x-8">
           <Button href="/contact" invert={invert}>
-            Contact us
+            Log in
+            {/*TODO: Refer to dashboard, when logged in*/}
           </Button>
           <button
             ref={toggleRef}
@@ -139,6 +140,7 @@ function NavigationItem({
   )
 }
 
+// TODO: Update/fix
 function Navigation() {
   return (
     <nav className="mt-px font-display text-5xl font-medium tracking-tight text-white">
