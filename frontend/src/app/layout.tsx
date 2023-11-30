@@ -3,11 +3,12 @@ import {type Metadata} from 'next'
 import {RootLayout} from '@/components/RootLayout'
 
 import '@/styles/tailwind.css'
+import React from "react";
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Studio',
-    default: 'Studio - Award winning developer studio based in Denmark',
+    template: '%s - ABI.',
+    default: 'ABI. - Verwalte dein Abitur!',
   },
 }
 
