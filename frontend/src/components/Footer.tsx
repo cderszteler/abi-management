@@ -23,7 +23,7 @@ const navigation = [
   {
     title: 'Über uns',
     links: [
-      { title: 'Impressum', href: '/impress' },
+      { title: 'Impressum', href: '/imprint' },
       { title: 'Kontakt', href: '/contact' },
     ],
   },

@@ -2,6 +2,7 @@ import clsx from 'clsx'
 
 import {Container} from '@/components/Container'
 import {FadeIn} from '@/components/FadeIn'
+import React from "react";
 
 export function PageIntro({
   eyebrow,
@@ -9,7 +10,7 @@ export function PageIntro({
   children,
   centered = false,
 }: {
-  eyebrow: string
+  eyebrow?: string
   title: string
   children: React.ReactNode
   centered?: boolean
