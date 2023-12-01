@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useId, useRef, useState} from 'react'
+import React, {useEffect, useId, useRef, useState} from 'react'
 import {motion} from 'framer-motion'
 
 function Block({

@@ -5,6 +5,7 @@ import {Border} from '@/components/Border'
 import {GrayscaleTransitionImage} from '@/components/GrayscaleTransitionImage'
 import {StatList, StatListItem} from '@/components/StatList'
 import {TagList, TagListItem} from '@/components/TagList'
+import React from "react";
 
 export const MDXComponents = {
   Blockquote({

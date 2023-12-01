@@ -9,7 +9,7 @@ const navigation = [
   {
     title: 'Services',
     links: [
-      { title: 'Zitate', href: '/dashboars/quotes' },
+      { title: 'Zitate', href: '/dashboard/quotes' },
       {
         title: (
           <>

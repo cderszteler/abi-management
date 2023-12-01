@@ -1,6 +1,6 @@
 'use client'
 
-import {useRef} from 'react'
+import React, {useRef} from 'react'
 import Image, {type ImageProps} from 'next/image'
 import {
   motion,

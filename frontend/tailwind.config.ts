@@ -25,7 +25,7 @@ export default {
         sans: ['Mona Sans', ...defaultTheme.fontFamily.sans],
         display: [
           ['Mona Sans', ...defaultTheme.fontFamily.sans],
-          { fontVariationSettings: '"wdth" 125' },
+          { fontVariationSettings: '"width" 125' },
         ],
       },
     },

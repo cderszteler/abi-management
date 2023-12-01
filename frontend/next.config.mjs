@@ -2,14 +2,11 @@ import rehypeShiki from '@leafac/rehype-shiki'
 import nextMDX from '@next/mdx'
 import {Parser} from 'acorn'
 import jsx from 'acorn-jsx'
-import escapeStringRegexp from 'escape-string-regexp'
-import * as path from 'path'
 import {recmaImportImages} from 'recma-import-images'
 import remarkGfm from 'remark-gfm'
 import {remarkRehypeWrap} from 'remark-rehype-wrap'
 import remarkUnwrapImages from 'remark-unwrap-images'
 import shiki from 'shiki'
-import {unifiedConditional} from 'unified-conditional'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -64,17 +61,6 @@ export default async function config() {
       remarkPlugins: [
         remarkGfm,
         remarkUnwrapImages,
-        [
-          unifiedConditional,
-          [
-            new RegExp(`^${escapeStringRegexp(path.resolve('src/app/blog'))}`),
-            [[remarkMDXLayout, '@/app/blog/wrapper', 'article']],
-          ],
-          [
-            new RegExp(`^${escapeStringRegexp(path.resolve('src/app/work'))}`),
-            [[remarkMDXLayout, '@/app/work/wrapper', 'caseStudy']],
-          ],
-        ],
       ],
     },
   })

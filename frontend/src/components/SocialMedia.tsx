@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
+import React from "react";
 
 function InstagramIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
