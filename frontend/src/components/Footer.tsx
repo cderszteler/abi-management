@@ -75,7 +75,7 @@ export function Footer() {
           <p className="text-sm text-neutral-700">
             @ ABI. {new Date().getFullYear()}
             <br/>
-            Made by Christoph Derszteler with &#9829;
+            Made by <Link className="hover:text-neutral-950" href="https://qetz.de">Christoph Derszteler</Link> with &#9829;
           </p>
         </div>
       </FadeIn>
