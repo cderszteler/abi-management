@@ -12,7 +12,7 @@ function ContactDetails() {
   return (
     <FadeIn>
       <h2 className="font-display text-base font-semibold text-neutral-950">
-        Email us
+        Schreib uns eine Email
       </h2>
       <p className="mt-6 text-base text-neutral-600">
         Aktuell sind wur nur per Email zu erreichen. Andernfalls kontaktiere
