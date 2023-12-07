@@ -34,7 +34,7 @@ public final class AuthenticationService {
     "Invalid credentials"
   );
 
-  public TokenPair authenticate(AuthenticationRequest request) {
+  public AuthenticationResponse authenticate(AuthenticationRequest request) {
     try {
       manager.authenticate(new UsernamePasswordAuthenticationToken(
         request.username(), request.password()
@@ -43,9 +43,9 @@ public final class AuthenticationService {
       throw invalidCredentials;
     }
 
-    return userRepository.findByUsername(request.username())
-      .map(this::createTokenPair)
+    var user = userRepository.findByUsername(request.username())
       .orElseThrow(() -> invalidCredentials);
+    return new AuthenticationResponse(createTokenPair(user));
   }
 
   TokenPair createTokenPair(User user) {
@@ -79,7 +79,7 @@ public final class AuthenticationService {
       var user = jwtService.findValidDetailsByToken(request.refreshToken())
         .flatMap(existing -> userRepository.findByUsername(existing.getUsername()))
         .orElseThrow(() -> invalidCredentials);
-      return new TokenPair(createAccessToken(user), null);
+      return new TokenPair(createAccessToken(user), request.refreshToken());
     } catch (UsernameNotFoundException unknownUser) {
       throw invalidCredentials;
     }

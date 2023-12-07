@@ -13,7 +13,7 @@ public record TokenPair(
   String accessToken,
   @Schema(
     description = "JWT refresh token, expires in 30 days after issuing. " +
-      "Only specified if fully authenticating (not refreshing access token).",
+      "New one is only specified if fully authenticating (not refreshing access token).",
     nullable = true
   )
   @Nullable String refreshToken

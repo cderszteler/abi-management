@@ -33,8 +33,9 @@ public final class AuthenticationRestEndpoint {
       This endpoint is used to authenticate with the backend with specified
       credentials in the request body.
 
-      If the authentication is successful, a `TokenPair` will be returned. It includes
-      the access and refresh token (for more information, view the response body).
+      If the authentication is successful, a `AuthenticationResponse` will be returned.
+      It includes the access and refresh token as well as the executing user
+      (for more information, view the response body).
       """,
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       content = @Content(schema = @Schema(implementation = AuthenticationRequest.class)),
@@ -54,14 +55,14 @@ public final class AuthenticationRestEndpoint {
         responseCode = "403"
       ),
       @ApiResponse(
-        content = @Content(schema = @Schema(implementation = TokenPair.class)),
-        description = "Upon successful authentication: JWT tokens",
+        content = @Content(schema = @Schema(implementation = AuthenticationResponse.class)),
+        description = "Upon successful authentication: JWT tokens and user",
         responseCode = "200"
       )
     }
   )
   @PostMapping(value = "/authenticate", produces = "application/json")
-  public ResponseEntity<TokenPair> authenticate(
+  public ResponseEntity<AuthenticationResponse> authenticate(
     @RequestBody AuthenticationRequest request
   ) {
     if (!request.valid()) {
@@ -78,7 +79,7 @@ public final class AuthenticationRestEndpoint {
       token specified in the request body.
 
       If the refresh token is still valid, a `TokenPair` will be returned.
-      It does **not include** a new refresh token.
+      It does not include a **new** refresh token.
       """,
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       content = @Content(schema = @Schema(implementation = AuthenticationRequest.class)),
