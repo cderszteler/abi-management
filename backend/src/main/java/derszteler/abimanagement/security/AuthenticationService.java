@@ -45,7 +45,7 @@ public final class AuthenticationService {
 
     var user = userRepository.findByUsername(request.username())
       .orElseThrow(() -> invalidCredentials);
-    return new AuthenticationResponse(createTokenPair(user));
+    return new AuthenticationResponse(createTokenPair(user), user);
   }
 
   TokenPair createTokenPair(User user) {
