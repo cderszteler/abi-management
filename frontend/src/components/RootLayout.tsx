@@ -80,7 +80,7 @@ function Header({
           />
         </Link>
         <div className="flex items-center gap-x-8">
-          <Button href="/contact" invert={invert}>
+          <Button href="/auth/login" invert={invert}>
             Log in
             {/*TODO: Refer to dashboard, when logged in*/}
           </Button>
