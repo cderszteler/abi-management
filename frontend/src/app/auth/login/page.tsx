@@ -5,8 +5,7 @@ import {Logomark} from "@/components/Logo";
 import Link from "next/link";
 import {signIn} from "next-auth/react";
 
-
-export default function Contact() {
+export default function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
