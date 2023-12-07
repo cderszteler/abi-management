@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 
 export default function Contact() {
   // noinspection HtmlUnknownTarget
+  // TODO: Connect with next-auth
+  // TODO: Update mail to username
   return (
     <>
       <Container className="mt-24 sm:mt-32 lg:mt-40">
