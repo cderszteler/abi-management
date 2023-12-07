@@ -7,7 +7,7 @@ It includes JWT authentication as well as REST endpoints to support core functio
 
 | **Variable**           | **Description**                                                                        | **Accepted Values** | **Example**                                    |
 |------------------------|----------------------------------------------------------------------------------------|---------------------|------------------------------------------------|
-| `PORT`                 | The port the application is running on.                                                | Number              | `80`                                           |
+| `PORT`                 | The port the application is running on.                                                | Number              | `5000`                                         |
 | `DATABASE_HOST`        | The host and port of the database.                                                     | String              | `localhost:5432`                               |
 | `DATABASE_DATABASE`    | The database name of the Postgres database.                                            | String              | `abi-management`                               |
 | `DATABASE_USERNAME`    | The username to authenticate with the database.                                        | String              | `abi-management`                               |
