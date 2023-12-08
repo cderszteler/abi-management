@@ -1,6 +1,8 @@
 "use client"
 
 import React, {useState} from "react";
+import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline'
+
 import {Logomark} from "@/components/Logo";
 import Link from "next/link";
 import {signIn} from "next-auth/react";
@@ -8,9 +10,10 @@ import {signIn} from "next-auth/react";
 export default function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
-  // TODO: Add option to show/hide password
   // TODO: Add error toast (by query parameter, too)
+  // TODO: Abstract (card, input)
 
   // noinspection HtmlUnknownTarget
   return (
@@ -50,17 +53,29 @@ export default function LoginForm() {
               <label htmlFor="password" className="block text-sm font-medium leading-6 text-neutral-950">
                 Password
               </label>
-              <div className="mt-2">
+              <div className="relative mt-2">
                 <input
                   className="block w-full rounded-md border-0 py-1.5 text-neutral-950 shadow-sm ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-700 focus:ring-2 focus:ring-inset focus:ring-neutral-700 sm:text-sm sm:leading-6"
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   onChange={event => setPassword(event.target.value)}
                   value={password}
                   required
                 />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <button onClick={event => {
+                    event.preventDefault()
+                    setShowPassword(!showPassword)
+                  }}>
+                    {(() => {
+                      return showPassword
+                        ? <EyeSlashIcon className="h-5 w-5 text-neutral-950"/>
+                        : <EyeIcon className="h-5 w-5 text-neutral-950"/>
+                    })()}
+                  </button>
+                </div>
               </div>
             </div>
 
