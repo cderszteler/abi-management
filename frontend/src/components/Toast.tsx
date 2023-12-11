@@ -2,14 +2,21 @@
 
 import {Fragment, useEffect, useState} from 'react'
 import {Transition} from '@headlessui/react'
-import {XCircleIcon} from '@heroicons/react/24/outline'
 import {XMarkIcon} from '@heroicons/react/20/solid'
 import {useRouter} from 'next/navigation'
+import {XCircleIcon} from '@heroicons/react/24/outline'
 
 export type Toast = React.ReactElement
 
-export default function ButtonToast({onRemove, autoRemove = true, cooldown = 5000}: {
-  onRemove: () => void,
+export default function ErrorToast(
+{
+  content,
+  onRemove = () => {},
+  autoRemove = true,
+  cooldown = 5000
+}: {
+  content: number,
+  onRemove?: () => void,
   autoRemove?: boolean
   cooldown?: number
 }) {
@@ -49,8 +56,7 @@ export default function ButtonToast({onRemove, autoRemove = true, cooldown = 500
               <div className="ml-3 w-0 flex-1 pt-0.5">
                 <p className="text-sm font-medium text-neutral-950">Fehler</p>
                 <p className="text-sm text-neutral-600">
-                  Der Login hat nicht funktioniert. Bitte probiere es erneut oder
-                  kontaktiere uns!
+                  {content}
                 </p>
                 <div className="mt-1.5 flex space-x-7">
                   <button

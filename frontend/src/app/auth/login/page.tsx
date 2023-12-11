@@ -7,7 +7,7 @@ import Card from "@/components/Card";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import ButtonToast from "@/components/Toast";
+import ErrorToast from "@/components/Toast";
 import clsx from "clsx";
 import {ExclamationCircleIcon} from "@heroicons/react/20/solid";
 
@@ -31,10 +31,13 @@ export default function LoginForm() {
     })
     if (response?.ok) {
       router.push("/dashboard")
+    } else if (response?.error) {
+      addToast(<ErrorToast
+        content="Der Login hat nicht funktioniert.
+        Bitte probiere es erneut oder kontaktiere uns!"
+      />)
     } else if (response?.status === 401) {
       setInvalidPassword(true)
-    } else if (response?.error) {
-      addToast(<ButtonToast onRemove={() => {}}/>)
     }
   }
 
