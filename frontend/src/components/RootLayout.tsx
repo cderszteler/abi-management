@@ -19,10 +19,13 @@ import {Footer} from '@/components/Footer'
 import {GridPattern} from '@/components/GridPattern'
 import {Logo, Logomark} from '@/components/Logo'
 import {SocialMedia} from '@/components/SocialMedia'
+import {Toast} from "@/components/Toast";
 
-const RootLayoutContext = createContext<{
+export const RootLayoutContext = createContext<{
   logoHovered: boolean
   setLogoHovered: React.Dispatch<React.SetStateAction<boolean>>
+  toasts: Toast[]
+  addToast: (toast: Toast) => void
 } | null>(null)
 
 function XIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
@@ -160,7 +163,24 @@ function Navigation() {
   )
 }
 
-function RootLayoutInner({ children }: { children: React.ReactNode }) {
+function ToastContainer() {
+  const {toasts} = useContext(RootLayoutContext)!
+
+  return (
+    <div
+      aria-live="assertive"
+      className="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:px-6 z-50"
+    >
+      <div
+        className="flex w-full flex-col items-center space-y-4 sm:items-end"
+      >
+        {toasts.map((toast, index) => <React.Fragment key={index}>{toast}</React.Fragment>)}
+      </div>
+    </div>
+  )
+}
+
+function RootLayoutInner({children}: { children: React.ReactNode }) {
   let panelId = useId()
   let [expanded, setExpanded] = useState(false)
   let openRef = useRef<React.ElementRef<'button'>>(null)
@@ -270,6 +290,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           <Footer />
         </motion.div>
       </motion.div>
+      <ToastContainer/>
     </MotionConfig>
   )
 }
@@ -277,10 +298,17 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
 export function RootLayout({ children }: { children: React.ReactNode }) {
   let pathname = usePathname()
   let [logoHovered, setLogoHovered] = useState(false)
+  const [toasts, setToasts] = useState<Toast[]>([])
+
+  const addToast = (toast: Toast) => {
+    setToasts(existing => [...existing, toast])
+  }
 
   return (
-    <RootLayoutContext.Provider value={{ logoHovered, setLogoHovered }}>
-      <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
+    <RootLayoutContext.Provider value={{logoHovered, setLogoHovered, toasts, addToast}}>
+      <RootLayoutInner key={pathname}>
+        {children}
+      </RootLayoutInner>
     </RootLayoutContext.Provider>
   )
 }
