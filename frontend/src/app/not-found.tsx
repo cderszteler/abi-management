@@ -2,9 +2,11 @@ import Link from 'next/link'
 
 import {Container} from '@/components/Container'
 import {FadeIn} from '@/components/FadeIn'
+import {getServerSession} from 'next-auth/next'
 
-export default function NotFound() {
-  // TODO: Or return to dashboard
+export default async function NotFound() {
+  const session = await getServerSession()
+
   return (
     <Container className="flex h-full items-center pt-24 sm:pt-32 lg:pt-40">
       <FadeIn className="flex max-w-xl flex-col items-center text-center">
@@ -18,10 +20,10 @@ export default function NotFound() {
           Entschuldigung, wir konnten die gesuchte Seite nicht finden.
         </p>
         <Link
-          href="/"
+          href={session ? "/dashboard" : "/"}
           className="mt-4 text-sm font-semibold text-neutral-950 transition hover:text-neutral-700"
         >
-          Zurück zur Startseite
+          {session ? "Zurück zum Dashboard" : "Zurück zur Startseite"}
         </Link>
       </FadeIn>
     </Container>

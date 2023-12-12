@@ -20,6 +20,7 @@ import {GridPattern} from '@/components/GridPattern'
 import {Logo, Logomark} from '@/components/Logo'
 import {SocialMedia} from '@/components/SocialMedia'
 import {Toast} from "@/components/Toast";
+import {useSession} from 'next-auth/react'
 
 export const RootLayoutContext = createContext<{
   logoHovered: boolean
@@ -61,6 +62,7 @@ function Header({
   invert?: boolean
 }) {
   let { logoHovered, setLogoHovered } = useContext(RootLayoutContext)!
+  const {status} = useSession()
 
   return (
     <Container>
@@ -83,9 +85,11 @@ function Header({
           />
         </Link>
         <div className="flex items-center gap-x-8">
-          <Button href="/auth/login" invert={invert}>
-            Log in
-            {/*TODO: Refer to dashboard, when logged in*/}
+          <Button
+            href={status === "authenticated" ? "/dashboard" : "/auth/login"}
+            invert={invert}
+          >
+            {status === "authenticated" ? "Zum Dashboard" : "Einloggen"}
           </Button>
           <button
             ref={toggleRef}
