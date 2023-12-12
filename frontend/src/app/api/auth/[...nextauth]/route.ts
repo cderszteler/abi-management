@@ -119,9 +119,7 @@ export const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    // TODO: Add logout page?
-    signIn: '/auth/login',
-    error: '/auth/login'
+    signIn: '/auth/login'
   },
   debug: process.env.NODE_ENV === 'development',
 }
