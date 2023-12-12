@@ -299,8 +299,17 @@ function RootLayoutInner({children}: { children: React.ReactNode }) {
   )
 }
 
-export function RootLayout({ children }: { children: React.ReactNode }) {
+export function DefaultLayout({ children }: { children: React.ReactNode }) {
   let pathname = usePathname()
+
+  return (
+    <RootLayoutInner key={pathname}>
+      {children}
+    </RootLayoutInner>
+  )
+}
+
+export function RootLayout({ children }: { children: React.ReactNode }) {
   let [logoHovered, setLogoHovered] = useState(false)
   const [toasts, setToasts] = useState<Toast[]>([])
 
@@ -310,9 +319,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <RootLayoutContext.Provider value={{logoHovered, setLogoHovered, toasts, addToast}}>
-      <RootLayoutInner key={pathname}>
-        {children}
-      </RootLayoutInner>
+      {children}
     </RootLayoutContext.Provider>
   )
 }
