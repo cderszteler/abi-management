@@ -1,7 +1,7 @@
 'use client'
 
 import './dashboard.css'
-import React, {Fragment, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
   Bars3Icon,
@@ -41,7 +41,7 @@ function NavigationList({className, children}: {
 
   return (
     <div className={clsx(
-      "flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6",
+      "flex grow flex-col gap-y-5 overflow-y-auto bg-neutral-950 px-6",
       className
     )}>
       <div className="flex h-16 shrink-0 items-center">
@@ -59,9 +59,9 @@ function NavigationList({className, children}: {
                     href={item.path}
                     className={clsx(
                       item.path === pathname
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                        ? 'bg-neutral-800 text-white'
+                        : 'text-neutral-300 hover:text-white hover:bg-neutral-800',
+                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition duration-100'
                     )}
                   >
                     <item.icon className="h-6 w-6 shrink-0" aria-hidden="true"/>
@@ -87,7 +87,7 @@ function Profile({className, includeName = true}: {
     <Link href="#" className={className}>
       <span className="sr-only">Your profile</span>
       <img
-        className="h-8 w-8 rounded-full bg-gray-800"
+        className="h-8 w-8 rounded-full"
         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
         alt=""
       />
@@ -98,6 +98,11 @@ function Profile({className, includeName = true}: {
 
 export default function Layout({children}: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [pathname]);
 
   return (
     <div>
@@ -116,7 +121,7 @@ export default function Layout({children}: { children: React.ReactNode }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-900/80"/>
+            <div className="fixed inset-0 bg-neutral-950/80"/>
           </Transition.Child>
 
           <div className="fixed inset-0 flex">
@@ -152,7 +157,6 @@ export default function Layout({children}: { children: React.ReactNode }) {
                     </button>
                   </div>
                 </Transition.Child>
-                {/* Sidebar component */}
                 <NavigationList className="pb-2 ring-1 ring-white/10"/>
               </Dialog.Panel>
             </Transition.Child>
@@ -160,12 +164,10 @@ export default function Layout({children}: { children: React.ReactNode }) {
         </Dialog>
       </Transition.Root>
 
-      <div
-        className="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden"
-      >
+      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-neutral-950 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
         <button
           type="button"
-          className="-m-2.5 p-2.5 text-gray-400 lg:hidden"
+          className="-m-2.5 p-2.5 text-neutral-300 lg:hidden"
           onClick={() => setSidebarOpen(true)}
         >
           <span className="sr-only">Open sidebar</span>
@@ -182,7 +184,7 @@ export default function Layout({children}: { children: React.ReactNode }) {
         <NavigationList>
           <li className="-mx-6 mt-auto">
             <Profile
-              className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
+              className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-neutral-800"
             />
           </li>
         </NavigationList>
