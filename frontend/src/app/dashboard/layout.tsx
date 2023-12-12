@@ -4,6 +4,7 @@ import './dashboard.css'
 import React, {Fragment, useEffect, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
+  ArrowLeftOnRectangleIcon,
   Bars3Icon,
   FolderIcon,
   HomeIcon,
@@ -14,6 +15,8 @@ import clsx from 'clsx'
 import {Logomark} from "@/components/Logo"
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
+import Dropdown, {DropdownDirection} from "@/components/Dropdown";
+import {signOut} from 'next-auth/react'
 
 const navigation = [
   {
@@ -78,21 +81,51 @@ function NavigationList({className, children}: {
   )
 }
 
-function Profile({className, includeName = true}: {
+function Profile({className, includeName = true, dropdownDirection}: {
   className?: string
-  includeName?: boolean
+  includeName?: boolean,
+  dropdownDirection?: DropdownDirection
 }) {
   // TODO: Update image
   return (
-    <Link href="#" className={className}>
-      <span className="sr-only">Your profile</span>
-      <img
-        className="h-8 w-8 rounded-full"
-        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-        alt=""
-      />
-      <span className={includeName ? "" : "hidden"} aria-hidden="true">Tom Cook</span>
-    </Link>
+    <Dropdown
+      groups={[
+        {
+          items: [
+            {
+              icon: ((active) => <ArrowLeftOnRectangleIcon
+                className={clsx("w-6", active ? 'text-red-600' : 'text-red-500')}
+              />),
+              content: ((active) =>
+                <span
+                  className={clsx(
+                    "text-base",
+                    active ? 'text-red-600' : 'text-red-500'
+                  )}
+                >
+                  Abmelden
+                </span>
+              ),
+              onClick: () => {signOut()}
+            }
+          ]
+        }
+      ]}
+      className={className ? "h-full w-full" : ""}
+      buttonClassName={className ? "h-full w-full" : ""}
+      direction={dropdownDirection}
+      invert
+    >
+      <div className={className}>
+        <span className="sr-only">Your profile</span>
+        <img
+          className="h-8 w-8 rounded-full"
+          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          alt=""
+        />
+        <span className={includeName ? "" : "hidden"} aria-hidden="true">Tom Cook</span>
+      </div>
+    </Dropdown>
   )
 }
 
@@ -176,7 +209,7 @@ export default function Layout({children}: { children: React.ReactNode }) {
         <div className="flex-1 text-sm font-semibold leading-6 text-white">
           Dashboard
         </div>
-        <Profile includeName={false}/>
+        <Profile includeName={false} dropdownDirection='down'/>
       </div>
 
       {/* Static sidebar for desktop */}
