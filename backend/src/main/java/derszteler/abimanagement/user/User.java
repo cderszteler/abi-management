@@ -1,7 +1,6 @@
 package derszteler.abimanagement.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -22,7 +21,6 @@ import java.util.List;
 @Accessors(fluent = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreType
 @Builder
 @Data
 @Table(name = "users")
@@ -43,6 +41,10 @@ public final class User implements UserDetails {
   @JsonIgnore
   @Column(nullable = false)
   private String password;
+
+  @JsonProperty
+  @Column(nullable = false)
+  private String displayName;
 
   @Schema(description = "Boolean if the user is disabled", example = "false")
   @JsonProperty
