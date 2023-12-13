@@ -4,10 +4,12 @@ import clsx from "clsx";
 export default function Card({
   logo = false,
   title,
+  className,
   children
 }: {
   logo?: boolean
   title?: string
+  className?: string
   children: React.ReactNode
 }) {
   return (
@@ -27,7 +29,10 @@ export default function Card({
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+        <div className={clsx(
+          "bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12",
+          className
+        )}>
           {children}
         </div>
       </div>

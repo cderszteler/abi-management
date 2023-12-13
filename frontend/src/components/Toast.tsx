@@ -1,5 +1,3 @@
-'use client'
-
 import {Fragment, useEffect, useState} from 'react'
 import {Transition} from '@headlessui/react'
 import {XMarkIcon} from '@heroicons/react/20/solid'
@@ -11,10 +9,14 @@ export type Toast = React.ReactElement
 export default function ErrorToast(
 {
   content,
+  retry = true,
+  onRetry,
   autoRemove = true,
   cooldown = 5000
 }: {
-  content: string,
+  content: string
+  retry?: boolean
+  onRetry?: () => void
   autoRemove?: boolean
   cooldown?: number
 }) {
@@ -54,17 +56,25 @@ export default function ErrorToast(
                   {content}
                 </p>
                 <div className="mt-1.5 flex space-x-7">
+                  {retry ? (
+                    <button
+                      className="rounded-md bg-white text-sm font-medium text-neutral-950 hover:text-neutral-700"
+                      type="button"
+                      onClick={() => {
+                        if (onRetry) {
+                          onRetry()
+                          return
+                        }
+                        setShow(false)
+                      }}
+                    >
+                      Erneut versuchen
+                    </button>
+                  ) : (<></>)}
                   <button
-                    type="button"
-                    onClick={() => setShow(false)}
-                    className="rounded-md bg-white text-sm font-medium text-neutral-950 hover:text-neutral-700"
-                  >
-                    Erneut versuchen
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => router.push("/contact")}
                     className="rounded-md bg-white text-sm font-medium text-red-500 hover:text-red-400"
+                    onClick={() => router.push("/contact")}
+                    type="button"
                   >
                     Kontakt
                   </button>
