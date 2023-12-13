@@ -1,7 +1,7 @@
 'use client'
 
 import './dashboard.css'
-import React, {Fragment, useEffect, useState} from 'react'
+import React, {Fragment, useEffect, useMemo, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
   ArrowLeftOnRectangleIcon,
@@ -16,7 +16,8 @@ import {Logomark} from "@/components/Logo"
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import Dropdown, {DropdownDirection} from "@/components/Dropdown";
-import {signOut} from 'next-auth/react'
+import {signOut, useSession} from 'next-auth/react'
+import {UserIcon} from '@heroicons/react/20/solid'
 
 const navigation = [
   {
@@ -86,7 +87,14 @@ function Profile({className, includeName = true, dropdownDirection}: {
   includeName?: boolean,
   dropdownDirection?: DropdownDirection
 }) {
-  // TODO: Update image
+  const {data: session} = useSession()
+  const displayName: string = useMemo(() => {
+    if (session) {
+      return session?.user?.displayName
+    }
+    return ""
+  }, [session])
+
   return (
     <Dropdown
       groups={[
@@ -118,12 +126,12 @@ function Profile({className, includeName = true, dropdownDirection}: {
     >
       <div className={className}>
         <span className="sr-only">Your profile</span>
-        <img
-          className="h-8 w-8 rounded-full"
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt=""
+        <UserIcon
+          className="h-8 w-8 rounded-full text-white"
         />
-        <span className={includeName ? "" : "hidden"} aria-hidden="true">Tom Cook</span>
+        <span className={includeName ? "" : "hidden"} aria-hidden="true">
+          {displayName}
+        </span>
       </div>
     </Dropdown>
   )
