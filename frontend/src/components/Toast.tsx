@@ -11,12 +11,10 @@ export type Toast = React.ReactElement
 export default function ErrorToast(
 {
   content,
-  onRemove = () => {},
   autoRemove = true,
   cooldown = 5000
 }: {
   content: string,
-  onRemove?: () => void,
   autoRemove?: boolean
   cooldown?: number
 }) {
@@ -24,15 +22,12 @@ export default function ErrorToast(
   const router = useRouter()
 
   useEffect(() => {
-    if (!show) {
-      onRemove()
-    }
     if (show && autoRemove) {
       setTimeout(() => {
         setShow(false)
       }, cooldown)
     }
-  }, [cooldown, autoRemove, show, onRemove]);
+  }, [cooldown, autoRemove, show]);
 
   return (
     <>
