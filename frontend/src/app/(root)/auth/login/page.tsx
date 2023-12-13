@@ -1,7 +1,6 @@
 'use client'
 
 import React, {useContext, useEffect, useState} from "react";
-import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline'
 import Link from "next/link";
 import Card from "@/components/Card";
 import {RootLayoutContext} from "@/components/RootLayout";
@@ -9,14 +8,13 @@ import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import ErrorToast from "@/components/Toast";
 import clsx from "clsx";
-import {ExclamationCircleIcon} from "@heroicons/react/20/solid";
+import {PasswordInputWithToggle, TextInput} from "@/components/Input";
 
 export default function LoginForm() {
   const router = useRouter()
   const {addToast} = useContext(RootLayoutContext)!
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const [invalidPassword, setInvalidPassword] = useState(false)
 
   useEffect(() => {
@@ -45,71 +43,20 @@ export default function LoginForm() {
   return (
     <Card title="Logge dich ein" logo>
       <form className="space-y-6">
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium leading-6 text-neutral-950">
-            Benutzername
-          </label>
-          <div className="relative mt-2 rounded-md shadow-sm">
-            <input
-              className={clsx(
-                "block w-full rounded-md border-0 py-1.5 text-neutral-950 ring-inset placeholder:text-neutral-700 focus:ring-inset sm:text-sm sm:leading-6",
-                invalidPassword
-                  ? "ring-2 ring-inset ring-red-500 focus:ring-2 focus:ring-red-500"
-                  : "ring-1 ring-neutral-300 focus:ring-2 focus:ring-neutral-700"
-              )}
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="username"
-              onChange={event => setUsername(event.target.value)}
-              value={username}
-              required
-            />
-            <div
-              className={clsx(
-                "pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3",
-                invalidPassword ? "" : "hidden"
-              )}
-            >
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true"/>
-            </div>
-          </div>
-        </div>
+        <TextInput
+          label="Benutzername"
+          autoComplete="username"
+          text={username}
+          setText={setUsername}
+          invalid={invalidPassword}
+        />
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium leading-6 text-neutral-950">
-            Passwort
-          </label>
-          <div className="relative mt-2">
-            <input
-              className={clsx(
-                "block w-full rounded-md border-0 py-1.5 text-neutral-950 shadow-sm ring-inset placeholder:text-neutral-700 focus:ring-inset sm:text-sm sm:leading-6",
-                invalidPassword
-                  ? "ring-2 ring-inset ring-red-500 focus:ring-2 focus:ring-red-500"
-                  : "ring-1 ring-neutral-300 focus:ring-2 focus:ring-neutral-700"
-              )}
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
-              onChange={event => setPassword(event.target.value)}
-              value={password}
-              required
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-              <button type="button" onClick={event => {
-                event.preventDefault()
-                setShowPassword(!showPassword)
-              }}>
-                {(() => {
-                  return showPassword
-                    ? <EyeSlashIcon className="h-5 w-5 text-neutral-950"/>
-                    : <EyeIcon className="h-5 w-5 text-neutral-950"/>
-                })()}
-              </button>
-            </div>
-          </div>
-        </div>
+        <PasswordInputWithToggle
+          label="Passwort"
+          autoComplete="current-password"
+          password={password}
+          setPassword={setPassword} invalid={invalidPassword}
+        />
 
         <p className={clsx(
           "mt-2 text-sm text-red-600",

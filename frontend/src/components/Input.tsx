@@ -1,12 +1,11 @@
-import {EyeIcon} from "@heroicons/react/20/solid"
-import {EyeSlashIcon} from "@heroicons/react/24/outline"
+import {EyeIcon, EyeSlashIcon} from "@heroicons/react/24/outline"
 import clsx from "clsx"
 import {SetStateAction, useId, useState} from "react"
 
 interface BasicProperties {
   label: string
   invalid: boolean
-  disabled: boolean
+  disabled?: boolean
   autoComplete?: string
   children?: React.ReactNode
 }
@@ -117,11 +116,13 @@ export function PasswordToggle({show, setShow, disabled = false}: {
   )
 }
 
-export function PasswordInputWithToggle(properties: PasswordInputProperties) {
+interface PasswordInputWithToggleProperties extends Omit<PasswordInputProperties, 'show'> {}
+
+export function PasswordInputWithToggle(properties: PasswordInputWithToggleProperties) {
   const [show, setShow] = useState(false)
 
   return (
-    <PasswordInput {...properties}>
+    <PasswordInput show={show} {...properties}>
       <PasswordToggle show={show} setShow={setShow} disabled={properties.disabled}/>
     </PasswordInput>
   )
