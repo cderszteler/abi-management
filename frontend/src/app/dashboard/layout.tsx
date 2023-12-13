@@ -6,9 +6,9 @@ import {Dialog, Transition} from '@headlessui/react'
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  FolderIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
   HomeIcon,
-  UsersIcon,
+  PencilSquareIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -28,12 +28,12 @@ const navigation = [
   {
     name: 'Zitate',
     path: '/dashboard/quotes',
-    icon: UsersIcon
+    icon: ChatBubbleOvalLeftEllipsisIcon
   },
   {
     name: 'Kommentare',
     path: '/dashboard/comments',
-    icon: FolderIcon
+    icon: PencilSquareIcon
   }
 ]
 
@@ -90,6 +90,7 @@ function Profile({className, includeName = true, dropdownDirection}: {
   const {data: session} = useSession()
   const displayName: string = useMemo(() => {
     if (session) {
+      // @ts-ignore
       return session?.user?.displayName
     }
     return ""
