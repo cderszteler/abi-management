@@ -1,7 +1,7 @@
 import {Container} from "@/components/Container";
 import {Metadata} from "next";
-import {getServerSession} from "next-auth/next";
 import {redirect} from "next/navigation";
+import {getSession} from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: 'Passwort zurücksetzen',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession()
+  const session = await getSession()
 
   if (session) {
     redirect("/dashboard")

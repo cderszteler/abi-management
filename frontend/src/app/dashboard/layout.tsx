@@ -1,7 +1,7 @@
 'use client'
 
 import './dashboard.css'
-import React, {Fragment, useEffect, useMemo, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
   ArrowLeftOnRectangleIcon,
@@ -16,8 +16,10 @@ import {Logomark} from "@/components/Logo"
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import Dropdown, {DropdownDirection} from "@/components/Dropdown";
-import {signOut, useSession} from 'next-auth/react'
+import {signOut} from 'next-auth/react'
 import {UserIcon} from '@heroicons/react/20/solid'
+import {Container} from "@/components/Container";
+import {useDisplayName} from "@/lib/auth";
 
 const navigation = [
   {
@@ -87,14 +89,7 @@ function Profile({className, includeName = true, dropdownDirection}: {
   includeName?: boolean,
   dropdownDirection?: DropdownDirection
 }) {
-  const {data: session} = useSession()
-  const displayName: string = useMemo(() => {
-    if (session) {
-      // @ts-ignore
-      return session?.user?.displayName
-    }
-    return ""
-  }, [session])
+  const displayName = useDisplayName()
 
   return (
     <Dropdown

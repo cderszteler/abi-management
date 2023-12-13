@@ -2,11 +2,11 @@ import Link from 'next/link'
 
 import {Container} from '@/components/Container'
 import {FadeIn} from '@/components/FadeIn'
-import {getServerSession} from 'next-auth/next'
 import {DefaultLayout} from "@/components/RootLayout";
+import {getSession} from "@/lib/auth";
 
 export default async function NotFound() {
-  const session = await getServerSession()
+  const session = await getSession()
 
   return (
     <DefaultLayout>
