@@ -16,8 +16,11 @@ public record AuthenticationRequest(
 
   public boolean valid() {
     return (username != null && !username.isBlank() && username.matches(usernameRegex))
-      && (password != null && !password.isBlank()
-        && password.length() >= 8 && password.length() <= 100
-      );
+      && validPassword(password);
+  }
+
+  public static boolean validPassword(String password) {
+    return password != null && !password.isBlank()
+      && password.length() >= 8 && password.length() <= 100;
   }
 }

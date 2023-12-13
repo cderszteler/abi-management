@@ -57,7 +57,7 @@ public final class ResetTokenRestEndpoint {
       ),
       @ApiResponse(
         content = @Content(schema = @Schema()),
-        description = "Reset the user",
+        description = "Reset the user's password",
         responseCode = "200"
       )
     }
@@ -70,7 +70,7 @@ public final class ResetTokenRestEndpoint {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
-    service.resetWithToken(request.tokenAsId());
+    service.resetWithToken(request);
     return ResponseEntity.ok().build();
   }
 }
