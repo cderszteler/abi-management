@@ -142,7 +142,7 @@ export default function Layout({children}: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <div>
+    <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -229,9 +229,11 @@ export default function Layout({children}: { children: React.ReactNode }) {
 
       <main className="py-10 lg:pl-72">
         <div className="px-4 sm:px-6 lg:px-8">
-          {children}
+          <Container>
+            {children}
+          </Container>
         </div>
       </main>
-    </div>
+    </>
   )
 }

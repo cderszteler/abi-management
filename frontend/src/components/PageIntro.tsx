@@ -4,6 +4,14 @@ import {Container} from '@/components/Container'
 import {FadeIn} from '@/components/FadeIn'
 import React from "react";
 
+export function PageHeading({content}: {content: string}) {
+  return (
+    <h1 className="block max-w-5xl text-5xl font-display font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-6xl lg:mt-8">
+      {content}
+    </h1>
+  )
+}
+
 export function PageIntro({
   eyebrow,
   title,
