@@ -2,15 +2,7 @@
 
 'use client'
 
-import React, {
-  SetStateAction,
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  useState
-} from "react";
-import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline'
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import Card from "@/components/Card";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {useSearchParams} from "next/navigation";
@@ -21,6 +13,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import ErrorToast from "@/components/Toast";
+import {PasswordInput, PasswordToggle} from "@/components/Input";
 
 function InvalidToken({disabled}: {disabled: boolean}) {
   return (
@@ -58,57 +51,6 @@ function SuccessfulReset({ok}: {ok: boolean}) {
         > logge dich ein</Link>
         , um auf das Dashboard zugreifen zu können.
       </p>
-    </div>
-  )
-}
-
-function PasswordInput(
-  {
-    label,
-    disabled,
-    show,
-    invalid,
-    password,
-    setPassword,
-    children
-  }: {
-    label: string
-    disabled: boolean
-    show: boolean,
-    invalid: boolean
-    password: string
-    setPassword: React.Dispatch<SetStateAction<string>>
-    children?: React.ReactNode
-  }) {
-  const id = useId()
-
-  return (
-    <div>
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium leading-6 text-neutral-950"
-      >
-        {label}
-      </label>
-      <div className={clsx("relative mt-2", disabled ? 'cursor-not-allowed' : '')}>
-        <input
-          className={clsx(
-            "block w-full rounded-md border-0 py-1.5 text-neutral-950 shadow-sm ring-inset placeholder:text-neutral-700 focus:ring-inset sm:text-sm sm:leading-6",
-            "disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:ring-neutral-200",
-            invalid
-              ? "ring-2 ring-inset ring-red-500 focus:ring-2 focus:ring-red-500"
-              : "ring-1 ring-neutral-300 focus:ring-2 focus:ring-neutral-700"
-          )}
-          id={id}
-          type={show ? "text" : "password"}
-          autoComplete="new-password"
-          onChange={event => setPassword(event.target.value)}
-          value={password}
-          disabled={disabled}
-          required
-        />
-        {children}
-      </div>
     </div>
   )
 }
@@ -182,35 +124,21 @@ export default function ResetForm() {
       <form className="space-y-6">
         <PasswordInput
           label="Passwort"
-          disabled={disabled}
+          autoComplete="new-password"
           show={show}
           invalid={invalid}
+          disabled={disabled}
           password={first}
           setPassword={setFirst}
         >
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            <button
-              type="button"
-              className="disabled:cursor-not-allowed"
-              onClick={event => {
-                event.preventDefault()
-                setShow(!show)
-              }}
-              disabled={disabled}
-            >
-              {(() => {
-                return show
-                  ? <EyeSlashIcon className="h-5 w-5 text-neutral-950"/>
-                  : <EyeIcon className="h-5 w-5 text-neutral-950"/>
-              })()}
-            </button>
-          </div>
+          <PasswordToggle show={show} setShow={setShow} disabled={disabled}/>
         </PasswordInput>
         <PasswordInput
           label="Passwort wiederholen"
-          disabled={disabled}
+          autoComplete="new-password"
           show={show}
           invalid={invalid}
+          disabled={disabled}
           password={second}
           setPassword={setSecond}
         />
