@@ -15,7 +15,7 @@ export default function ErrorToast(
   autoRemove = true,
   cooldown = 5000
 }: {
-  content: number,
+  content: string,
   onRemove?: () => void,
   autoRemove?: boolean
   cooldown?: number
