@@ -17,9 +17,7 @@ export async function middleware(request: NextRequest) {
    if (isValidApiDestination(request.nextUrl.pathname)) {
     return await handleApiRequest(request, session)
   } else if (!session) {
-    return NextResponse.redirect(new URL("/auth/login", request.url), {
-      status: TEMPORARY_REDIRECT_STATUS
-    })
+    return NextResponse.redirect(new URL("/auth/login", request.url), TEMPORARY_REDIRECT_STATUS)
   }
 
   return NextResponse.next()
@@ -31,6 +29,8 @@ async function handleApiRequest(request: NextRequest, session?: JWT | null) {
   if (session) {
     requestHeaders.set("Authorization", `Bearer ${session?.accessToken}`)
   }
+  requestHeaders.set("Accept", "*/*")
+  requestHeaders.set("Content-Type", "application/json")
   return NextResponse.rewrite(
     `${backendUrl}${request.nextUrl.pathname}`,
     {
