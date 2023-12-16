@@ -59,7 +59,7 @@ export default function Pagination({total, page, setPage, className}: {
             setPage(page + 1)
           }}
         >
-          Next
+          Nächste
           <ArrowLongRightIcon
             className="ml-3 h-5 w-5 text-gray-400 group-disabled:text-gray-300 transition duration-100"
             aria-hidden="true"
