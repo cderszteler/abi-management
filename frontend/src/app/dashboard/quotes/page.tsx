@@ -2,13 +2,14 @@ import {PageHeading} from "@/components/PageIntro";
 import clsx from "clsx";
 import {Colors, PillWithBorder} from "@/components/Badge";
 import {CheckIcon, XMarkIcon} from "@heroicons/react/24/outline";
+import {SectionHeader} from "@/components/SectionIntro";
 
 // TODO: Abstract / fetch from server
 const quotes = [
   {
     id: 1,
     content: 'Ich hatte ganz viele motivierte Q1-ser in meinem Projekt, die das als 4. oder 5. Wahl bekommen haben. War toll. Ja, ich wusste gar nicht, ob ich morgens aufstehen oder mir gleich die Kugel geben soll.',
-    status: 'Pending'
+    status: 'Accepted'
   },
   {
     id: 2,
@@ -50,8 +51,11 @@ function Button({className, children}: {
 
 function statusColor(status: string): Colors {
   switch (status) {
-    case "Pending": {
+    case "Accepted": {
       return "green"
+    }
+    case "Pending": {
+      return "yellow"
     }
     case "Denied": {
       return "red"
@@ -121,11 +125,11 @@ export default function Quotes() {
                 >
 
                   <Button
-                    className="mb-4 lg:mb-0 lg:mr-4 bg-green-100 text-green-700 ring-green-500/50 shadow-green-300 hover:bg-green-200/80 hover:text-green-900 hover:ring-green-700/50"
+                    className="mb-4 lg:mb-0 lg:mr-4 bg-green-100 text-green-700 ring-green-500/40 shadow-green-300/80 hover:bg-green-200/80 hover:text-green-900 hover:ring-green-700/40"
                   >
                     <CheckIcon className="h-4 group-hover:scale-110"/>
                   </Button>
-                  <Button className="bg-red-100 text-red-700 ring-red-500/50 shadow-red-300 hover:bg-red-200/80 hover:text-red-900 hover:ring-red-700/50">
+                  <Button className="bg-red-100 text-red-700 ring-red-500/40 shadow-red-300/80 hover:bg-red-200/80 hover:text-red-900 hover:ring-red-700/40">
                     <XMarkIcon className="h-4 group-hover:scale-110"/>
                   </Button>
                   {index !== 0 ? <RowSeparator side="right"/> : null}
