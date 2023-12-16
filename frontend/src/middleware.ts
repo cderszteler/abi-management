@@ -14,7 +14,7 @@ export const config = {
 export async function middleware(request: NextRequest) {
   const session = await getToken({ req: request });
 
-   if (isValidApiDestination(request.nextUrl.pathname)) {
+  if (isValidApiDestination(request.nextUrl.pathname)) {
     return await handleApiRequest(request, session)
   } else if (!session) {
     return NextResponse.redirect(new URL("/auth/login", request.url), TEMPORARY_REDIRECT_STATUS)
@@ -27,12 +27,13 @@ async function handleApiRequest(request: NextRequest, session?: JWT | null) {
   const requestHeaders = new Headers(request.headers)
 
   if (session) {
-    requestHeaders.set("Authorization", `Bearer ${session?.accessToken}`)
+    requestHeaders.set("Authorization", `Bearer ${session?.tokens?.accessToken}`)
   }
   requestHeaders.set("Accept", "*/*")
   requestHeaders.set("Content-Type", "application/json")
+
   return NextResponse.rewrite(
-    `${backendUrl}${request.nextUrl.pathname}`,
+    `${backendUrl}${request.nextUrl.pathname}?${request.nextUrl.searchParams}`,
     {
       request: {
         headers: requestHeaders
