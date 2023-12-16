@@ -43,7 +43,7 @@ public class QuoteReview {
   @JoinColumn(nullable = false, name = "quote_id")
   private Quote quote;
 
-  enum Status {
+  public enum Status {
     Pending,
     Accepted,
     Rejected
