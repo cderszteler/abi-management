@@ -1,6 +1,7 @@
 import {PageHeading} from "@/components/PageIntro";
 import clsx from "clsx";
 import {Colors, PillWithBorder} from "@/components/Badge";
+import {CheckIcon, XMarkIcon} from "@heroicons/react/24/outline";
 
 // TODO: Abstract / fetch from server
 const quotes = [
@@ -27,6 +28,23 @@ function RowSeparator({side}: {side: 'left' | 'right'}) {
       "absolute -top-px h-px bg-neutral-300",
       side === 'left' ? 'left-6 right-0' : 'left-0 right-6'
     )}/>
+  )
+}
+
+function Button({className, children}: {
+  className?: string
+  children?: React.ReactNode
+}) {
+  return (
+    <button
+      className={clsx(
+        "group rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold ring-1 ring-inset shadow-inner lg:hover:-translate-y-1 lg:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-30 transition",
+        className
+      )}
+      type="button"
+    >
+      {children}
+    </button>
   )
 }
 
@@ -94,18 +112,15 @@ export default function Quotes() {
                     'relative py-3.5 pl-4 pr-4 text-right text-sm font-medium sm:pr-6 lg:whitespace-nowrap'
                   )}
                 >
-                  <button
-                    type="button"
-                    className="rounded-md bg-white px-2.5 py-1.5 mb-8 lg:mb-0 lg:mr-8 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+
+                  <Button
+                    className="mb-4 lg:mb-0 lg:mr-4 bg-green-100 text-green-700 ring-green-500/50 shadow-green-300 hover:bg-green-200/80 hover:text-green-900 hover:ring-green-700/50"
                   >
-                    Yes
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
-                  >
-                    No
-                  </button>
+                    <CheckIcon className="h-4 group-hover:scale-110"/>
+                  </Button>
+                  <Button className="bg-red-100 text-red-700 ring-red-500/50 shadow-red-300 hover:bg-red-200/80 hover:text-red-900 hover:ring-red-700/50">
+                    <XMarkIcon className="h-4 group-hover:scale-110"/>
+                  </Button>
                   {index !== 0 ? <RowSeparator side="right"/> : null}
                 </td>
               </tr>
