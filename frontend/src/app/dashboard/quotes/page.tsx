@@ -1,9 +1,8 @@
 import {PageHeading} from "@/components/PageIntro";
-import clsx from "clsx";
 import {Colors, PillWithBorder} from "@/components/Badge";
-import {CheckIcon, XMarkIcon} from "@heroicons/react/24/outline";
 import {SectionHeader} from "@/components/SectionIntro";
 import {TableWithBorder} from "@/components/Table";
+import {BooleanActionButtonGroup} from "@/components/Button";
 
 // TODO: Abstract / fetch from server
 const quotes = [
@@ -23,23 +22,6 @@ const quotes = [
     status: 'Denied',
   }
 ]
-
-function Button({className, children}: {
-  className?: string
-  children?: React.ReactNode
-}) {
-  return (
-    <button
-      className={clsx(
-        "group rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold ring-1 ring-inset shadow-inner lg:hover:-translate-y-1 lg:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-30 transition",
-        className
-      )}
-      type="button"
-    >
-      {children}
-    </button>
-  )
-}
 
 function statusColor(status: string): Colors {
   switch (status) {
@@ -70,6 +52,8 @@ export default function Quotes() {
         </p>
       </SectionHeader>
       <TableWithBorder
+        // TODO: Implement loading
+        loading={false}
         separator={true}
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
         rows={quotes.map((quote) => [
@@ -85,20 +69,27 @@ export default function Quotes() {
           },
           {
             children: (
-              <>
-                <Button
-                  className="mb-4 lg:mb-0 lg:mr-4 bg-green-100 text-green-700 ring-green-500/40 shadow-green-300/80 hover:bg-green-200/80 hover:text-green-900 hover:ring-green-700/40"
-                >
-                  <CheckIcon className="h-4 group-hover:scale-110"/>
-                </Button>
-                <Button className="bg-red-100 text-red-700 ring-red-500/40 shadow-red-300/80 hover:bg-red-200/80 hover:text-red-900 hover:ring-red-700/40">
-                  <XMarkIcon className="h-4 group-hover:scale-110"/>
-                </Button>
-              </>
+              <BooleanActionButtonGroup/>
             ),
             className: "lg:whitespace-nowrap"
           }
         ])}
+        loadingRow={[
+          {
+            children: (
+              <>
+                <div className="animate-pulse w-40 lg:w-72 xl:w-10/12 h-2 bg-neutral-300 rounded-md"/>
+                <div className="animate-pulse mt-2 w-12 lg:w-32 h-2 bg-neutral-300 rounded-md"/>
+              </>
+            )
+          },
+          {
+            children: <div className="animate-pulse w-16 h-2 bg-neutral-300 rounded-md"/>
+          },
+          {
+            children: <BooleanActionButtonGroup disabled={true}/>
+          }
+        ]}
       />
     </>
   )

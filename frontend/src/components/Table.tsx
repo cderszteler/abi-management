@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import React from "react";
 
 type TableHeader = {
   name?: string
@@ -7,22 +8,27 @@ type TableHeader = {
 
 type TableColumn = {
   text?: string
-  children?: React.ReactNode
   className?: string
+  children?: React.ReactNode
 }
 
+const loadingRows = 2
+
 // TODO:
-//  - skeleton
 //  - tooltip for status
 //  - paging...
 export function TableWithBorder({
   separator,
+  loading,
   headers,
+  loadingRow,
   rows
 }: {
   separator: boolean
+  loading?: boolean
   headers: TableHeader[]
   rows: TableColumn[][]
+  loadingRow: Omit<TableColumn, 'text'>[]
 }) {
   return (
     <div className="-mx-4 mt-10 ring-1 ring-gray-300 sm:mx-0 sm:rounded-lg">
@@ -50,20 +56,28 @@ export function TableWithBorder({
         </tr>
         </thead>
         <tbody>
-          {rows.map((columns, rowIndex) =>
+          {loading && [...Array(loadingRows)].map((e, rowIndex) =>
+            <TableRow key={rowIndex}>
+              {loadingRow.map((column, index) =>
+                mapColumnToElement({column, index, separator,
+                  isLast: (rowIndex + 1 === loadingRows),
+                  side: index === 0 ? "left" : index === 2 ? "right" : null
+                })
+              )}
+            </TableRow>
+          )}
+          {!loading && rows.map((columns, rowIndex) =>
             <TableRow key={rowIndex}>
               {columns.map((column, index) =>
-                <TableColumn
-                  key={index}
-                  separator={separator}
-                  side={index !== 0
+                mapColumnToElement({
+                  column,
+                  index,
+                  isLast: (rowIndex + 1 === rows.length),
+                  separator,
+                  side: index !== 0
                     ? index === (columns.length - 1) ? 'right' : null
                     : "left"
-                  }
-                  {...column}
-                >
-                  {column.children}
-                </TableColumn>
+                })
               )}
             </TableRow>
           )}
@@ -73,9 +87,29 @@ export function TableWithBorder({
   )
 }
 
-function TableRow({children}: {children: React.ReactNode}) {
+function mapColumnToElement({column, index, isLast, separator, side}: {
+  column: TableColumn
+  index: number
+  isLast: boolean,
+  separator: boolean
+  side: React.ComponentPropsWithoutRef<typeof RowSeparator>['side']
+}) {
   return (
-    <tr className="even:bg-neutral-50 min">
+    <TableColumn
+      key={index}
+      isLast={isLast}
+      separator={separator}
+      side={side}
+      {...column}
+    >
+      {column.children}
+    </TableColumn>
+  )
+}
+
+function TableRow({className, children}: {className?: string, children: React.ReactNode}) {
+  return (
+    <tr className={clsx("even:bg-neutral-50 min", className)}>
       {children}
     </tr>
   )
@@ -83,9 +117,10 @@ function TableRow({children}: {children: React.ReactNode}) {
 
 function TableColumn({text, side, separator = true, ...properties}: TableColumn & {
   separator: boolean
+  isLast: boolean
   side: React.ComponentPropsWithoutRef<typeof RowSeparator>['side']
 }) {
-  const border = calculateBorder({separator, side})
+  const border = calculateBorder({separator, isLast: properties.isLast, side})
   const padding = calculatePadding(side)
   return (
     <td
@@ -119,13 +154,17 @@ function RowSeparator({side}: {side: 'left' | 'right' | null}) {
   )
 }
 
-function calculateBorder({separator, side}:
-  Pick<React.ComponentPropsWithoutRef<typeof TableColumn>, 'separator' | 'side'>
+function calculateBorder({separator, isLast, side}:
+  Pick<React.ComponentPropsWithoutRef<typeof TableColumn>, 'separator' | 'isLast' | 'side'>
 ) {
   if (!separator) {
     return ""
-  } else if (side) {
+  } else if (side && !isLast) {
     return "border-t border-transparent"
+  } else if (isLast && side === "left") {
+    return "border-t border-transparent sm:rounded-bl-lg"
+  } else if (isLast && side === "right") {
+    return "border-t border-transparent sm:rounded-br-lg"
   }
   return "border-t border-neutral-300"
 }
