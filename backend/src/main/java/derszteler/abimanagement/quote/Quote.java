@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.id.IdentityGenerator;
@@ -49,10 +50,13 @@ public class Quote {
   )
   private Collection<User> authors;
 
+  @Builder.Default
   @CreationTimestamp
-  private LocalDateTime createdAt;
+  @ColumnDefault("now()")
+  @Column(nullable = false)
+  private LocalDateTime createdAt = LocalDateTime.now();
 
-  enum Status {
+  public enum Status {
     NotAllowed
   }
 }

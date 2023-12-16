@@ -10,8 +10,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.id.IdentityGenerator;
+
+import java.time.LocalDateTime;
 
 @Accessors(fluent = true)
 @AllArgsConstructor
@@ -42,6 +46,12 @@ public class QuoteReview {
   @ManyToOne
   @JoinColumn(nullable = false, name = "quote_id")
   private Quote quote;
+
+  @Builder.Default
+  @CreationTimestamp
+  @ColumnDefault("now()")
+  @Column(nullable = false)
+  private LocalDateTime createdAt = LocalDateTime.now();
 
   public enum Status {
     Pending,
