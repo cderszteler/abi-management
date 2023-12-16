@@ -84,7 +84,7 @@ export default function Quotes() {
           },
           {
             children: (
-              <BooleanActionButtonGroup/>
+              <BooleanActionButtonGroup disabled={quote.status === 'NotAllowed'}/>
             ),
             className: "lg:whitespace-nowrap"
           }

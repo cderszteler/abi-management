@@ -15,7 +15,6 @@ type TableColumn = {
 const loadingRows = 2
 
 // TODO:
-//  - tooltip for status
 //  - paging...
 export function TableWithBorder({
   separator,
