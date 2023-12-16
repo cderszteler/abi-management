@@ -1,8 +1,9 @@
 import {PageHeading} from "@/components/PageIntro";
-import {Colors, PillWithBorder} from "@/components/Badge";
+import {Color, PillWithBorder} from "@/components/Badge";
 import {SectionHeader} from "@/components/SectionIntro";
 import {TableWithBorder} from "@/components/Table";
 import {BooleanActionButtonGroup} from "@/components/Button";
+import {Tooltip} from "@/components/Tooltip";
 
 // TODO: Abstract / fetch from server
 const quotes = [
@@ -19,25 +20,43 @@ const quotes = [
   {
     id: 3,
     content: 'Aber das sagt ihr nicht Frau D., sonst läuft die hier wieder so zickig rum.',
-    status: 'Denied',
+    status: 'NotAllowed',
   }
 ]
 
-function statusColor(status: string): Colors {
-  switch (status) {
-    case "Accepted": {
-      return "green"
-    }
-    case "Pending": {
-      return "yellow"
-    }
-    case "Denied": {
-      return "red"
-    }
-    default: {
-      return "gray"
-    }
+
+const statusDescriptions: { [key:string]: { color: Color, name: string, description: string } } = {
+  'Accepted': {
+    color: "green",
+    name: "Angenommen",
+    description: "Du hast dieses Zitat angenommen"
+  },
+  'Pending': {
+    color: "yellow",
+    name: "Anstehend",
+    description: "Dieses Zitat hast du noch nicht bearbeitet"
+  },
+  'Denied': {
+    color: "red",
+    name: "Abgelehnt",
+    description: "Du hast dieses Zitat abgelehnt"
+  },
+  'NotAllowed': {
+    color: "red",
+    name: "Nicht erlaubt",
+    description: "Dieses Zitat wurde von uns abgelehnt"
   }
+}
+
+function createStatus(status: string) {
+  const description = statusDescriptions[status]
+  return (
+    <Tooltip content={description.description}>
+      <PillWithBorder color={description.color}>
+        {description.name}
+      </PillWithBorder>
+    </Tooltip>
+  )
 }
 
 export default function Quotes() {
@@ -61,11 +80,7 @@ export default function Quotes() {
             text: quote.content
           },
           {
-            children: (
-              <PillWithBorder color={statusColor(quote.status)}>
-                {quote.status}
-              </PillWithBorder>
-            )
+            children: createStatus(quote.status)
           },
           {
             children: (

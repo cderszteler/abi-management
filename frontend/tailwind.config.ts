@@ -2,7 +2,10 @@ import {type Config} from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default {
-  content: ['./src/**/*.{js,jsx,mdx,ts,tsx}'],
+  content: [
+    './src/**/*.{js,jsx,mdx,ts,tsx}',
+    './node_modules/flowbite-react/lib/**/*.js'
+  ],
   theme: {
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
@@ -32,5 +35,6 @@ export default {
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('flowbite/plugin'),
   ],
 } satisfies Config

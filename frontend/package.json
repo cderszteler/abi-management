@@ -31,6 +31,8 @@
     "clsx": "^1.2.1",
     "escape-string-regexp": "^5.0.0",
     "fast-glob": "^3.3.2",
+    "flowbite": "^2.2.1",
+    "flowbite-react": "^0.7.2",
     "framer-motion": "^10.16.16",
     "jsonwebtoken": "^9.0.2",
     "next": "13.4.16",
