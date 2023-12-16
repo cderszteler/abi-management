@@ -1,4 +1,4 @@
-# Abi Management
+# Abi Management - Backend
 
 This is the backend of the main application developed with Spring Boot 3.
 It includes JWT authentication as well as REST endpoints to support core functionality.
