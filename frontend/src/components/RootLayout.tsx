@@ -320,6 +320,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <RootLayoutContext.Provider value={{logoHovered, setLogoHovered, toasts, addToast}}>
       {children}
+      <ToastContainer/>
     </RootLayoutContext.Provider>
   )
 }
