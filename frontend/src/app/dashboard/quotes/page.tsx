@@ -65,7 +65,14 @@ function statusColor(status: string): Colors {
 export default function Quotes() {
   return (
     <>
-      <PageHeading content={`Zitate`}/>
+      <PageHeading content="Zitate"/>
+      <SectionHeader title="Ausstehende Zitate" smaller={true} className="mt-4">
+        <p className="text-base -mt-4">
+          Beachte, dass für ein Zitat, das mehre Personen beinhaltet,
+          alle Personen diesem Zitat zustimmen müssen,
+          damit dieses gedruckt werden kann.
+        </p>
+      </SectionHeader>
       <div className="-mx-4 mt-10 ring-1 ring-gray-300 sm:mx-0 sm:rounded-lg">
         <table className="min-w-full divide-y divide-gray-300">
           <thead>
