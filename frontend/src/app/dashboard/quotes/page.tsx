@@ -1,9 +1,12 @@
+'use client'
+
 import {PageHeading} from "@/components/PageIntro";
 import {Color, PillWithBorder} from "@/components/Badge";
 import {SectionHeader} from "@/components/SectionIntro";
 import {TableWithBorder} from "@/components/Table";
 import {BooleanActionButtonGroup} from "@/components/Button";
 import {Tooltip} from "@/components/Tooltip";
+import Pagination from "@/components/Pagination";
 
 // TODO: Abstract / fetch from server
 const quotes = [
@@ -33,7 +36,7 @@ const statusDescriptions: { [key:string]: { color: Color, name: string, descript
   },
   'Pending': {
     color: "yellow",
-    name: "Anstehend",
+    name: "Ausstehend",
     description: "Dieses Zitat hast du noch nicht bearbeitet"
   },
   'Denied': {
@@ -105,6 +108,14 @@ export default function Quotes() {
             children: <BooleanActionButtonGroup disabled={true}/>
           }
         ]}
+      />
+      <Pagination
+        // TODO: Update/implement
+        total={Math.ceil(43/20)}
+        onUpdate={(number) => {
+          // TODO: Re-fetch data
+        }}
+        className="mt-8"
       />
     </>
   )
