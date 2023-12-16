@@ -3,33 +3,31 @@ import {
   ArrowLongRightIcon
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-import {SetStateAction, useMemo, useState} from 'react'
+import {SetStateAction, useMemo} from 'react'
 
-export default function Pagination({total, onUpdate, className}: {
-  total: number,
-  onUpdate: (page: number) => void
+export default function Pagination({total, page, setPage, className}: {
+  page: number
+  setPage: React.Dispatch<SetStateAction<number>>
+  total: number
   className?: string
 }) {
-  const [selected, setSelected] = useState(1)
   const pages = useMemo(() => {
     const pages = []
 
     for (let current = 1; current <= total; current++) {
-      if (current <= 2 || current >= total - 1 || total === 5 || current === selected) {
+      if (current <= 2 || current >= total - 1 || total === 5 || current === page) {
         pages.push(
-          <Page key={current - 1} number={current} onUpdate={onUpdate} selected={selected} setSelected={setSelected}/>
+          <Page key={current - 1} number={current} page={page} setPage={setPage}/>
         )
         continue
       }
       pages.push(<Separator key={current - 1}/>)
-      current = current < selected
-        ? Math.min(selected - 1, total - 2)
+      current = current < page
+        ? Math.min(page - 1, total - 2)
         : total - 2
     }
-
-    console.log("--")
     return pages
-  }, [selected, total, onUpdate])
+  }, [page, setPage, total])
 
   return (
     <nav className={clsx(
@@ -38,10 +36,9 @@ export default function Pagination({total, onUpdate, className}: {
     )}>
       <div className="-mt-px flex w-0 flex-1">
         <Arrow
-          disabled={selected <= 1}
+          disabled={page <= 1}
           onClick={() => {
-            onUpdate(selected - 1)
-            setSelected(selected - 1)
+            setPage(page - 1)
           }}
         >
           <ArrowLongLeftIcon
@@ -57,10 +54,9 @@ export default function Pagination({total, onUpdate, className}: {
 
       <div className="-mt-px flex w-0 flex-1 justify-end">
         <Arrow
-          disabled={selected >= total}
+          disabled={page >= total}
           onClick={() => {
-            onUpdate(selected + 1)
-            setSelected(selected + 1)
+            setPage(page + 1)
           }}
         >
           Next
@@ -97,24 +93,22 @@ function Arrow({disabled, onClick, children}: {
   )
 }
 
-function Page({number, selected, setSelected, onUpdate}: {
+function Page({number, page, setPage}: {
   number: number
-  selected: number
-  setSelected: React.Dispatch<SetStateAction<number>>
-  onUpdate: (page: number) => void
+  page: number
+  setPage: React.Dispatch<SetStateAction<number>>
 }) {
   return (
     <button
       className={clsx(
         "inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium",
-        selected === number
+        page === number
           ? "border-neutral-800 text-neutral-950"
           : "border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-700"
       )}
       onClick={event => {
         event.preventDefault()
-        setSelected(number)
-        onUpdate(number)
+        setPage(number)
       }}
     >
       {number}

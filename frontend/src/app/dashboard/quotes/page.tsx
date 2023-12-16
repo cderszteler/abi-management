@@ -7,26 +7,12 @@ import {TableWithBorder} from "@/components/Table";
 import {BooleanActionButtonGroup} from "@/components/Button";
 import {Tooltip} from "@/components/Tooltip";
 import Pagination from "@/components/Pagination";
-
-// TODO: Abstract / fetch from server
-const quotes = [
-  {
-    id: 1,
-    content: 'Ich hatte ganz viele motivierte Q1-ser in meinem Projekt, die das als 4. oder 5. Wahl bekommen haben. War toll. Ja, ich wusste gar nicht, ob ich morgens aufstehen oder mir gleich die Kugel geben soll.',
-    status: 'Accepted'
-  },
-  {
-    id: 2,
-    content: 'P.: Ein Experiment ist bei der Relativitätstheorie schwierig.\n L.: Wieso? Man muss nur schnell laufen können.',
-    status: 'Pending',
-  },
-  {
-    id: 3,
-    content: 'Aber das sagt ihr nicht Frau D., sonst läuft die hier wieder so zickig rum.',
-    status: 'NotAllowed',
-  }
-]
-
+import {useContext, useEffect, useState} from "react";
+import {fetcher} from "@/lib/backend";
+import useSWR from 'swr'
+import {Quote} from "@/lib/quotes";
+import {RootLayoutContext} from "@/components/RootLayout";
+import ErrorToast from "@/components/Toast";
 
 const statusDescriptions: { [key:string]: { color: Color, name: string, description: string } } = {
   'Accepted': {
@@ -63,6 +49,22 @@ function createStatus(status: string) {
 }
 
 export default function Quotes() {
+  const {addToast} = useContext(RootLayoutContext)!
+  const [page, setPage] = useState(1)
+  const {data, error, isLoading} = useSWR<{quotes: Quote[], total: number}>(
+    `/api/v1/quotes?filter=Pending&page=${page - 1}&limit=20`,
+    fetcher
+  )
+
+  useEffect(() => {
+    if (error) {
+      addToast(<ErrorToast
+        content="Die Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
+        retry={false}
+      />)
+    }
+  }, [addToast, error]);
+
   return (
     <>
       <PageHeading content="Zitate"/>
@@ -74,11 +76,10 @@ export default function Quotes() {
         </p>
       </SectionHeader>
       <TableWithBorder
-        // TODO: Implement loading
-        loading={false}
+        loading={isLoading || error}
         separator={true}
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
-        rows={quotes.map((quote) => [
+        rows={isLoading ? [] : data!.quotes.map((quote) => [
           {
             text: quote.content
           },
@@ -110,11 +111,9 @@ export default function Quotes() {
         ]}
       />
       <Pagination
-        // TODO: Update/implement
-        total={Math.ceil(43/20)}
-        onUpdate={(number) => {
-          // TODO: Re-fetch data
-        }}
+        page={page}
+        setPage={setPage}
+        total={isLoading ? 1 : Math.ceil(data!.total/20)}
         className="mt-8"
       />
     </>
