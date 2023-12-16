@@ -37,7 +37,7 @@ public class Quote {
   private String content;
 
   @Enumerated(EnumType.STRING)
-  @Column
+  @Column(nullable = true)
   private Status status;
 
   @ManyToMany
@@ -45,11 +45,9 @@ public class Quote {
     name = "quote_authors",
     joinColumns = @JoinColumn(nullable = false, name = "quote_id"),
     inverseJoinColumns = @JoinColumn(nullable = false, name = "user_id"),
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "user_id"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"quote_id", "user_id"})
   )
-  private Collection<User> author;
-
-
+  private Collection<User> authors;
 
   @CreationTimestamp
   private LocalDateTime createdAt;

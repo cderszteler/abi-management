@@ -15,6 +15,16 @@ public record UserQuote(
   QuoteReview review
 ) {
   @JsonProperty
+  int id() {
+    return quote.id();
+  }
+
+  @JsonProperty
+  String content() {
+    return quote().content();
+  }
+
+  @JsonProperty
   Status status() {
     if (quote.status() == Quote.Status.NotAllowed) {
       return NotAllowed;
