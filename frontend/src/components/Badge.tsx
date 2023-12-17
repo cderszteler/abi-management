@@ -16,7 +16,7 @@ export function PillWithBorder({color, children}: {
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-center ring-1 ring-inset cursor-pointer",
+        "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-center ring-1 ring-inset cursor-pointer lg:whitespace-nowrap",
         classNames[color]
       )}
       data-tooltip-target="tooltip-animation"
