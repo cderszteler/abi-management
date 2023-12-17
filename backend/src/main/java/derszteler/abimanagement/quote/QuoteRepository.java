@@ -17,6 +17,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
     where author = :user and review is null and quote.status is null
+    order by quote.createdAt
     """
   )
   List<UserQuote> findPendingQuotes(User user, Pageable pageable);
@@ -40,6 +41,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
     where author = :user and review is not null
+    order by quote.createdAt
     """
   )
   List<UserQuote> findProcessedQuotes(User user, Pageable pageable);
@@ -64,6 +66,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
     where author = :user and quote.status is not null
+    order by quote.createdAt
     """
   )
   List<UserQuote> findNotAllowedQuotes(User user, Pageable pageable);
