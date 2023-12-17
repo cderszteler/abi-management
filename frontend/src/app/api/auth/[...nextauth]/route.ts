@@ -32,6 +32,7 @@ export const authOptions: AuthOptions = {
           type: "password"
         }
       },
+      // @ts-ignore
       authorize: async (credentials) => {
         let response
         try {
@@ -77,6 +78,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     // The 'user' field is provided if the user has just logged in. It's the
     // result of the 'authorize' method above.
+    // @ts-ignore
     jwt: async function ({token: authentication, user}: {
       token: Authentication,
       user: User
@@ -100,6 +102,7 @@ export const authOptions: AuthOptions = {
       }
     },
 
+    // @ts-ignore
     session: async function ({session, token: authentication}: {
       session: any,
       token: Authentication

@@ -27,6 +27,7 @@ async function handleApiRequest(request: NextRequest, session?: JWT | null) {
   const requestHeaders = new Headers(request.headers)
 
   if (session) {
+    // @ts-ignore
     requestHeaders.set("Authorization", `Bearer ${session?.tokens?.accessToken}`)
   }
   requestHeaders.set("Accept", "*/*")
