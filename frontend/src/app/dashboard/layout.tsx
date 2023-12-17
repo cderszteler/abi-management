@@ -133,6 +133,23 @@ function Profile({className, includeName = true, dropdownDirection}: {
   )
 }
 
+function Links({className}: {className?: string}) {
+  // noinspection HtmlUnknownTarget
+  return (
+    <li className={clsx(
+      "text-sm font-semibold text-neutral-500",
+      className
+    )}>
+      <Link href="/contact" className="block hover:text-neutral-300 transition">
+        Kontakt
+      </Link>
+      <Link href="/imprint" className="block hover:text-neutral-300 transition">
+        Impressum
+      </Link>
+    </li>
+  )
+}
+
 export default function Layout({children}: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
@@ -194,7 +211,9 @@ export default function Layout({children}: { children: React.ReactNode }) {
                     </button>
                   </div>
                 </Transition.Child>
-                <NavigationList className="pb-2 ring-1 ring-white/10"/>
+                <NavigationList className="pb-2 ring-1 ring-white/10">
+                  <Links/>
+                </NavigationList>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -219,7 +238,8 @@ export default function Layout({children}: { children: React.ReactNode }) {
       {/* Static sidebar for desktop */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         <NavigationList>
-          <li className="-mx-6 mt-auto">
+          <Links className="mb-0 mt-auto"/>
+          <li className="-mx-6">
             <Profile
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-neutral-800"
             />
