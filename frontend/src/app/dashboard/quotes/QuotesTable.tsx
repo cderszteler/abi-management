@@ -101,6 +101,7 @@ export function QuotesTable(
         rows={loading ? [] : data!.quotes.map((quote) => [
           {
             text: quote.content,
+            className: "w-full",
             children: quote.context
               ? (<span className="italic block">({quote.context})</span>)
               : (<></>)

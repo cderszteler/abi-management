@@ -95,7 +95,8 @@ export function CommentsTable(
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
         rows={loading ? [] : data!.comments.map((comment) => [
           {
-            text: comment.content
+            text: comment.content,
+            className: "w-full"
           },
           {
             children: createStatus(comment.status)

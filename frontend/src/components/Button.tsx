@@ -34,7 +34,7 @@ export function BooleanActionButtonGroup({disabled, onClick}: {
   onClick?: (accepted: boolean) => void
 }) {
   return (
-    <>
+    <div className="flex flex-col lg:flex-row items-center justify-end min-w-full">
       <ActionButton
         className="mb-4 lg:mb-0 lg:mr-4 bg-green-200/50 text-green-700 ring-green-500/40 shadow-green-300/80 hover:bg-green-200/80 hover:text-green-900 hover:ring-green-700/40"
         onClick={() => {
@@ -57,7 +57,7 @@ export function BooleanActionButtonGroup({disabled, onClick}: {
       >
         <XMarkIcon className="h-4 group-hover:scale-110"/>
       </ActionButton>
-    </>
+    </div>
   )
 }
 
