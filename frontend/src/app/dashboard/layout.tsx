@@ -43,6 +43,7 @@ function NavigationList({className, children}: {
   className?: string
   children?: React.ReactNode
 }) {
+  const [logoHovered, setLogoHovered] = useState(false)
   const pathname = usePathname()
 
   return (
@@ -51,8 +52,13 @@ function NavigationList({className, children}: {
       className
     )}>
       <div className="flex h-16 shrink-0 items-center">
-        <Link href="/" aria-label="Homepage">
-          <Logomark className="h-8 w-auto" invert/>
+        <Link
+          href="/"
+          aria-label="Homepage"
+          onMouseEnter={() => setLogoHovered(true)}
+          onMouseLeave={() => setLogoHovered(false)}
+        >
+          <Logomark className="h-8 w-auto" filled={logoHovered} invert/>
         </Link>
       </div>
       <nav className="flex flex-1 flex-col">
