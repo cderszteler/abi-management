@@ -16,7 +16,7 @@ public final class QuoteReviewService {
   private final QuoteReviewRepository repository;
   private final QuoteRepository quoteRepository;
 
-  public void review(User user, ReviewQuotesRequest request) {
+  public void review(User user, ReviewQuoteRequest request) {
     var quote = quoteRepository.findById(request.quoteId())
       .filter(existing -> existing.authors().contains(user))
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

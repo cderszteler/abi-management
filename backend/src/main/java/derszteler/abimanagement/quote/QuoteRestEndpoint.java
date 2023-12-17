@@ -80,7 +80,10 @@ public final class QuoteRestEndpoint {
     @RequestParam(defaultValue = "20") int limit
   ) {
     if (page < 0 || limit < 1 || limit > 100) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid pagination parameters");
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        "invalid pagination parameters"
+      );
     }
 
     return ResponseEntity.ok(service.list(user, filter, page, limit));

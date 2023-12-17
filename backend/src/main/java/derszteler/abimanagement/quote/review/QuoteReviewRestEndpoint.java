@@ -27,13 +27,13 @@ public final class QuoteReviewRestEndpoint {
   private final QuoteReviewService service;
 
   @Operation(
-    summary = "Review quote",
+    summary = "Review a quote",
     description = """
       This endpoint is used to review a user's quote. Reviews can be done on
       quotes that have not the status 'NotAllowed'.
       """,
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-      content = @Content(schema = @Schema(implementation = ReviewQuotesRequest.class)),
+      content = @Content(schema = @Schema(implementation = ReviewQuoteRequest.class)),
       description = "The status (review) the user wants give a quote",
       required = true
     ),
@@ -63,7 +63,7 @@ public final class QuoteReviewRestEndpoint {
   @PostMapping(produces = "application/json")
   public ResponseEntity<Void> review(
     @AuthenticationPrincipal User user,
-    @RequestBody ReviewQuotesRequest request
+    @RequestBody ReviewQuoteRequest request
   ) {
     if (!request.valid()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid request body");

@@ -34,7 +34,7 @@ public class Quote {
 
   @Schema(description = "The content of the quote", example = "I am a cyborg.")
   @JsonProperty
-  @Column
+  @Column(nullable = false)
   private String content;
 
   @Schema(

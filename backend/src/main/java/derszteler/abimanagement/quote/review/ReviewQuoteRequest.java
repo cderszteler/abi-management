@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import static derszteler.abimanagement.quote.review.QuoteReview.Status.Pending;
 
-public record ReviewQuotesRequest(
+public record ReviewQuoteRequest(
   @Schema(description = "The id of the quote to be reviewed", example = "1")
   int quoteId,
   @Schema(
