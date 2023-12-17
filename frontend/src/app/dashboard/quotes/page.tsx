@@ -51,10 +51,11 @@ function createStatus(status: string) {
 export default function Quotes() {
   const {addToast} = useContext(RootLayoutContext)!
   const [page, setPage] = useState(1)
-  const {data, error, isLoading} = useSWR<{quotes: Quote[], total: number}>(
-    `/api/v1/quotes?filter=Pending&page=${page - 1}&limit=20`,
+  const {data, error, isLoading, mutate} = useSWR<{quotes: Quote[], total: number}>(
+    `/api/v1/quotes?filter=Processed&page=${page - 1}&limit=20`,
     fetcher
   )
+  const loading = isLoading || error
 
   useEffect(() => {
     if (error) {
@@ -65,12 +66,6 @@ export default function Quotes() {
     }
   }, [error]);
 
-  useEffect(() => {
-    if (data) {
-      console.log(data)
-    }
-  }, [data]);
-
   const handleReview = async (parameters: Parameters<typeof reviewQuote>[0]) => {
     const ok = await reviewQuote(parameters)
     if (!ok) {
@@ -80,7 +75,7 @@ export default function Quotes() {
         retry={true}
       />)
     } else {
-      // TODO: Update (re-fetch) pending & processed data
+      await mutate()
     }
   }
 
@@ -97,10 +92,10 @@ export default function Quotes() {
         </p>
       </SectionHeader>
       <TableWithBorder
-        loading={isLoading || error}
+        loading={loading}
         separator={true}
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
-        rows={isLoading ? [] : data!.quotes.map((quote) => [
+        rows={loading ? [] : data!.quotes.map((quote) => [
           {
             text: quote.content,
             children: (<span className="italic block">({quote.context})</span>)
@@ -141,7 +136,7 @@ export default function Quotes() {
       <Pagination
         page={page}
         setPage={setPage}
-        total={isLoading ? 1 : Math.ceil(data!.total/20)}
+        total={loading ? 1 : Math.ceil(data!.total/20)}
         className="mt-8"
       />
     </>
