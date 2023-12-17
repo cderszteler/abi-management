@@ -63,7 +63,26 @@ export default function Quotes() {
         retry={false}
       />)
     }
-  }, [addToast, error]);
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data)
+    }
+  }, [data]);
+
+  const handleReview = async (parameters: Parameters<typeof reviewQuote>[0]) => {
+    const ok = await reviewQuote(parameters)
+    if (!ok) {
+      addToast(<ErrorToast
+        content="Das Zitat konnte nicht bearbeitet werden. Bitte probiere es erneut oder kontaktiere uns."
+        onRetry={async () => await handleReview(parameters)}
+        retry={true}
+      />)
+    } else {
+      // TODO: Update (re-fetch) pending & processed data
+    }
+  }
 
   return (
     <>
@@ -91,7 +110,13 @@ export default function Quotes() {
           },
           {
             children: (
-              <BooleanActionButtonGroup disabled={quote.status === 'NotAllowed'}/>
+              <BooleanActionButtonGroup
+                disabled={quote.status === 'NotAllowed'}
+                onClick={async (allowed) => handleReview({
+                  quoteId: quote.id,
+                  status: allowed ? 'Accepted' : 'Rejected'
+                })}
+              />
             ),
             className: "lg:whitespace-nowrap"
           }
@@ -121,4 +146,15 @@ export default function Quotes() {
       />
     </>
   )
+}
+
+async function reviewQuote({status, quoteId}: {
+  status: Extract<Quote['status'], 'Accepted' | 'Rejected'>
+  quoteId: number
+}): Promise<boolean> {
+  const response = await fetch('/api/v1/quote/review', {
+    body: JSON.stringify({quoteId, status}),
+    method: 'POST'
+  })
+  return response.ok
 }
