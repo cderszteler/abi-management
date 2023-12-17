@@ -22,14 +22,14 @@ function SectionContent({
       <h2>
         {eyebrow && (
           <>
-              <span
-                className={clsx(
-                  'mb-6 block font-display text-base font-semibold',
-                  invert ? 'text-white' : 'text-neutral-950',
-                )}
-              >
-                {eyebrow}
-              </span>
+            <span
+              className={clsx(
+                'mb-6 block font-display text-base font-semibold',
+                invert ? 'text-white' : 'text-neutral-950',
+              )}
+            >
+              {eyebrow}
+            </span>
             <span className="sr-only"> - </span>
           </>
         )}
@@ -42,8 +42,8 @@ function SectionContent({
             invert ? 'text-white' : 'text-neutral-950',
           )}
         >
-            {title}
-          </span>
+          {title}
+        </span>
       </h2>
       {children && (
         <div
