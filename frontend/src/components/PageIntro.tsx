@@ -4,11 +4,22 @@ import {Container} from '@/components/Container'
 import {FadeIn} from '@/components/FadeIn'
 import React from "react";
 
-export function PageHeading({content}: {content: string}) {
+export function PageHeading({content, className, children}: {
+  content: string
+  className?: string
+  children?: React.ReactNode
+}) {
   return (
-    <h1 className="block max-w-5xl text-5xl font-display font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-6xl lg:mt-8">
-      {content}
-    </h1>
+    <div className={className}>
+      <h1 className="block max-w-5xl text-5xl font-display font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-6xl lg:mt-8">
+        {content}
+      </h1>
+      <div
+        className="mt-2 max-w-3xl text-xl text-neutral-600"
+      >
+        {children}
+      </div>
+    </div>
   )
 }
 

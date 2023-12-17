@@ -67,7 +67,9 @@ export default function Quotes() {
 
   return (
     <>
-      <PageHeading content="Zitate"/>
+      <PageHeading content="Zitate" className="lg:mb-8">
+        <p>Verwalte hier deine Zitate!</p>
+      </PageHeading>
       <SectionHeader title="Ausstehende Zitate" smaller={true} className="mt-4">
         <p className="text-base -mt-4">
           Beachte, dass für ein Zitat, das mehre Personen beinhaltet,
