@@ -25,7 +25,7 @@ const statusDescriptions: { [key:string]: { color: Color, name: string, descript
     name: "Ausstehend",
     description: "Dieses Zitat hast du noch nicht bearbeitet"
   },
-  'Denied': {
+  'Rejected': {
     color: "red",
     name: "Abgelehnt",
     description: "Du hast dieses Zitat abgelehnt"
@@ -40,9 +40,9 @@ const statusDescriptions: { [key:string]: { color: Color, name: string, descript
 function createStatus(status: string) {
   const description = statusDescriptions[status]
   return (
-    <Tooltip content={description.description}>
-      <PillWithBorder color={description.color}>
-        {description.name}
+    <Tooltip content={description?.description || "Fehler"}>
+      <PillWithBorder color={description?.color || 'red'}>
+        {description?.name || "Fehler"}
       </PillWithBorder>
     </Tooltip>
   )
