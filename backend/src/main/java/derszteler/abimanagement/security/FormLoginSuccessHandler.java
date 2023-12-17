@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
@@ -23,7 +24,7 @@ public final class FormLoginSuccessHandler implements AuthenticationSuccessHandl
     HttpServletRequest request,
     HttpServletResponse response,
     Authentication authentication
-  ) {
+  ) throws IOException {
     var user = (User) authentication.getPrincipal();
     var token = service.createTokenPair(user);
 
@@ -32,5 +33,6 @@ public final class FormLoginSuccessHandler implements AuthenticationSuccessHandl
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
     response.addCookie(cookie);
+    response.sendRedirect("docs/swagger-ui/index.html#/");
   }
 }
