@@ -4,7 +4,6 @@ import {PageHeading} from "@/components/PageIntro";
 import {QuotesTable} from "@/app/dashboard/quotes/QuotesTable";
 import Link from "next/link";
 
-// TODO: Show message for empty tables
 export default function Quotes() {
   // noinspection HtmlUnknownTarget
   return (
@@ -28,7 +27,6 @@ export default function Quotes() {
         className="mt-16"
         title="Bearbeitete Zitate"
         fallback="Es sind keine bearbeiteten Zitate vorhanden."
-        description=""
         errorMessages={{
           fetch: "Die bearbeiteten Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
         }}

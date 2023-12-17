@@ -155,13 +155,12 @@ function NavigationItem({
   )
 }
 
-// TODO: Update/fix
 function Navigation() {
   return (
     <nav className="mt-px font-display text-5xl font-medium tracking-tight text-white">
       <NavigationRow>
         <NavigationItem href="/dashboard/quotes">Zitate</NavigationItem>
-        <NavigationItem href="/" disabled>Coming soon...</NavigationItem>
+        <NavigationItem href="/dashboard/comments">Kommentare</NavigationItem>
       </NavigationRow>
     </nav>
   )
