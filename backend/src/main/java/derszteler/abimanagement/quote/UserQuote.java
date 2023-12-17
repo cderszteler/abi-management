@@ -30,6 +30,16 @@ public record UserQuote(
   }
 
   @Schema(
+    description = "The context of the quote",
+    example = "said while running",
+    nullable = true
+  )
+  @JsonProperty
+  String context() {
+    return quote().context();
+  }
+
+  @Schema(
     description = """
       The (user-specific) status of a quote. Possible values:
         - 'NotAllowed' if the status of the quote is 'NotAllowed'

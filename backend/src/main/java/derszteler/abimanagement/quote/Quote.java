@@ -37,6 +37,15 @@ public class Quote {
   @Column
   private String content;
 
+  @Schema(
+    description = "The context of the quote",
+    example = "said while running",
+    nullable = true
+  )
+  @JsonProperty
+  @Column
+  private String context;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = true)
   private Status status;

@@ -83,7 +83,8 @@ export default function Quotes() {
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
         rows={isLoading ? [] : data!.quotes.map((quote) => [
           {
-            text: quote.content
+            text: quote.content,
+            children: (<span className="italic block">({quote.context})</span>)
           },
           {
             children: createStatus(quote.status)

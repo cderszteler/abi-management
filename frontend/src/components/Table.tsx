@@ -46,10 +46,7 @@ export function TableWithBorder({
               )}
             >
               {column.name ? column.name : ""}
-              {column.screenReader
-                ? <span className="sr-only">{column.screenReader}</span>
-                : <></>
-              }
+              {column.screenReader && <span className="sr-only">{column.screenReader}</span>}
             </th>
           )}
         </tr>
@@ -132,6 +129,7 @@ function TableColumn({text, side, separator = true, ...properties}: TableColumn 
     >
       {text && (
         <div className="font-medium text-gray-900 whitespace-pre-line">
+          {properties.children}
           {text}
         </div>
       )}
