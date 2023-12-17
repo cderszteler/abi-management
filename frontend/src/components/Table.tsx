@@ -17,12 +17,14 @@ const loadingRows = 2
 export function TableWithBorder({
   separator,
   loading,
+  fallback,
   headers,
   loadingRow,
   rows
 }: {
   separator: boolean
   loading?: boolean
+  fallback?: string
   headers: TableHeader[]
   rows: TableColumn[][]
   loadingRow: Omit<TableColumn, 'text'>[]
@@ -74,6 +76,16 @@ export function TableWithBorder({
                 })
               )}
             </TableRow>
+          )}
+          {!loading && rows.length === 0 && fallback && (
+            <tr>
+              <td
+                colSpan={headers.length}
+                className="py-2 text-neutral-600 text-center italic"
+              >
+                {fallback}
+              </td>
+            </tr>
           )}
         </tbody>
       </table>

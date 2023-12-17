@@ -18,6 +18,7 @@ export default function Quotes() {
           alle Personen diesem Zitat zustimmen müssen,
           damit dieses gedruckt werden kann.
         "
+        fallback="Es sind keine ausstehende Zitate vorhanden."
         errorMessages={{
           fetch: "Die ausstehenden Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
         }}
@@ -26,6 +27,7 @@ export default function Quotes() {
       <QuotesTable
         className="mt-16"
         title="Bearbeitete Zitate"
+        fallback="Es sind keine bearbeiteten Zitate vorhanden."
         description=""
         errorMessages={{
           fetch: "Die bearbeiteten Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
@@ -35,6 +37,7 @@ export default function Quotes() {
       <QuotesTable
         className="mt-16 pb-12"
         title="Nicht verfügbare Zitate"
+        fallback="Es sind keine nicht verfügbaren Zitate vorhanden."
         description={
           <>
             Diese Zitate wurden von uns als unangemessen gekennzeichnet,

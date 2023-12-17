@@ -40,12 +40,14 @@ export function QuotesTable(
 {
   title,
   description,
+  fallback,
   errorMessages,
   className,
   filter
 }: {
   title: string
   description: React.ReactNode
+  fallback: string
   errorMessages: {fetch: string}
   className?: string
   filter: 'Pending' | 'Processed' | 'NotAllowed'
@@ -94,6 +96,7 @@ export function QuotesTable(
       <TableWithBorder
         loading={loading}
         separator={true}
+        fallback={fallback}
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
         rows={loading ? [] : data!.quotes.map((quote) => [
           {
