@@ -130,12 +130,14 @@ export function CommentsTable(
           }
         ]}
       />
-      <Pagination
-        page={page}
-        setPage={setPage}
-        total={loading ? 1 : Math.ceil(data!.total/20)}
-        className="mt-8"
-      />
+      {page > 1 && (
+        <Pagination
+          page={page}
+          setPage={setPage}
+          total={loading ? 1 : Math.ceil(data!.total/20)}
+          className="mt-8"
+        />
+      )}
     </div>
   )
 }
