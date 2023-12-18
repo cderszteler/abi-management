@@ -11,4 +11,4 @@ WORKDIR /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
 
 EXPOSE 5000
-ENTRYPOINT ["java", "-jar","/app/spring-boot-application.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/spring-boot-application.jar"]
