@@ -5,8 +5,8 @@ import {RootLayout} from '@/components/RootLayout'
 import '@/styles/tailwind.css'
 import React from "react";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import SafeSessionProvider from "@/components/SafeSessionProvider";
+import {authOptions} from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: {

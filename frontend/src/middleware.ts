@@ -1,7 +1,6 @@
 import {getToken, JWT} from "next-auth/jwt";
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
-import {TEMPORARY_REDIRECT_STATUS} from "next/constants";
 import {backendUrl} from "@/lib/backend";
 
 export const config = {
@@ -17,7 +16,7 @@ export async function middleware(request: NextRequest) {
   if (isValidApiDestination(request.nextUrl.pathname)) {
     return await handleApiRequest(request, session)
   } else if (!session) {
-    return NextResponse.redirect(new URL("/auth/login", request.url), TEMPORARY_REDIRECT_STATUS)
+    return NextResponse.redirect(new URL("/auth/login", request.url), { status: 307 })
   }
 
   return NextResponse.next()
