@@ -36,8 +36,9 @@ public final class AuthenticationRestEndpointTest {
 
   private static final String password = "D&Uy=(P@BaApA&fL";
   private static final User user = User.builder()
-    .username("christoph.derszteler")
     .password(new BCryptPasswordEncoder().encode(password))
+    .displayName("Christoph Derszteler")
+    .username("christoph.derszteler")
     .build();
 
   @BeforeAll
@@ -83,9 +84,9 @@ public final class AuthenticationRestEndpointTest {
       "authentication was not successful"
     );
 
-    var tokenPair = mapper.readValue(response.getContentAsString(), TokenPair.class);
-    Assertions.assertNotNull(tokenPair, "received no response");
-    Assertions.assertNotNull(tokenPair.accessToken(), "received no access token");
-    Assertions.assertNotNull(tokenPair.refreshToken(), "received no refresh token");
+    var authentication = mapper.readValue(response.getContentAsString(), AuthenticationResponse.class);
+    Assertions.assertNotNull(authentication, "received no response");
+    Assertions.assertNotNull(authentication.tokens().accessToken(), "received no access token");
+    Assertions.assertNotNull(authentication.tokens().refreshToken(), "received no refresh token");
   }
 }

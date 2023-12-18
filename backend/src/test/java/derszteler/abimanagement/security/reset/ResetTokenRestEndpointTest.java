@@ -40,12 +40,14 @@ public final class ResetTokenRestEndpointTest {
 
   private static final UUID resetToken = UUID.randomUUID();
   private static final User user = User.builder()
-    .username("christoph.derszteler")
     .password(new BCryptPasswordEncoder().encode("D&Uy=(P@BaApA&fL"))
+    .displayName("Christoph Derszteler")
+    .username("christoph.derszteler")
     .build();
 
   @BeforeAll
   void setupTokens() {
+    userRepository.deleteAll();
     var user = userRepository.save(ResetTokenRestEndpointTest.user);
 
     repository.save(ResetToken.builder()
@@ -57,18 +59,22 @@ public final class ResetTokenRestEndpointTest {
   }
 
   private static final String resetPath = "/api/v1/auth/reset";
+  private static final String newPassword = user.password();
 
   @Order(1)
   @Test
   void testInvalidToken() throws Exception {
     mockMvc.perform(post(resetPath)
       .contentType("application/json")
-      .content(mapper.writeValueAsString(new ResetRequest("invalid")))
+      .content(mapper.writeValueAsString(new ResetRequest("invalid", newPassword)))
     ).andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     mockMvc.perform(post(resetPath)
       .contentType("application/json")
-      .content(mapper.writeValueAsString(new ResetRequest(UUID.randomUUID().toString())))
+      .content(mapper.writeValueAsString(new ResetRequest(
+        UUID.randomUUID().toString(),
+        newPassword
+      )))
     ).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -77,7 +83,10 @@ public final class ResetTokenRestEndpointTest {
   void testValidToken() throws Exception {
     mockMvc.perform(post(resetPath)
       .contentType("application/json")
-      .content(mapper.writeValueAsString(new ResetRequest(resetToken.toString())))
+      .content(mapper.writeValueAsString(new ResetRequest(
+        resetToken.toString(),
+        newPassword
+      )))
     ).andExpect(MockMvcResultMatchers.status().isOk());
 
     var user = userRepository.findByUsername(ResetTokenRestEndpointTest.user.username())
