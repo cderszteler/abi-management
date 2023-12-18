@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  backend:
+    image: qetz/abi-management-backend
+    restart: always
+    pull_policy: always
+    env_file:
+      - .env.backend.prod
+  frontend:
+    image: qetz/abi-management-frontend
+    restart: always
+    pull_policy: always
+    env_file:
+      - .env.frontend.prod
+    ports:
+      - '127.0.0.1:3000:3000'
+  database:
+    image: postgres
+    ports:
+      - '127.0.0.1:5432:5432'
+    environment:
+      POSTGRES_USER: 'abi-management'
+      POSTGRES_PASSWORD: 'jqduv6zNgV2KUSwf'
+      POSTGRES_DATABASE: 'abi-management'
+      POSTGRES_SUPER_PASSWORD: '}GkUNKJfC#4kC<B>'
+
+volumes:
+  database:
