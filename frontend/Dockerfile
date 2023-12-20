@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:19-alpine AS deps
+FROM node:21-alpine3.19 AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 
@@ -14,9 +14,8 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-
 # Rebuild the source code only when needed
-FROM node:21-alpine AS builder
+FROM node:21-alpine3.19 AS builder
 
 RUN npm install -g pnpm
 
@@ -32,7 +31,7 @@ COPY . .
 RUN pnpm build
 
 # Production image, copy all the files and run next
-FROM node:19-alpine AS runner
+FROM node:21-alpine3.19 AS runner
 RUN apk update && apk upgrade && apk add --no-cache ffmpeg
 
 WORKDIR /app
