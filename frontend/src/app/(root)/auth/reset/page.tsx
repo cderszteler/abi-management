@@ -68,24 +68,20 @@ export default function ResetForm() {
   const [first, setFirst] = useState('')
   const [second, setSecond] = useState('')
   const [show, setShow] = useState(false)
-  const [invalid, setInvalid] = useState(false)
-
-  useEffect(() => {
-    setInvalid(false)
-  }, [first, second]);
-
+  const [invalid, setInvalid] = useState<string | null>(null)
   const [token, disabled] = useMemo(() => {
     const token = params.get("token")
     return [token, !validToken(token)]
   }, [params])
 
-    useEffect(() => {
-    setInvalid(false)
-  }, [first, setFirst]);
+  useEffect(() => {
+    setInvalid(null)
+  }, [first, second]);
 
   const reset = async () => {
-    if (first !== second) {
-      setInvalid(true)
+    const invalid = passwordsInvalid(first, second)
+    if (invalid) {
+      setInvalid(reasonDescriptions[invalid])
       return
     }
     const response = await fetch('/api/v1/auth/reset', {
@@ -126,7 +122,7 @@ export default function ResetForm() {
           label="Passwort"
           autoComplete="new-password"
           show={show}
-          invalid={invalid}
+          invalid={!!invalid}
           disabled={disabled}
           password={first}
           setPassword={setFirst}
@@ -137,18 +133,20 @@ export default function ResetForm() {
           label="Passwort wiederholen"
           autoComplete="new-password"
           show={show}
-          invalid={invalid}
+          invalid={!!invalid}
           disabled={disabled}
           password={second}
           setPassword={setSecond}
         />
 
-        <p className={clsx(
-          "mt-2 text-sm text-red-600",
-          invalid ? "" : "hidden"
-        )}>
-          Die Passwörter stimmen nicht überein.
-        </p>
+        {invalid && (
+          <p className={clsx(
+            "mt-2 text-sm text-red-600",
+            invalid ? "" : "hidden"
+          )}>
+            {invalid}
+          </p>
+        )}
 
         <div>
           <button
@@ -156,7 +154,7 @@ export default function ResetForm() {
               "flex w-full justify-center rounded-full bg-neutral-950 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm transition hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-750",
               "disabled:cursor-not-allowed disabled:bg-neutral-950/40"
             )}
-            disabled={disabled || invalid}
+            disabled={disabled || !!invalid || !first || !second}
             type="submit"
             onClick={async event => {
               event.preventDefault()
@@ -169,4 +167,24 @@ export default function ResetForm() {
       </form>
     </Card>
   )
+}
+
+type InvalidReason = 'no-match' | 'too-short' | 'too-long'
+
+const reasonDescriptions: { [key in InvalidReason]: string } = {
+  'no-match': "Die Passwörter stimmen nicht überein.",
+  'too-short': "Das Passwort muss mindestens 8 Zeichen lang sein.",
+  'too-long': "Das Passwort darf nicht länger als 100 Zeichen lang sein."
+}
+
+function passwordsInvalid(first: string, second: string): InvalidReason | null {
+  if (first !== second) {
+    return 'no-match'
+  }
+  if (first.length < 8) {
+    return 'too-short'
+  } else if (first.length > 100) {
+    return 'too-long'
+  }
+  return null
 }
