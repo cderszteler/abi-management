@@ -16,7 +16,7 @@ function ContactDetails() {
       </h2>
       <p className="mt-6 text-base text-neutral-600">
         Aktuell sind wur nur per Email zu erreichen. Andernfalls kontaktiere
-        uns bitte, wie wir mit dir Kontakt aufgenommen haben.
+        uns bitte so, wie wir mit dir Kontakt aufgenommen haben.
       </p>
       <dl className="mt-10 grid grid-cols-1 gap-8 text-sm sm:grid-cols-2">
         {[
