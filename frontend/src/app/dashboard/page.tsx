@@ -36,11 +36,11 @@ export default async function Dashboard() {
             uns einfach kontaktieren.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button className="px-6 py-2">
-              <Link href="/dashboard/quotes">
+            <Link className="w-full h-full" href="/dashboard/quotes">
+              <Button className="px-6 py-2">
                 Zitate
-              </Link>
-            </Button>
+              </Button>
+            </Link>
             <Link
               href="/contact"
               className="text-sm font-semibold leading-6 text-gray-900"
