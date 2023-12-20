@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "@headlessui/react": "^1.7.17",
-    "@heroicons/react": "^2.0.18",
+    "@heroicons/react": "^2.1.1",
     "@leafac/rehype-shiki": "^2.2.1",
     "@mdx-js/loader": "^3.0.0",
     "@mdx-js/react": "^3.0.0",
@@ -46,7 +46,7 @@
     "remark-unwrap-images": "^4.0.0",
     "shiki": "^0.14.7",
     "swr": "^2.2.4",
-    "tailwindcss": "^3.3.6",
+    "tailwindcss": "^3.4.0",
     "typescript": "5.3.3",
     "unified-conditional": "0.0.2"
   },
