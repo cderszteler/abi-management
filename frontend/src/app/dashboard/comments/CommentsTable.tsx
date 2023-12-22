@@ -105,7 +105,7 @@ export function CommentsTable(
             children: (
               <BooleanActionButtonGroup
                 onClick={async (allowed) => handleReview({
-                  commentId: comment.id,
+                  id: comment.id,
                   status: allowed ? 'Accepted' : 'Rejected'
                 })}
               />
@@ -153,12 +153,12 @@ function createStatus(status: string) {
   )
 }
 
-async function reviewComment({status, commentId}: {
+async function reviewComment({status, id}: {
   status: Extract<Comment['status'], 'Accepted' | 'Rejected'>
-  commentId: number
+  id: number
 }): Promise<boolean> {
-  const response = await fetch('/api/v1/comment/review', {
-    body: JSON.stringify({commentId, status}),
+  const response = await fetch(`/api/v1/comment/${id}/review`, {
+    body: JSON.stringify({status}),
     method: 'POST'
   })
   return response.ok

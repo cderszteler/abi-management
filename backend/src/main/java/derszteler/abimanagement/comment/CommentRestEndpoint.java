@@ -93,6 +93,12 @@ public final class CommentRestEndpoint {
       This endpoint is used to review a user's comment. Reviews can be done on
       every kind of comment (in comparison to quotes).
       """,
+    parameters = @Parameter(
+      description = "The id of the comment to be reviewed.",
+      example = "1",
+      required = true,
+      name = "id"
+    ),
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       content = @Content(schema = @Schema(implementation = ReviewQuoteRequest.class)),
       description = "The status (review) the user wants give a comment",
@@ -116,16 +122,19 @@ public final class CommentRestEndpoint {
       )
     }
   )
-  @PostMapping(value = "/comment/review", produces = "application/json")
+  @PostMapping(value = "/comment/{id}/review", produces = "application/json")
   public ResponseEntity<Void> review(
     @AuthenticationPrincipal User user,
-    @RequestBody ReviewCommentRequest request
+    @RequestBody ReviewCommentRequest request,
+    @PathVariable int id
   ) {
-    if (!request.valid()) {
+    if (id <= 0) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid id");
+    } else if (!request.valid()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid request body");
     }
 
-    service.review(user, request);
+    service.review(user, id, request);
     return ResponseEntity.ok().build();
   }
 }

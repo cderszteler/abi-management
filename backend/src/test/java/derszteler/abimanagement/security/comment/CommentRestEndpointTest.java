@@ -109,30 +109,30 @@ public final class CommentRestEndpointTest {
     Assertions.assertEquals(0, emptyResult.comments().size(), "empty page has comments");
   }
 
-  private static final String reviewPath = "/api/v1/comment/review";
+  private static final String reviewPath = "/api/v1/comment/%d/review";
 
   @Order(4)
   @Test
   void testReview() throws Exception {
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewCommentRequest(1, Comment.Status.Pending)))
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Pending)))
       )
       .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(10))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewCommentRequest(10, Comment.Status.Rejected)))
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewCommentRequest(1, Comment.Status.Accepted)))
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Accepted)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(3))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewCommentRequest(3, Comment.Status.Accepted)))
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Accepted)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
   }

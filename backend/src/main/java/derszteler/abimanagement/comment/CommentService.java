@@ -29,8 +29,8 @@ public final class CommentService {
     return new ListCommentsResponse(comments, total);
   }
 
-  public void review(User user, ReviewCommentRequest request) {
-    var comment = repository.findById(request.commentId())
+  public void review(User user, int id, ReviewCommentRequest request) {
+    var comment = repository.findById(id)
       .filter(existing -> existing.user().equals(user))
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
