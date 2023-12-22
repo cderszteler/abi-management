@@ -16,7 +16,9 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     from Quote quote
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
-    where author = :user and review is null and quote.status is null
+    where author = :user
+      and quote.status is null
+      and (review is null or review.status = derszteler.abimanagement.quote.review.QuoteReview$Status.Pending)
     order by quote.createdAt
     """
   )
@@ -27,7 +29,9 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     from Quote quote
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
-    where author = :user and review is null and quote.status is null
+    where author = :user
+      and quote.status is null
+      and (review is null or review.status = derszteler.abimanagement.quote.review.QuoteReview$Status.Pending)
     """
   )
   int countPendingQuotes(User user);
@@ -40,7 +44,10 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     from Quote quote
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
-    where author = :user and review is not null
+    where author = :user
+      and quote.status is null
+      and review is not null
+      and review.status != derszteler.abimanagement.quote.review.QuoteReview$Status.Pending
     order by quote.createdAt
     """
   )
@@ -51,7 +58,10 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
     from Quote quote
     join quote.authors as author
     left join QuoteReview review on review.quote = quote and review.user = :user
-    where author = :user and review is not null
+    where author = :user
+      and quote.status is null
+      and review is not null
+      and review.status != derszteler.abimanagement.quote.review.QuoteReview$Status.Pending
     """
   )
   int countProcessedQuotes(User user);
