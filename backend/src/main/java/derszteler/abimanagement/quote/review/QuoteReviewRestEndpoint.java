@@ -3,6 +3,7 @@ package derszteler.abimanagement.quote.review;
 import derszteler.abimanagement.ErrorSchema;
 import derszteler.abimanagement.user.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,15 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @Tag(name = "Quotes")
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
-@RequestMapping("/api/v1/quote/review")
+@RequestMapping("/api/v1/quote/{id}/review")
 @RestController
 public final class QuoteReviewRestEndpoint {
   private final QuoteReviewService service;
@@ -32,6 +30,12 @@ public final class QuoteReviewRestEndpoint {
       This endpoint is used to review a user's quote. Reviews can be done on
       quotes that have not the status 'NotAllowed'.
       """,
+    parameters = @Parameter(
+      description = "The id of the quote to be reviewed.",
+      example = "1",
+      required = true,
+      name = "id"
+    ),
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       content = @Content(schema = @Schema(implementation = ReviewQuoteRequest.class)),
       description = "The status (review) the user wants give a quote",
@@ -63,13 +67,16 @@ public final class QuoteReviewRestEndpoint {
   @PostMapping(produces = "application/json")
   public ResponseEntity<Void> review(
     @AuthenticationPrincipal User user,
-    @RequestBody ReviewQuoteRequest request
+    @RequestBody ReviewQuoteRequest request,
+    @PathVariable int id
   ) {
-    if (!request.valid()) {
+    if (id <= 0) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid id");
+    } else if (!request.valid()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid request body");
     }
 
-    service.review(user, request);
+    service.review(user, id, request);
     return ResponseEntity.ok().build();
   }
 }

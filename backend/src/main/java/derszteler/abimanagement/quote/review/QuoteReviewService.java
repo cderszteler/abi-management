@@ -16,8 +16,8 @@ public final class QuoteReviewService {
   private final QuoteReviewRepository repository;
   private final QuoteRepository quoteRepository;
 
-  public void review(User user, ReviewQuoteRequest request) {
-    var quote = quoteRepository.findById(request.quoteId())
+  public void review(User user, int id, ReviewQuoteRequest request) {
+    var quote = quoteRepository.findById(id)
       .filter(existing -> existing.authors().contains(user))
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -25,7 +25,7 @@ public final class QuoteReviewService {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "quote is not allowed");
     }
 
-    var review = repository.findByQuoteAndUser(request.quoteId(), user)
+    var review = repository.findByQuoteAndUser(id, user)
       .orElseGet(() -> QuoteReview.builder()
         .quote(quote)
         .user(user)

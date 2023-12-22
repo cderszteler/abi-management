@@ -114,7 +114,7 @@ export function QuotesTable(
               <BooleanActionButtonGroup
                 disabled={quote.status === 'NotAllowed'}
                 onClick={async (allowed) => handleReview({
-                  quoteId: quote.id,
+                  id: quote.id,
                   status: allowed ? 'Accepted' : 'Rejected'
                 })}
               />
@@ -162,12 +162,12 @@ function createStatus(status: string) {
   )
 }
 
-async function reviewQuote({status, quoteId}: {
+async function reviewQuote({status, id}: {
   status: Extract<Quote['status'], 'Accepted' | 'Rejected'>
-  quoteId: number
+  id: number
 }): Promise<boolean> {
-  const response = await fetch('/api/v1/quote/review', {
-    body: JSON.stringify({quoteId, status}),
+  const response = await fetch(`/api/v1/quote/${id}/review`, {
+    body: JSON.stringify({status}),
     method: 'POST'
   })
   return response.ok

@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import static derszteler.abimanagement.quote.review.QuoteReview.Status.Pending;
 
 public record ReviewQuoteRequest(
-  @Schema(description = "The id of the quote to be reviewed", example = "1")
-  int quoteId,
   @Schema(
     description = """
       The status (review) the quote should get. Note,
@@ -18,6 +16,6 @@ public record ReviewQuoteRequest(
   Status status
 ) {
   boolean valid() {
-    return quoteId > 0 && status != Pending;
+    return status != Pending;
   }
 }

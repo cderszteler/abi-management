@@ -39,34 +39,34 @@ public final class QuoteReviewRestEndpointTest {
   private final ObjectMapper mapper;
   private final MockMvc mvc;
 
-  private static final String reviewPath = "/api/v1/quote/review";
+  private static final String reviewPath = "/api/v1/quote/%d/review";
 
   @Test
   void testReview() throws Exception {
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewQuoteRequest(1, QuoteReview.Status.Pending)))
+        .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Pending)))
       )
       .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(4))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewQuoteRequest(4, QuoteReview.Status.Rejected)))
+        .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isForbidden());
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(10))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewQuoteRequest(10, QuoteReview.Status.Rejected)))
+        .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewQuoteRequest(1, QuoteReview.Status.Accepted)))
+        .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Accepted)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
-    mvc.perform(post(reviewPath)
+    mvc.perform(post(reviewPath.formatted(2))
         .contentType("application/json")
-        .content(mapper.writeValueAsString(new ReviewQuoteRequest(2, QuoteReview.Status.Rejected)))
+        .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
   }
