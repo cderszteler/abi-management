@@ -2,8 +2,10 @@ package derszteler.abimanagement.security.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import derszteler.abimanagement.Application;
+import derszteler.abimanagement.comment.Comment;
 import derszteler.abimanagement.comment.CommentService;
 import derszteler.abimanagement.comment.ListCommentsResponse;
+import derszteler.abimanagement.comment.ReviewCommentRequest;
 import derszteler.abimanagement.security.AuthenticationConfiguration;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -106,5 +109,31 @@ public final class CommentRestEndpointTest {
     Assertions.assertEquals(0, emptyResult.comments().size(), "empty page has comments");
   }
 
-  // TODO: Test review
+  private static final String reviewPath = "/api/v1/comment/review";
+
+  @Order(4)
+  @Test
+  void testReview() throws Exception {
+    mvc.perform(post(reviewPath)
+        .contentType("application/json")
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(1, Comment.Status.Pending)))
+      )
+      .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    mvc.perform(post(reviewPath)
+        .contentType("application/json")
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(10, Comment.Status.Rejected)))
+      )
+      .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    mvc.perform(post(reviewPath)
+        .contentType("application/json")
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(1, Comment.Status.Accepted)))
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk());
+    mvc.perform(post(reviewPath)
+        .contentType("application/json")
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(3, Comment.Status.Accepted)))
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 }
