@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   description: 'Wir bemühen uns das beste Erlebnis für deine Abiturkonfiguration zu ermöglichen.',
 }
 
-export default async function Home() {
+export default function Home() {
   return (
     <>
       <Container className="mt-24 sm:mt-32 md:mt-56">

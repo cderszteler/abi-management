@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Impressum'
 }
 
-export default async function Imprint() {
+export default function Imprint() {
   return (
     <>
       <PageIntro title="Impressum">
