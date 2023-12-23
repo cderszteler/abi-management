@@ -46,6 +46,13 @@ public class Quote {
   @Column
   private String context;
 
+  @Schema(
+    description = "The status **of the quote**. " +
+      "This is not the status of a review of this quote.",
+    example = "NotAllowed",
+    nullable = true
+  )
+  @JsonProperty
   @Enumerated(EnumType.STRING)
   @Column(nullable = true)
   private Status status;

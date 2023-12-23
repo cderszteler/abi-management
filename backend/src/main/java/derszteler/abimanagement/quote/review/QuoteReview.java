@@ -28,6 +28,14 @@ import java.time.LocalDateTime;
 )
 @Entity
 public class QuoteReview {
+  public static QuoteReview emptyReviewForQuote(User user, Quote quote) {
+    return QuoteReview.builder()
+      .status(Status.Pending)
+      .quote(quote)
+      .user(user)
+      .build();
+  }
+
   @Schema(description = "The unique id of a quote", example = "1")
   @JsonProperty
   @GenericGenerator(name = "increment", type = IncrementGenerator.class)
