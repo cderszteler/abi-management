@@ -2,6 +2,7 @@ package derszteler.abimanagement.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,13 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.id.IncrementGenerator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+
+import static derszteler.abimanagement.user.User.Role.Default;
 
 @Accessors(fluent = true)
 @AllArgsConstructor
@@ -35,7 +39,6 @@ public final class User implements UserDetails {
 
   @Schema(description = "The unique username of a user", example = "admin")
   @Column(nullable = false, unique = true)
-  @JsonProperty
   private String username;
 
   @JsonIgnore
@@ -47,15 +50,27 @@ public final class User implements UserDetails {
   private String displayName;
 
   @Schema(description = "Boolean if the user is disabled", example = "false")
-  @JsonProperty
   @ColumnDefault("false")
   @Column
   private boolean disabled;
 
+  @Schema(description = "Roles the user owns", example = "[\"Default\", \"Admin\"]")
+  @JsonProperty
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "user_roles")
+  @Enumerated(EnumType.STRING)
+  @Builder.Default
+  private Collection<Role> roles = Lists.newArrayList(Default);
+
   @JsonIgnore
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of();
+    if (roles == null || roles.isEmpty()) {
+      return List.of();
+    }
+    return roles.stream()
+      .map(role -> new SimpleGrantedAuthority(role.toString()))
+      .toList();
   }
 
   @JsonIgnore
@@ -92,5 +107,11 @@ public final class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return !disabled;
+  }
+
+  public enum Role {
+    Default,
+    Moderator,
+    Admin
   }
 }
