@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentityGenerator;
+import org.hibernate.id.IncrementGenerator;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 public class Comment {
   @Schema(description = "The unique id of a comment", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "increment", type = IdentityGenerator.class)
+  @GenericGenerator(name = "increment", type = IncrementGenerator.class)
   @GeneratedValue(generator = "increment")
   @Id
   private Integer id;

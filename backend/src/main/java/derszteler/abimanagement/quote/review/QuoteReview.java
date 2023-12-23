@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentityGenerator;
+import org.hibernate.id.IncrementGenerator;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 public class QuoteReview {
   @Schema(description = "The unique id of a quote", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "increment", type = IdentityGenerator.class)
+  @GenericGenerator(name = "increment", type = IncrementGenerator.class)
   @GeneratedValue(generator = "increment")
   @Id
   private Integer id;
@@ -40,12 +40,12 @@ public class QuoteReview {
   private Status status;
 
   @ManyToOne
-  @JoinColumn(nullable = false, name = "user_id")
-  private User user;
-
-  @ManyToOne
   @JoinColumn(nullable = false, name = "quote_id")
   private Quote quote;
+
+  @ManyToOne
+  @JoinColumn(nullable = false, name = "user_id")
+  private User user;
 
   @Builder.Default
   @CreationTimestamp

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentityGenerator;
+import org.hibernate.id.IncrementGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,7 +28,7 @@ import java.util.List;
 public final class User implements UserDetails {
   @Schema(description = "The unique id of a user", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "increment", type = IdentityGenerator.class)
+  @GenericGenerator(name = "increment", type = IncrementGenerator.class)
   @GeneratedValue(generator = "increment")
   @Id
   private Integer id;
