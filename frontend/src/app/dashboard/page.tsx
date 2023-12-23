@@ -36,7 +36,7 @@ export default async function Dashboard() {
             uns einfach kontaktieren.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link className="w-full h-full" href="/dashboard/quotes">
+            <Link href="/dashboard/quotes">
               <Button className="px-6 py-2">
                 Zitate
               </Button>
