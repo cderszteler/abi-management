@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static derszteler.abimanagement.user.User.Role.Default;
 
@@ -61,6 +62,24 @@ public final class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private Collection<Role> roles = Lists.newArrayList(Default);
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == this) {
+      return true;
+    }
+    if (!(object instanceof User)) {
+      return false;
+    }
+    //noinspection PatternVariableCanBeUsed
+    var user = (User) object;
+    return id.equals(user.id);
+  }
 
   @JsonIgnore
   @Override

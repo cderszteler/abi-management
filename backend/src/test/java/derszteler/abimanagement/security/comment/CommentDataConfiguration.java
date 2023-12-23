@@ -24,15 +24,15 @@ public final class CommentDataConfiguration {
         .user(primaryUser)
         .build(),
       Comment.builder()
-      .status(Comment.Status.Accepted)
-      .content("I like you <3")
-      .user(primaryUser)
-      .build(),
-    Comment.builder()
-      .content("I don't like your muffins!")
-      .status(Comment.Status.Rejected)
-      .user(primaryUser)
-      .build()
+        .status(Comment.Status.Accepted)
+        .content("I like you <3")
+        .user(primaryUser)
+        .build(),
+      Comment.builder()
+        .content("I don't like your muffins!")
+        .status(Comment.Status.Rejected)
+        .user(primaryUser)
+        .build()
     );
 
     repository.saveAll(reviews);
