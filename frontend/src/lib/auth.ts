@@ -5,19 +5,18 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import {backendUrl} from "@/lib/backend";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import {NextAuthOptions, User} from "next-auth";
+import {
+  hasTokenExpired,
+  refreshAccessToken,
+  RefreshedAccessToken,
+  TokenPair
+} from "@/lib/refresh";
 
 export type Authentication = {
   tokens: TokenPair
   user: {}
   error?: string
 }
-
-export type TokenPair = {
-  accessToken: string
-  refreshToken?: string | undefined
-}
-
-const oneHourInSeconds = 60 * 60
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -91,12 +90,10 @@ export const authOptions: NextAuthOptions = {
           ...user
         }
       }
-      const decoded = jwt.decode(authentication.tokens.accessToken as string, {json: true})
-      const expiredTimestamp = new Date((decoded?.exp || Date.now() - oneHourInSeconds) * 1000)
 
-      const newAccessToken: RefreshedAccessToken = await (expiredTimestamp <= new Date()
-          ? async () => await refreshAccessToken(authentication.tokens.refreshToken as string)
-          : () => ({...authentication})
+      const newAccessToken: RefreshedAccessToken = await (hasTokenExpired(authentication.tokens.accessToken as string)
+        ? async () => await refreshAccessToken(authentication.tokens.refreshToken as string)
+        : () => ({...authentication})
       )()
       return {
         ...authentication,
@@ -120,35 +117,16 @@ export const authOptions: NextAuthOptions = {
     },
   },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/auth/login'
   },
   debug: process.env.NODE_ENV === 'development',
-}
-
-type RefreshedAccessToken = {tokens: TokenPair} | {error: string}
-
-async function refreshAccessToken(refreshToken: string): Promise<RefreshedAccessToken> {
-  const response = await fetch(`${backendUrl}/api/v1/auth/refresh`, {
-    method: 'POST',
-    body: JSON.stringify({refreshToken: refreshToken}),
-    headers: {
-      accept: '*/*', 'Content-Type': 'application/json',
-    }
-  })
-  const result = await response.json()
-
-  if (!response.ok) {
-    return {
-      error: result.message
-    }
-  }
-  return {
-    tokens: result
-  }
 }
 
 export async function getSession() {
