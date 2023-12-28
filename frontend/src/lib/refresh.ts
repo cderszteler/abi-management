@@ -12,9 +12,6 @@ export function hasTokenExpired(token: string) {
   const decoded = jwt.decode(token, {json: true})
   const expiredTimestamp = new Date((decoded?.exp || Date.now() - oneHourInSeconds) * 1000)
 
-  console.log("expired Timestamp: " + expiredTimestamp)
-  console.log("refresh? " + (expiredTimestamp <= new Date()))
-
   return expiredTimestamp <= new Date()
 }
 
