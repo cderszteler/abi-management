@@ -46,6 +46,7 @@ public final class User implements UserDetails {
   @Column(nullable = false)
   private String password;
 
+  @Schema(description = "The display name of the user", example = "Christoph Derszteler")
   @JsonProperty
   @Column(nullable = false)
   private String displayName;
