@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
       },
     })
 
-    response.cookies.set(sessionCookie, newSession)
+    response.cookies.set(sessionCookie, newSession, {secure: true})
   }
 
   return response
