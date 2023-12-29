@@ -1,10 +1,8 @@
-import {useSession} from "next-auth/react"
-import {useMemo} from "react"
 import {getServerSession} from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {backendUrl} from "@/lib/backend";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {NextAuthOptions, User} from "next-auth";
+import {NextAuthOptions} from "next-auth";
 import {
   hasTokenExpired,
   refreshAccessToken,
@@ -12,9 +10,15 @@ import {
   TokenPair
 } from "@/lib/refresh";
 
+export type User = {
+  id: number,
+  displayName: string,
+  roles: ('Default' | 'Moderator' | 'Admin')[]
+}
+
 export type Authentication = {
   tokens: TokenPair
-  user: {}
+  user: User
   error?: string
 }
 
@@ -131,15 +135,4 @@ export const authOptions: NextAuthOptions = {
 
 export async function getSession() {
   return await getServerSession(authOptions)
-}
-
-export function useDisplayName(): string | null {
-  const {data: session} = useSession()
-  return useMemo(() => {
-    if (session) {
-      // @ts-ignore
-      return session?.user?.displayName
-    }
-    return null
-  }, [session])
 }

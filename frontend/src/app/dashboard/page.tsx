@@ -1,9 +1,9 @@
 import {Metadata} from "next"
-import {getSession} from "@/lib/auth";
 import {GridPattern} from "@/components/GridPattern";
 import Link from "next/link";
 import {Button} from "@/components/Button";
 import {ArrowRightIcon} from "@heroicons/react/24/outline";
+import {DashboardDisplayName} from "@/app/dashboard/DashboardDisplayName";
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -11,11 +11,6 @@ export const metadata: Metadata = {
 }
 
 export default async function Dashboard() {
-  const session = await getSession()
-  // @ts-ignore
-  const displayName = session?.user?.displayName
-
-  // noinspection HtmlUnknownTarget
   return (
     <>
       <GridPattern
@@ -28,7 +23,9 @@ export default async function Dashboard() {
           <h1
             className="text-4xl font-bold tracking-tight sm:text-6xl"
           >
-            {`Ahoi, ${displayName}!`}
+            Ahoi,&nbsp;
+            <DashboardDisplayName/>
+            !
           </h1>
           <p className="mt-6 text-lg leading-8 text-neutral-600">
             Du hast es hier hin geschafft, sehr gut! Fang doch gleich an
