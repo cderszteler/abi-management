@@ -10,10 +10,12 @@ import {
   TokenPair
 } from "@/lib/refresh";
 
+export type Role = 'Default' | 'Moderator' | 'Admin'
+
 export type User = {
   id: number,
   displayName: string,
-  roles: ('Default' | 'Moderator' | 'Admin')[]
+  roles: Role[]
 }
 
 export type Authentication = {
@@ -135,4 +137,11 @@ export const authOptions: NextAuthOptions = {
 
 export async function getSession() {
   return await getServerSession(authOptions)
+}
+
+export function hasRoles(roles: Role[] | undefined, check: Role[]): boolean {
+  if (!roles) {
+    return false
+  }
+  return roles.filter(role => check.includes(role)).length > 0
 }

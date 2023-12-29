@@ -15,6 +15,7 @@ import {
   ChatBubbleOvalLeftEllipsisIcon,
   HomeIcon,
   PencilSquareIcon,
+  PlusCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -25,7 +26,7 @@ import Dropdown, {DropdownDirection} from "@/components/Dropdown";
 import {signOut} from 'next-auth/react'
 import {UserIcon} from '@heroicons/react/20/solid'
 import {Container} from "@/components/Container";
-import {User} from "@/lib/auth";
+import {hasRoles, Role, User} from "@/lib/auth";
 import useSWR from "swr";
 import {fetcher} from "@/lib/backend";
 import {CenteredLoading} from "@/components/Loading";
@@ -39,7 +40,13 @@ type DashboardData = {
 
 export const DashboardContext = createContext<DashboardData | undefined | null>(null)
 
-const navigation = [
+type NavigationPath = {
+  name: string
+  path: string
+  icon: any
+}
+
+const navigation: NavigationPath[] = [
   {
     name: 'Home',
     path: '/dashboard',
@@ -57,12 +64,26 @@ const navigation = [
   }
 ]
 
+const adminNavigation: (NavigationPath & {roles: Role[]})[] = [
+  {
+    name: "Hinzufügen",
+    path: "/dashboard/admin/create",
+    icon: PlusCircleIcon,
+    roles: ['Moderator', 'Admin']
+  }
+]
+
 function NavigationList({className, children}: {
   className?: string
   children?: React.ReactNode
 }) {
+  const context = useContext(DashboardContext)
   const [logoHovered, setLogoHovered] = useState(false)
   const pathname = usePathname()
+
+  const userRoles = context?.user.roles
+  const isModerator = hasRoles(userRoles, ['Moderator'])
+  const isAdmin = hasRoles(userRoles, ['Admin'])
 
   return (
     <div className={clsx(
@@ -101,6 +122,31 @@ function NavigationList({className, children}: {
               ))}
             </ul>
           </li>
+          {(isAdmin || isModerator) && (
+            <li>
+              <div className="text-xs font-semibold leading-6 text-neutral-300">
+                {isAdmin ? "Admin Dashboard" : "Moderator Dashboard"}
+              </div>
+              <ul role="list" className="-mx-2 mt-2 space-y-1">
+                {adminNavigation.map((item) => hasRoles(userRoles, item.roles) && (
+                  <li key={item.name}>
+                    <Link
+                      href={item.path}
+                      className={clsx(
+                        item.path === pathname
+                          ? 'bg-gray-800 text-white'
+                          : 'text-neutral-300 hover:text-white hover:bg-gray-800',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition'
+                      )}
+                    >
+                      <item.icon className="h-6 w-6 shrink-0 text-white" aria-hidden="true"/>
+                      {item.name}
+                  </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )}
           {children}
         </ul>
       </nav>
