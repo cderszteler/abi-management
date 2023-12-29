@@ -28,7 +28,7 @@ export default function LoginForm() {
       redirect: false
     })
     if (response?.ok) {
-      router.push("/dashboard")
+      router.refresh()
     } else if (response?.error) {
       addToast(<ErrorToast
         content="Der Login hat nicht funktioniert.
