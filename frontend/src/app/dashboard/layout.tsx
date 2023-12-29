@@ -34,7 +34,7 @@ import ErrorToast from "@/components/Toast";
 
 type DashboardData = {
   user: User
-  expiringAt: Date
+  expiringAt?: Date | undefined
 }
 
 export const DashboardContext = createContext<DashboardData | undefined | null>(null)

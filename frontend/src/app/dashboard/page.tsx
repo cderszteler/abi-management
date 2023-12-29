@@ -1,9 +1,6 @@
 import {Metadata} from "next"
 import {GridPattern} from "@/components/GridPattern";
-import Link from "next/link";
-import {Button} from "@/components/Button";
-import {ArrowRightIcon} from "@heroicons/react/24/outline";
-import {DashboardDisplayName} from "@/app/dashboard/DashboardDisplayName";
+import {DashboardHero} from "@/app/dashboard/DashboardHero";
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -18,35 +15,7 @@ export default async function Dashboard() {
         yOffset={-96}
         interactive
       />
-      <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-        <div className="text-center">
-          <h1
-            className="text-4xl font-bold tracking-tight sm:text-6xl"
-          >
-            Ahoi,&nbsp;
-            <DashboardDisplayName/>
-            !
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-neutral-600">
-            Du hast es hier hin geschafft, sehr gut! Fang doch gleich an
-            und schau dir ein paar Zitate an. Falls du Fragen hast, kannst du
-            uns einfach kontaktieren.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link href="/dashboard/quotes">
-              <Button className="px-6 py-2">
-                Zitate
-              </Button>
-            </Link>
-            <Link
-              href="/contact"
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              Kontakt <ArrowRightIcon className="ml-0.5 inline w-3.5"/>
-            </Link>
-          </div>
-        </div>
-      </div>
+        <DashboardHero/>
     </>
   )
 }
