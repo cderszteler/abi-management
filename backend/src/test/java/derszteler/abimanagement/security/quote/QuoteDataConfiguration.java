@@ -14,6 +14,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
@@ -22,6 +23,11 @@ public final class QuoteDataConfiguration {
   private final UserRepository userRepository;
   private final QuoteRepository repository;
   private final User primaryUser;
+
+  // Nanos need to be 0, because H2 doesn't store as many decimals as the runtime
+  public static final LocalDateTime expiringAt = LocalDateTime.now()
+    .minusHours(1)
+    .withNano(0);
 
   @EventListener(ApplicationReadyEvent.class)
   void createMockData() {
@@ -36,7 +42,7 @@ public final class QuoteDataConfiguration {
       .authors(Collections.singleton(primaryUser))
       .build();
     var contextQuote = Quote.builder()
-      .content("You get it?")
+      .content("I'm expired... :(")
       .authors(Collections.singleton(primaryUser))
       .context("Very relevant context")
       .build();
@@ -55,6 +61,7 @@ public final class QuoteDataConfiguration {
         .quote(contextQuote)
         .status(QuoteReview.Status.Pending)
         .user(primaryUser)
+        .expiringAt(expiringAt)
         .build(),
       QuoteReview.builder()
         .quote(doubleAuthorsQuote)

@@ -31,6 +31,11 @@ public final class QuoteReviewService {
         .user(user)
         .build()
       );
+
+    if (review.hasExpired()) {
+      throw new ResponseStatusException(HttpStatus.GONE, "expired");
+    }
+
     review.status(request.status());
     repository.save(review);
   }

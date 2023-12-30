@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 public final class CommentDataConfiguration {
   private final CommentRepository repository;
@@ -20,6 +22,12 @@ public final class CommentDataConfiguration {
     var reviews = Lists.newArrayList(
       Comment.builder()
         .content("Normal pending comment")
+        .status(Comment.Status.Pending)
+        .user(primaryUser)
+        .build(),
+      Comment.builder()
+        .content("Expired comment... :(")
+        .expiringAt(LocalDateTime.now().minusHours(1))
         .status(Comment.Status.Pending)
         .user(primaryUser)
         .build(),

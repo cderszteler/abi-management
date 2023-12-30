@@ -5,9 +5,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface QuoteRepository extends JpaRepository<Quote, Integer> {
+  @Query("""
+    select review.expiringAt
+    from QuoteReview review
+    where review.user = :user and review.expiringAt is not null
+    order by review.expiringAt
+    limit 1
+    """
+  )
+  Optional<LocalDateTime> findEarliestExpiringAtByUser(User user);
+
+
+  // List queries:
+
   @Query("""
     select new derszteler.abimanagement.quote.UserQuote(
       quote,

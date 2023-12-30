@@ -3,6 +3,7 @@ package derszteler.abimanagement.security.user.dashboard;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import derszteler.abimanagement.Application;
 import derszteler.abimanagement.security.AuthenticationConfiguration;
+import derszteler.abimanagement.security.quote.QuoteDataConfiguration;
 import derszteler.abimanagement.user.User;
 import derszteler.abimanagement.user.dashboard.DashboardData;
 import lombok.AccessLevel;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = Application.class)
 @TestPropertySource(locations = "classpath:application-testing.properties")
-@Import(AuthenticationConfiguration.class)
+@Import({AuthenticationConfiguration.class, QuoteDataConfiguration.class})
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class DashboardDataRestEndpointTest {
@@ -52,6 +53,10 @@ public final class DashboardDataRestEndpointTest {
     );
 
     Assertions.assertEquals(primaryUser, dashboardData.user(), "users are not equal");
-    // TODO: Implement test for 'expiringAt' field
+    Assertions.assertEquals(
+      QuoteDataConfiguration.expiringAt,
+      dashboardData.expiringAt(),
+      "'expiringAt' was not not expected"
+    );
   }
 }

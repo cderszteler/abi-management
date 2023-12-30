@@ -1,5 +1,6 @@
 package derszteler.abimanagement.quote;
 
+import derszteler.abimanagement.quote.CreateQuoteRequest.QuoteAuthor;
 import derszteler.abimanagement.quote.review.QuoteReview;
 import derszteler.abimanagement.quote.review.QuoteReviewRepository;
 import derszteler.abimanagement.user.User;
@@ -11,6 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Service
@@ -41,7 +46,7 @@ public class QuoteService {
     "T(derszteler.abimanagement.user.User$Role).Admin" +
   ")")
   public Quote create(CreateQuoteRequest request) {
-    var authors = userRepository.findAllById(request.authorIds());
+    var authors = findQuoteAuthors(request.authors());
     if (authors.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "authors not found");
     }
@@ -50,15 +55,33 @@ public class QuoteService {
       .content(request.content())
       .context(request.context())
       .status(request.staus())
-      .authors(authors)
+      .authors(authors.values())
       .build()
     );
-    reviewRepository.saveAll(authors.stream()
-      .map(author -> QuoteReview.emptyReviewForQuote(author, quote))
+    reviewRepository.saveAll(authors.entrySet().stream()
+      .map(entry -> QuoteReview.emptyReviewForQuote(entry.getValue(), quote)
+        .expiringAt(entry.getKey().expiringAt())
+      )
       .toList()
     );
 
     return quote;
+  }
+
+  private Map<QuoteAuthor, User> findQuoteAuthors(
+    Set<QuoteAuthor> authors
+  ) {
+    var mapped = authors.stream()
+      .collect(Collectors.toMap(
+        QuoteAuthor::id,
+        author -> author
+      ));
+    var users = userRepository.findAllById(mapped.keySet());
+    return users.stream()
+      .collect(Collectors.toMap(
+        user -> mapped.get(user.id()),
+        user -> user
+      ));
   }
 
   public enum Filter {

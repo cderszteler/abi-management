@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import derszteler.abimanagement.quote.Quote;
 import derszteler.abimanagement.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +48,16 @@ public class QuoteReview {
   @Column
   private Status status;
 
+  @Schema(
+    description = "The timestamp the review expires and thus cannot be changed anymore afterwards",
+    example = "2024-01-31T00:00:00.00000Z",
+    nullable = true
+  )
+  @JsonProperty
+  @Column
+  @Nullable
+  private LocalDateTime expiringAt;
+
   @ManyToOne
   @JoinColumn(nullable = false, name = "quote_id")
   private Quote quote;
@@ -60,6 +71,10 @@ public class QuoteReview {
   @ColumnDefault("now()")
   @Column(nullable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
+
+  public boolean hasExpired() {
+    return expiringAt != null && expiringAt.isBefore(LocalDateTime.now());
+  }
 
   public enum Status {
     Pending,

@@ -58,13 +58,18 @@ public final class QuoteReviewRestEndpointTest {
         .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isNotFound());
+    mvc.perform(post(reviewPath.formatted(2))
+        .contentType("application/json")
+        .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
+      )
+      .andExpect(MockMvcResultMatchers.status().isGone());
 
     mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
         .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Accepted)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
-    mvc.perform(post(reviewPath.formatted(2))
+    mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
         .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )

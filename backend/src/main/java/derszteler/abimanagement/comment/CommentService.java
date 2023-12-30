@@ -34,6 +34,10 @@ public final class CommentService {
       .filter(existing -> existing.user().equals(user))
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+    if (comment.hasExpired()) {
+      throw new ResponseStatusException(HttpStatus.GONE, "expired");
+    }
+
     comment.status(request.status());
     repository.save(comment);
   }

@@ -116,6 +116,11 @@ public final class CommentRestEndpoint {
         responseCode = "404"
       ),
       @ApiResponse(
+        content = @Content(schema = @Schema(implementation = ErrorSchema.class)),
+        description = "The comment's review has expired.",
+        responseCode = "10"
+      ),
+      @ApiResponse(
         content = @Content(schema = @Schema()),
         description = "The comment's status has been updated",
         responseCode = "200"

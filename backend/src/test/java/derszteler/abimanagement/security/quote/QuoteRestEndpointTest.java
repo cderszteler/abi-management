@@ -3,6 +3,7 @@ package derszteler.abimanagement.security.quote;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import derszteler.abimanagement.Application;
 import derszteler.abimanagement.quote.CreateQuoteRequest;
+import derszteler.abimanagement.quote.CreateQuoteRequest.QuoteAuthor;
 import derszteler.abimanagement.quote.ListQuotesResponse;
 import derszteler.abimanagement.quote.QuoteService;
 import derszteler.abimanagement.security.AuthenticationConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -147,7 +149,7 @@ public final class QuoteRestEndpointTest {
     mvc.perform(post(createPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new CreateQuoteRequest(
-        "content", null, Set.of(3), null
+        "content", null, Set.of(new QuoteAuthor(3, null)), null
       )))
       .with(SecurityMockMvcRequestPostProcessors.user(defaultUser))
     )
@@ -156,7 +158,7 @@ public final class QuoteRestEndpointTest {
     mvc.perform(post(createPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new CreateQuoteRequest(
-        "content", null, Set.of(100), null
+        "content", null, Set.of(new QuoteAuthor(100, null)), null
       )))
     )
     .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -164,7 +166,14 @@ public final class QuoteRestEndpointTest {
     mvc.perform(post(createPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new CreateQuoteRequest(
-        "Cool quote", "with context?", Set.of(1), null
+        "Cool quote", "with context?", Set.of(new QuoteAuthor(1, null)), null
+      )))
+    )
+    .andExpect(MockMvcResultMatchers.status().isOk());
+    mvc.perform(post(createPath)
+      .contentType("application/json")
+      .content(mapper.writeValueAsString(new CreateQuoteRequest(
+        "Be quick!", null, Set.of(new QuoteAuthor(1, LocalDateTime.now().plusHours(1))), null
       )))
     )
     .andExpect(MockMvcResultMatchers.status().isOk());

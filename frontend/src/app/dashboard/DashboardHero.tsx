@@ -1,3 +1,5 @@
+// noinspection HtmlUnknownTarget
+
 'use client'
 
 import {useContext, useMemo} from "react";
@@ -14,33 +16,34 @@ export function DashboardHero() {
   const context = useContext(DashboardContext)!
   const expiringSoon = useMemo(() => {
     const limit = new Date()
-    limit.setDate(limit.getDate() - 1)
-    return !!(context.expiringAt && context.expiringAt >= limit);
+    limit.setDate(limit.getDate() + 1)
+    return !!(context.expiringAt && context.expiringAt <= limit);
   }, [context.expiringAt])
 
   return (
     <>
       <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
         {context.expiringAt && (
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+          <div className="mb-8 sm:flex sm:justify-center">
             <div className={clsx(
-              "relative rounded-full px-3 py-1 flex items-center leading-6 text-gray-600 ring-1 ring-neutral-900/10 hover:ring-neutral-900/20 transition",
+              "relative rounded-full px-3 py-1 flex flex-col xs:flex-row items-center text-center",
+              "leading-6 text-gray-600 ring-1 ring-neutral-900/10 hover:ring-neutral-900/20 transition",
               expiringSoon ? "" : "text-sm"
             )}>
               {expiringSoon && (
                 <ExclamationCircleIcon
                   className={clsx(
-                    "mr-2 text-red-500",
+                    "hidden xs:block mr-2 text-red-500",
                     expiringSoon ? "h-6" : "h-5"
                   )}
                   aria-hidden="true"
                 />
               )}
-              Bitte bearbeite deine Zitate bis zum
+              Bitte bearbeite deine Zitate und Kommentare bis zum
               <span className={clsx("transition-all",
                 expiringSoon
-                  ? "text-red-500 font-bold hover:text-xl"
-                  : "text-neutral-950 font-semibold hover:text-lg"
+                  ? "text-red-500 font-bold sm:hover:text-xl"
+                  : "text-neutral-950 font-semibold sm:hover:text-lg"
               )}>
                 &nbsp;
                 {context.expiringAt.toLocaleString()}

@@ -51,6 +51,7 @@ public record UserQuote(
     description = """
       The (user-specific) status of a quote. Possible values:
         - 'NotAllowed' if the status of the quote is 'NotAllowed'
+        - 'Expired' if the quote's review has expired and the quote has not been reviewed yet
         - 'Pending' if no review from the user exists for this quote
         - 'Accepted' if the user accepted this quote
         - 'Rejected' if the user rejected this quote
@@ -63,6 +64,8 @@ public record UserQuote(
     }
     if (review == null) {
       return Pending;
+    } else if (review.status() == QuoteReview.Status.Pending && review.hasExpired()) {
+      return Expired;
     }
     return switch (review.status()) {
       case Accepted -> Accepted;
@@ -75,6 +78,7 @@ public record UserQuote(
     Accepted,
     Pending,
     Rejected,
+    Expired,
     NotAllowed
   }
 

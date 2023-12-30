@@ -28,6 +28,11 @@ const statusDescriptions: { [key:string]: { color: Color, name: string, descript
     color: "red",
     name: "Abgelehnt",
     description: "Du hast diesen Kommentar abgelehnt"
+  },
+  'Expired': {
+    color: "gray",
+    name: "Abgelaufen",
+    description: "Du kannst diesen Kommentar nicht mehr bearbeiten"
   }
 }
 
@@ -73,7 +78,7 @@ export function CommentsTable(
     } else {
       await mutate((key) => typeof key === 'string'
         && key.startsWith("/api/v1/comments")
-        && !key.includes("NotAllowed")
+        && !key.includes("Expired")
         && !(filter === 'Processed' && key.includes("Pending"))
       )
     }
@@ -92,7 +97,7 @@ export function CommentsTable(
         loading={loading}
         separator={true}
         fallback={fallback}
-        headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
+        headers={[{name: "Kommentar"}, {name: "Status"}, {screenReader: "Aktionen"}]}
         rows={loading ? [] : data!.comments.map((comment) => [
           {
             text: comment.content,
@@ -104,6 +109,7 @@ export function CommentsTable(
           {
             children: (
               <BooleanActionButtonGroup
+                disabled={comment.status === 'Expired'}
                 onClick={async (allowed) => handleReview({
                   id: comment.id,
                   status: allowed ? 'Accepted' : 'Rejected'

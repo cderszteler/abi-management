@@ -3,6 +3,7 @@ package derszteler.abimanagement.comment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import derszteler.abimanagement.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,11 +37,19 @@ public class Comment {
   @Column(nullable = false)
   private String content;
 
-  @Schema(description = "The status of the comment", example = "Pending")
-  @JsonProperty
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Status status;
+
+  @Schema(
+    description = "The timestamp reviewing the comment expires and this is not possible anymore",
+    example = "2024-01-31T00:00:00.00000Z",
+    nullable = true
+  )
+  @JsonProperty
+  @Column
+  @Nullable
+  private LocalDateTime expiringAt;
 
   @ManyToOne
   @JoinColumn(nullable = false)
@@ -52,9 +61,35 @@ public class Comment {
   @Column(nullable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
 
+  // Only used for JSON deserialization
+  @Schema(description = "The status of the comment", example = "Pending")
+  @JsonProperty("status")
+  @Deprecated
+  private DeserializationStatus deserializationStatus() {
+    if (status == Status.Pending && hasExpired()) {
+      return DeserializationStatus.Expired;
+    }
+    return switch (status) {
+      case Pending -> DeserializationStatus.Pending;
+      case Accepted -> DeserializationStatus.Accepted;
+      case Rejected -> DeserializationStatus.Rejected;
+    };
+  }
+
+  public boolean hasExpired() {
+    return expiringAt != null && expiringAt.isBefore(LocalDateTime.now());
+  }
+
   public enum Status {
     Pending,
     Accepted,
     Rejected
+  }
+
+  private enum DeserializationStatus {
+    Pending,
+    Accepted,
+    Rejected,
+    Expired
   }
 }

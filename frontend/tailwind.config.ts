@@ -31,6 +31,9 @@ export default {
           { fontVariationSettings: '"width" 125' },
         ],
       },
+      screens: {
+        'xs': '700px'
+      }
     },
   },
   plugins: [

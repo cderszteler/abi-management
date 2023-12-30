@@ -3,6 +3,7 @@ package derszteler.abimanagement.quote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public record CreateQuoteRequest(
@@ -15,8 +16,8 @@ public record CreateQuoteRequest(
   )
   @Nullable
   String context,
-  @Schema(description = "The (User) ids of the quote's authors", example = "[1]")
-  Set<Integer> authorIds,
+  @Schema(description = "The authors of the quote")
+  Set<QuoteAuthor> authors,
   @Schema(
     description = "The status **of the quote**. " +
       "This is not the status of a review of this quote.",
@@ -30,7 +31,19 @@ public record CreateQuoteRequest(
   @SuppressWarnings("ConstantValue")
   boolean valid() {
     return (content != null && !content.isBlank())
-      && (authorIds != null && !authorIds.isEmpty())
+      && (authors != null && !authors.isEmpty())
       && (context == null || !content.isBlank());
   }
+
+  public record QuoteAuthor(
+    @Schema(description = "The (User) id of the quote's author", example = "1")
+    Integer id,
+    @Schema(
+      description = "The timestamp the quote's review expires for this author",
+      example = "2024-01-31T00:00:00.00000Z",
+      nullable = true
+    )
+    @Nullable
+    LocalDateTime expiringAt
+  ) {}
 }

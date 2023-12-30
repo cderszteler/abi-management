@@ -29,6 +29,11 @@ const statusDescriptions: { [key:string]: { color: Color, name: string, descript
     name: "Abgelehnt",
     description: "Du hast dieses Zitat abgelehnt"
   },
+  'Expired': {
+    color: "gray",
+    name: "Abgelaufen",
+    description: "Du kannst dieses Zitat nicht mehr bearbeiten"
+  },
   'NotAllowed': {
     color: "red",
     name: "Nicht erlaubt",
@@ -78,7 +83,7 @@ export function QuotesTable(
     } else {
       await mutate((key) => typeof key === 'string'
         && key.startsWith("/api/v1/quotes")
-        && !key.includes("NotAllowed")
+        && !(key.includes("NotAllowed") || key.includes("Expired"))
         && !(filter === 'Processed' && key.includes("Pending"))
       )
     }
@@ -112,7 +117,7 @@ export function QuotesTable(
           {
             children: (
               <BooleanActionButtonGroup
-                disabled={quote.status === 'NotAllowed'}
+                disabled={quote.status === 'NotAllowed' || quote.status === 'Expired'}
                 onClick={async (allowed) => handleReview({
                   id: quote.id,
                   status: allowed ? 'Accepted' : 'Rejected'

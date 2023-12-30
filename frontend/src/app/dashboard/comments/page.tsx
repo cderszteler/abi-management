@@ -12,6 +12,13 @@ export default function Comments() {
       </PageHeading>
       <CommentsTable
         title="Ausstehende Kommentare"
+        description={(
+          <>
+            <span className="font-semibold">
+              Nicht bearbeitete Kommentare gelten als angenommen.
+            </span>
+          </>
+        )}
         fallback="Es sind keine ausstehende Kommentare vorhanden."
         errorMessages={{
           fetch: "Die ausstehenden Kommentare konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."

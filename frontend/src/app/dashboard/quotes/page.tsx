@@ -13,10 +13,17 @@ export default function Quotes() {
       </PageHeading>
       <QuotesTable
         title="Ausstehende Zitate"
-        description="Beachte, dass für ein Zitat, das mehre Personen beinhaltet,
-          alle Personen diesem Zitat zustimmen müssen,
-          damit dieses gedruckt werden kann.
-        "
+        description={(
+          <>
+            Beachte, dass für ein Zitat, das mehre Personen beinhaltet,
+            alle Personen diesem Zitat zustimmen müssen,
+            damit dieses gedruckt werden kann.
+            <br/>
+            <span className="font-semibold">
+              Nicht bearbeitete Zitate gelten als angenommen.
+            </span>
+          </>
+        )}
         fallback="Es sind keine ausstehende Zitate vorhanden."
         errorMessages={{
           fetch: "Die ausstehenden Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."

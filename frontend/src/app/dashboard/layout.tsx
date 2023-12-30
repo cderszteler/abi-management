@@ -6,6 +6,7 @@ import React, {
   Fragment,
   useContext,
   useEffect,
+  useMemo,
   useState
 } from 'react'
 import {Dialog, Transition} from '@headlessui/react'
@@ -245,9 +246,20 @@ export default function Layout({children}: { children: React.ReactNode }) {
     setSidebarOpen(false)
   }, [pathname]);
 
+  const contextValue = useMemo(() => {
+    if (!data) {
+      return data
+    }
+
+    return {
+      ...data,
+      expiringAt: data.expiringAt && new Date(data.expiringAt)
+    }
+  }, [data])
+
   return (
     <>
-      <DashboardContext.Provider value={data}>
+      <DashboardContext.Provider value={contextValue}>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"

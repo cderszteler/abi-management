@@ -58,6 +58,11 @@ public final class QuoteReviewRestEndpoint {
         responseCode = "404"
       ),
       @ApiResponse(
+        content = @Content(schema = @Schema(implementation = ErrorSchema.class)),
+        description = "The quote's review has expired.",
+        responseCode = "410"
+      ),
+      @ApiResponse(
         content = @Content(schema = @Schema()),
         description = "The quote's status has been updated",
         responseCode = "200"

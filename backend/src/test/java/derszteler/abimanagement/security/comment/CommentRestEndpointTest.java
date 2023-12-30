@@ -71,7 +71,7 @@ public final class CommentRestEndpointTest {
       ListCommentsResponse.class
     );
 
-    Assertions.assertEquals(1, result.comments().size(), "pending comments' size do not match");
+    Assertions.assertEquals(2, result.comments().size(), "pending comments' size do not match");
 
     var comment = Lists.newArrayList(result.comments()).getFirst();
     Assertions.assertEquals(1, comment.id(), "expected different rejected comment's id");
@@ -124,13 +124,18 @@ public final class CommentRestEndpointTest {
         .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isNotFound());
+    mvc.perform(post(reviewPath.formatted(2))
+        .contentType("application/json")
+        .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Rejected)))
+      )
+      .andExpect(MockMvcResultMatchers.status().isGone());
 
     mvc.perform(post(reviewPath.formatted(1))
         .contentType("application/json")
         .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Accepted)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
-    mvc.perform(post(reviewPath.formatted(3))
+    mvc.perform(post(reviewPath.formatted(4))
         .contentType("application/json")
         .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Accepted)))
       )
