@@ -108,13 +108,18 @@ export function CommentsTable(
           },
           {
             children: (
-              <BooleanActionButtonGroup
-                disabled={comment.status === 'Expired'}
-                onClick={async (allowed) => handleReview({
-                  id: comment.id,
-                  status: allowed ? 'Accepted' : 'Rejected'
-                })}
-              />
+              <Tooltip
+                className={comment.expired ? "" : "hidden"}
+                content="Du kannst diesen Kommentar nicht mehr bearbeiten"
+              >
+                <BooleanActionButtonGroup
+                  disabled={comment.expired}
+                  onClick={async (allowed) => handleReview({
+                    id: comment.id,
+                    status: allowed ? 'Accepted' : 'Rejected'
+                  })}
+                />
+              </Tooltip>
             ),
             className: "lg:whitespace-nowrap"
           }

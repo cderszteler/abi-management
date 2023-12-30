@@ -116,13 +116,18 @@ export function QuotesTable(
           },
           {
             children: (
-              <BooleanActionButtonGroup
-                disabled={quote.status === 'NotAllowed' || quote.status === 'Expired'}
-                onClick={async (allowed) => handleReview({
-                  id: quote.id,
-                  status: allowed ? 'Accepted' : 'Rejected'
-                })}
-              />
+              <Tooltip
+                className={quote.expired ? "" : "hidden"}
+                content="Du kannst diesen Kommentar nicht mehr bearbeiten"
+              >
+                <BooleanActionButtonGroup
+                  disabled={quote.status === 'NotAllowed' || quote.expired}
+                  onClick={async (allowed) => handleReview({
+                    id: quote.id,
+                    status: allowed ? 'Accepted' : 'Rejected'
+                  })}
+                />
+              </Tooltip>
             ),
             className: "lg:whitespace-nowrap"
           }
