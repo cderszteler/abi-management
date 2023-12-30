@@ -76,6 +76,8 @@ public class Comment {
     };
   }
 
+  @Schema(description = "Boolean if the comment's review has expired", example = "false")
+  @JsonProperty("expired")
   public boolean hasExpired() {
     return expiringAt != null && expiringAt.isBefore(LocalDateTime.now());
   }

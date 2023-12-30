@@ -56,7 +56,8 @@ public record UserQuote(
         - 'Accepted' if the user accepted this quote
         - 'Rejected' if the user rejected this quote
     """,
-    example = "Pending")
+    example = "Pending"
+  )
   @JsonProperty
   Status status() {
     if (quote.status() == Quote.Status.NotAllowed) {
@@ -72,6 +73,15 @@ public record UserQuote(
       case Pending -> Pending;
       case Rejected -> Rejected;
     };
+  }
+
+  @Schema(description = "Boolean if the quote's review has expired", example = "false")
+  @JsonProperty
+  boolean expired() {
+    if (review == null) {
+      return false;
+    }
+    return review.hasExpired();
   }
 
   enum Status {
