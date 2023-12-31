@@ -1,8 +1,12 @@
-'use client'
-
 import {PageHeading} from "@/components/PageIntro";
 import {QuotesTable} from "@/app/dashboard/quotes/QuotesTable";
 import Link from "next/link";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Zitate',
+  description: 'Verwalte hier deine Zitate.',
+}
 
 export default function Quotes() {
   // noinspection HtmlUnknownTarget

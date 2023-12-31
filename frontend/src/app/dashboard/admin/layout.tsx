@@ -1,18 +1,19 @@
-'use client'
+import {Metadata} from "next";
+import SecureAdminDashboardContainer
+  from "@/app/dashboard/admin/AdminDashboardContainer";
 
-import {hasRoles} from "@/lib/auth";
-import {DashboardContext} from "@/app/dashboard/layout";
-import {useRouter} from "next/navigation";
-import {useContext} from "react";
+export const metadata: Metadata = {
+  title: {
+    template: '[Admin] %s - ABI.',
+    default: 'Admin Dashboard',
+  },
+  description: 'Administriere hier die Abizeitung!'
+}
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-  const context = useContext(DashboardContext)!
-
-  if (!hasRoles(context.user.roles, ['Admin', 'Moderator'])) {
-    router.push('/dashboard')
-    return <></>
-  }
-
-  return children
+  return (
+    <SecureAdminDashboardContainer>
+      {children}
+    </SecureAdminDashboardContainer>
+  )
 }

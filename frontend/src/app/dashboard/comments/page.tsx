@@ -1,7 +1,11 @@
-'use client'
-
 import {PageHeading} from "@/components/PageIntro";
 import {CommentsTable} from "@/app/dashboard/comments/CommentsTable";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Kommentare',
+  description: 'Verwalte hier deine Kommentare.',
+}
 
 export default function Comments() {
   // noinspection HtmlUnknownTarget

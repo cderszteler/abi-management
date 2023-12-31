@@ -3,7 +3,6 @@
 'use client'
 
 import {useContext, useMemo} from "react";
-import {DashboardContext} from "@/app/dashboard/layout";
 import {Button} from "@/components/Button";
 import Link from "next/link";
 import {
@@ -11,19 +10,20 @@ import {
   ExclamationCircleIcon
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import {DashboardContext} from "@/app/dashboard/DashboardContextProvider";
 
 export function DashboardHero() {
-  const context = useContext(DashboardContext)!
+  const {user, expiringAt} = useContext(DashboardContext)
   const expiringSoon = useMemo(() => {
     const limit = new Date()
     limit.setDate(limit.getDate() + 1)
-    return !!(context.expiringAt && context.expiringAt <= limit);
-  }, [context.expiringAt])
+    return !!(expiringAt && expiringAt <= limit);
+  }, [expiringAt])
 
   return (
     <>
       <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-        {context.expiringAt && (
+        {expiringAt && (
           <div className="mb-8 sm:flex sm:justify-center">
             <div className={clsx(
               "relative rounded-full px-3 py-1 flex flex-col xs:flex-row items-center text-center",
@@ -46,7 +46,7 @@ export function DashboardHero() {
                   : "text-neutral-950 font-semibold sm:hover:text-lg"
               )}>
                 &nbsp;
-                {context.expiringAt.toLocaleString()}
+                {expiringAt.toLocaleString()}
               </span>
             </div>
           </div>
@@ -55,7 +55,7 @@ export function DashboardHero() {
           <h1
             className="text-4xl font-bold tracking-tight sm:text-6xl"
           >
-            {`Ahoi, ${context.user.displayName}!`}
+            {`Ahoi, ${user?.displayName}!`}
           </h1>
           <p className="mt-6 text-lg leading-8 text-neutral-600">
             Du hast es hier hin geschafft, sehr gut! Fang doch gleich an
