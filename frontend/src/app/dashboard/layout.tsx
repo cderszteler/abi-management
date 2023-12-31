@@ -44,7 +44,7 @@ export const DashboardContext = createContext<DashboardData | undefined | null>(
 type NavigationPath = {
   name: string
   path: string
-  icon: any
+  icon: typeof HomeIcon
 }
 
 const navigation: NavigationPath[] = [
