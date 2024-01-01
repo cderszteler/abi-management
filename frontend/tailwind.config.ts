@@ -38,6 +38,7 @@ export default {
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('tailwind-scrollbar')({nocompatible: true}),
     require('flowbite/plugin'),
   ],
 } satisfies Config
