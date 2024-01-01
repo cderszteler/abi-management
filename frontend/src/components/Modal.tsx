@@ -9,16 +9,26 @@ import {
 } from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 
-export function Modal({open, setOpen, initialFocus, children}: {
+export function Modal({open, setOpen, onClose, initialFocus, children}: {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
+  onClose?: (() => void) | undefined
   initialFocus: MutableRefObject<HTMLElement | null>
   children: ReactNode
 }) {
-
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" initialFocus={initialFocus} onClose={setOpen}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        initialFocus={initialFocus}
+        onClose={() => {
+          setOpen(false)
+          if (onClose) {
+            onClose()
+          }
+        }}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
