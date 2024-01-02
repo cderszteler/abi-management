@@ -12,8 +12,8 @@ import {
   ExclamationCircleIcon
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import ErrorToast from "@/components/Toast";
 import {PasswordInput, PasswordToggle} from "@/components/Input";
+import {ErrorToast} from "@/components/Toast";
 
 function InvalidToken({disabled}: {disabled: boolean}) {
   return (

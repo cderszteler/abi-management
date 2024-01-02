@@ -172,7 +172,7 @@ function ToastContainer() {
   return (
     <div
       aria-live="assertive"
-      className="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:px-6 z-50"
+      className="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:px-6 z-[60]"
     >
       <div
         className="flex w-full flex-col items-center space-y-4 sm:items-end"

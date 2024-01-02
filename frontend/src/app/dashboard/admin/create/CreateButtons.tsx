@@ -11,7 +11,7 @@ import AddQuoteButton from "@/app/dashboard/admin/create/AddQuoteButton";
 import AddCommentButton from "./AddCommentButton";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {fetcher} from "@/lib/backend";
-import ErrorToast from "@/components/Toast";
+import {ErrorToast} from "@/components/Toast";
 import useSWR from "swr";
 
 export function Button({content, onClick, ...props}: {
@@ -62,8 +62,7 @@ export default function CreateButtons() {
   useEffect(() => {
     if (error) {
       addToast(<ErrorToast
-        content={"Das Admin Dashboard konnte nicht vollständig geladen werden. "
-          + "Bitte lade die Seite neu oder kontaktiere uns."
+        content={"Das Admin Dashboard konnte nicht vollständig geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
         }
         retry={false}
       />)

@@ -5,7 +5,7 @@ import {BooleanActionButtonGroup} from "@/components/Button";
 import Pagination from "@/components/Pagination";
 import {fetcher} from "@/lib/backend";
 import {RootLayoutContext} from "@/components/RootLayout";
-import ErrorToast from "@/components/Toast";
+import {ErrorToast} from "@/components/Toast";
 import {useContext, useEffect, useState} from "react";
 import useSWR, {useSWRConfig} from 'swr'
 import {Color, PillWithBorder} from "@/components/Badge";

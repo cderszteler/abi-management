@@ -1,12 +1,14 @@
 'use client'
 
-import {useMemo, useState} from "react";
+import {useContext, useMemo, useState} from "react";
 import {PencilSquareIcon} from "@heroicons/react/24/outline";
 
+import {RootLayoutContext} from "@/components/RootLayout";
 import {User} from "@/lib/auth";
 import clsx from "clsx";
 import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
 import CreateButton from "@/app/dashboard/admin/create/CreateButton";
+import {ErrorToast, SuccessToast} from "@/components/Toast";
 
 type RequiredFields = 'comment' | 'user'
 
@@ -22,8 +24,10 @@ function validateFields(comment: string, user: User | undefined): RequiredFields
 }
 
 export default function AddCommentButton() {
+  const {addToast} = useContext(RootLayoutContext)!
   const [comment, setComment] = useState('')
   const [user, setUser] = useState<User | undefined>()
+  const [submitting, setSubmitting] = useState(false)
 
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
 
@@ -38,6 +42,22 @@ export default function AddCommentButton() {
       setInvalidFields(invalidFields)
       return
     }
+    setSubmitting(true)
+    const response = await fetch(`/api/v1/comment`, {
+      body: JSON.stringify({content: comment, userId: user?.id}),
+      method: 'POST'
+    })
+    setSubmitting(false)
+    if (response.ok) {
+      setComment('')
+      setUser(undefined)
+      addToast(<SuccessToast content="Der Kommentar wurde erfolgreich erstellt!"/>)
+    } else {
+      addToast(<ErrorToast
+        content="Der Kommentar konnte nicht erstellt werden. Bitte probiere es erneut oder kontaktiere uns!"
+        onRetry={async () => submit()}
+      />)
+    }
   }
 
   return (
@@ -46,6 +66,7 @@ export default function AddCommentButton() {
       icon={PencilSquareIcon}
       warnBeforeClosing={modified}
       onClose={() => setInvalidFields([])}
+      submitting={submitting}
       submit={submit}
     >
       <div className="col-span-full">

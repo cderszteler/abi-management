@@ -4,13 +4,16 @@ import {HomeIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import {Modal} from "@/components/Modal";
 import {Button} from "@/app/dashboard/admin/create/CreateButtons";
 import {useEffect, useRef, useState} from "react";
+import clsx from "clsx";
+import {CenteredLoading} from "@/components/Loading";
 
-export default function CreateButton({title, submit, onClose, children, ...props}:
+export default function CreateButton({title, onClose, submitting, ...props}:
 {
   title: string
   icon: typeof HomeIcon
   warnBeforeClosing: boolean
   onClose: (() => void) | undefined
+  submitting: boolean
   submit: () => Promise<void>
   children: React.ReactNode
 }) {
@@ -27,6 +30,12 @@ export default function CreateButton({title, submit, onClose, children, ...props
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [props.warnBeforeClosing]);
+
+  useEffect(() => {
+    if (!submitting) {
+      setOpen(false)
+    }
+  }, [submitting]);
 
   return (
     <>
@@ -57,16 +66,25 @@ export default function CreateButton({title, submit, onClose, children, ...props
           {title}
         </h3>
         <form>
-          {children}
+          {props.children}
           <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
             <button
-              className="inline-flex w-full sm:w-auto justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 transition"
+              className={clsx(
+                "inline-flex w-full sm:w-auto justify-center items-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm transition",
+                submitting
+                  ? "cursor-not-allowed bg-green-400"
+                  : "bg-green-500 hover:bg-green-400"
+              )}
               onClick={async event => {
                 event.preventDefault()
-                await submit()
+                await props.submit()
               }}
+              disabled={submitting}
               type="submit"
             >
+              {submitting && (
+                <CenteredLoading className="w-4 mr-2 fill-neutral-500"/>
+              )}
               Hinzufügen
             </button>
           </div>

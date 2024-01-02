@@ -2,7 +2,7 @@
 
 import {RootLayoutContext} from "@/components/RootLayout";
 import {fetcher} from "@/lib/backend";
-import ErrorToast from "@/components/Toast";
+import {ErrorToast} from "@/components/Toast";
 import {createContext, useContext, useEffect, useMemo} from "react";
 import useSWR from "swr";
 import {User} from "@/lib/auth";

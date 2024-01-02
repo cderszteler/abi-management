@@ -6,7 +6,7 @@ import Card from "@/components/Card";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import ErrorToast from "@/components/Toast";
+import {ErrorToast} from "@/components/Toast";
 import clsx from "clsx";
 import {PasswordInputWithToggle, TextInput} from "@/components/Input";
 
