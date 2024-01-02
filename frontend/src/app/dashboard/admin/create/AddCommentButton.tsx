@@ -8,32 +8,32 @@ import clsx from "clsx";
 import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
 import CreateButton from "@/app/dashboard/admin/create/CreateButton";
 
-type RequiredFields = 'comment' | 'authors'
+type RequiredFields = 'comment' | 'user'
 
-function validateFields(comment: string, authors: User[]): RequiredFields[] {
+function validateFields(comment: string, user: User | undefined): RequiredFields[] {
   const invalidFields: RequiredFields[] = []
   if (!comment) {
     invalidFields.push('comment')
   }
-  if (authors.length === 0) {
-    invalidFields.push('authors')
+  if (!user) {
+    invalidFields.push('user')
   }
   return invalidFields
 }
 
 export default function AddCommentButton() {
   const [comment, setComment] = useState('')
-  const [authors, setAuthors] = useState<User[]>([])
+  const [user, setUser] = useState<User | undefined>()
 
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
 
   const modified = useMemo(
-    () => !!(comment || authors.length != 0),
-    [comment, authors]
+    () => !!(comment || user),
+    [comment, user]
   )
 
   const submit = async () => {
-    const invalidFields = validateFields(comment, authors)
+    const invalidFields = validateFields(comment, user)
     if (invalidFields.length !== 0) {
       setInvalidFields(invalidFields)
       return
@@ -78,10 +78,11 @@ export default function AddCommentButton() {
       </div>
       <div className="relative mt-4 col-span-full">
         <AuthorsInput
-          invalid={invalidFields.includes('authors')}
-          authors={authors}
-          setAuthors={setAuthors}
-          onInput={() => setInvalidFields(invalidFields.filter(invalid => invalid !== 'authors'))}
+          multiple={false}
+          invalid={invalidFields.includes('user')}
+          authors={user}
+          setAuthors={setUser}
+          onInput={() => setInvalidFields(invalidFields.filter(invalid => invalid !== 'user'))}
         />
       </div>
     </CreateButton>

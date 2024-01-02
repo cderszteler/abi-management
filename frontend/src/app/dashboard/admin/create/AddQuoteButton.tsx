@@ -98,6 +98,7 @@ export default function AddQuoteButton() {
       </div>
       <div className="relative mt-4 col-span-full">
         <AuthorsInput
+          multiple={true}
           invalid={invalidFields.includes('authors')}
           authors={authors}
           setAuthors={setAuthors}

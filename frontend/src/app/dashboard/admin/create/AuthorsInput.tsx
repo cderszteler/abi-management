@@ -39,10 +39,20 @@ const users: User[] = [
   },
 ]
 
-export default function AuthorsInput({invalid, authors, setAuthors, onInput}: {
+type AuthorsType = User[] | (User | undefined)
+
+export default function AuthorsInput<Type extends AuthorsType>(
+{
+  multiple,
+  invalid,
+  authors,
+  setAuthors,
+  onInput
+}: {
+  multiple: boolean
   invalid: boolean
-  authors: User[]
-  setAuthors: Dispatch<SetStateAction<User[]>>
+  authors: Type
+  setAuthors: Dispatch<SetStateAction<Type>>
   onInput?: (() => void) | undefined
 }) {
   const [query, setQuery] = useState('')
@@ -52,12 +62,16 @@ export default function AuthorsInput({invalid, authors, setAuthors, onInput}: {
       .filter((user) => user.displayName.toLowerCase().includes(query.toLowerCase()))
     : users
 
-  const selectedAuthorsName = useMemo(() => {
-    const enumerated = authors.map((author) => author.displayName).join(", ")
-    if (enumerated.length > 35) {
-      return enumerated.substring(0, 32) + `... (${authors.length})`
+  const selectedAuthorsName: string = useMemo(() => {
+    if (Array.isArray(authors)) {
+      const enumerated = authors.map((author) => author.displayName).join(", ")
+      if (enumerated.length > 35) {
+        return enumerated.substring(0, 32) + `... (${authors.length})`
+      }
+      return enumerated
+    } else {
+      return authors?.displayName || ''
     }
-    return enumerated
   }, [authors])
 
   return (
@@ -73,7 +87,8 @@ export default function AuthorsInput({invalid, authors, setAuthors, onInput}: {
             onInput()
           }
         }}
-        multiple={true}
+        // @ts-ignore
+        multiple={multiple}
         name="authors"
       >
         {({open}) => (
