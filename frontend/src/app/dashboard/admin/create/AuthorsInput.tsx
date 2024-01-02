@@ -58,9 +58,6 @@ export default function AuthorsInput<Type extends AuthorsType>(
 
   return (
     <>
-      <label htmlFor="authors" className="block font-medium leading-6 text-neutral-950">
-        Zitierte Personen:
-      </label>
       <Combobox
         value={authors}
         onChange={(authors) => {
@@ -75,8 +72,7 @@ export default function AuthorsInput<Type extends AuthorsType>(
       >
         {({open}) => (
           <>
-            <div
-              className="relative min-h-[29.5px] w-full mt-1 cursor-pointer text-neutral-950 shadow-sm">
+            <div className="relative min-h-[29.5px] w-full mt-1 cursor-pointer text-neutral-950 shadow-sm">
               <Combobox.Input
                 className={clsx(
                   "w-full pl-3 pr-10 py-1.5 text-left rounded-md border-0 ring-inset focus:ring-2 focus:ring-inset text-sm !leading-tight",
@@ -90,10 +86,8 @@ export default function AuthorsInput<Type extends AuthorsType>(
               <Combobox.Button
                 className="absolute inset-y-0 right-0 flex items-center pr-2">
                 {open
-                  ? (<ChevronUpIcon className="h-5 w-5 text-neutral-400"
-                                    aria-hidden="true"/>)
-                  : (<ChevronDownIcon className="h-5 w-5 text-neutral-400"
-                                      aria-hidden="true"/>)
+                  ? (<ChevronUpIcon className="h-5 w-5 text-neutral-400" aria-hidden="true"/>)
+                  : (<ChevronDownIcon className="h-5 w-5 text-neutral-400" aria-hidden="true"/>)
                 }
               </Combobox.Button>
             </div>

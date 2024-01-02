@@ -129,6 +129,9 @@ export default function AddQuoteButton() {
         </div>
       </div>
       <div className="relative mt-4 col-span-full">
+        <label htmlFor="authors" className="block font-medium leading-6 text-neutral-950">
+          Zitierte Personen:
+        </label>
         <AuthorsInput
           multiple={true}
           invalid={invalidFields.includes('authors')}
@@ -139,7 +142,7 @@ export default function AddQuoteButton() {
       </div>
       <div className="mt-4 sm:mt-12 col-span-full relative flex gap-x-2">
         <div className="flex h-6 items-center">
-          <input
+        <input
             className="h-4 w-4 cursor-pointer rounded border-neutral-300 text-neutral-950 focus:ring-neutral-700"
             onChange={event => setNotAllowed(event.target.checked)}
             defaultChecked={notAllowed}

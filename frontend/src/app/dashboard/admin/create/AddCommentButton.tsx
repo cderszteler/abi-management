@@ -98,6 +98,9 @@ export default function AddCommentButton() {
         )}
       </div>
       <div className="relative mt-4 col-span-full">
+        <label htmlFor="authors" className="block font-medium leading-6 text-neutral-950">
+          Adressat:
+        </label>
         <AuthorsInput
           multiple={false}
           invalid={invalidFields.includes('user')}
