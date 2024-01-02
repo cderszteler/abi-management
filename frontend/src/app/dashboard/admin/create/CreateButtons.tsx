@@ -18,7 +18,7 @@ export function Button({content, onClick, ...props}: {
   // TODO: cursor-wait & disable hover when loading users
   return (
     <>
-      <div className="h-full max-h-80 border-4 border-dashed rounded-3xl border-neutral-300 hover:scale-105 transition">
+      <div className="h-full max-h-80 border-2 border-dashed rounded-3xl border-neutral-900/25 hover:scale-105 transition">
         <button
           className="w-full h-full p-2 sm:p-4 flex flex-col items-center justify-center gap-y-4 sm:gap-y-8 focus:rounded-3xl"
           onClick={event => {
@@ -28,8 +28,8 @@ export function Button({content, onClick, ...props}: {
             }
           }}
         >
-          <props.icon className="w-16 text-neutral-500/80"/>
-          <span className="font-display font-medium text-3xl text-neutral-800/80">
+          <props.icon className="w-16 text-neutral-300"/>
+          <span className="font-display text-3xl text-neutral-600">
             {content}
           </span>
         </button>
