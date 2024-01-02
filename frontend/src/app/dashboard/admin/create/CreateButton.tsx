@@ -2,10 +2,10 @@
 
 import {HomeIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import {Modal} from "@/components/Modal";
-import {Button} from "@/app/dashboard/admin/create/CreateButtons";
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import clsx from "clsx";
 import {CenteredLoading} from "@/components/Loading";
+import {DisplayUsersContext} from "@/app/dashboard/admin/create/CreateButtons";
 
 export default function CreateButton({title, onClose, submitting, ...props}:
 {
@@ -17,6 +17,7 @@ export default function CreateButton({title, onClose, submitting, ...props}:
   submit: () => Promise<void>
   children: React.ReactNode
 }) {
+  const users = useContext(DisplayUsersContext)
   const [open, setOpen] = useState(false)
   const closeButtonRef = useRef(null)
 
@@ -62,7 +63,8 @@ export default function CreateButton({title, onClose, submitting, ...props}:
             <XMarkIcon className="h-6 w-6" aria-hidden="true"/>
           </button>
         </div>
-        <h3 className="mb-3 sm:mt-5 text-xl font-semibold leading-10 text-neutral-950">
+        <h3
+          className="mb-3 sm:mt-5 text-xl font-semibold leading-10 text-neutral-950">
           {title}
         </h3>
         <form>
@@ -90,11 +92,28 @@ export default function CreateButton({title, onClose, submitting, ...props}:
           </div>
         </form>
       </Modal>
-      <Button
-        icon={props.icon}
-        onClick={() => setOpen(true)}
-        content={title}
-      />
+      <div className={clsx(
+        "h-full max-h-80 border-2 border-dashed rounded-3xl border-neutral-900/25 transition",
+        users.length !== 0 ? "hover:scale-105" : ""
+      )}>
+        <button
+          className={clsx(
+            "w-full h-full p-2 sm:p-4 flex flex-col items-center justify-center gap-y-4 sm:gap-y-8 focus:rounded-3xl",
+            users.length === 0 ? "cursor-not-allowed" : ""
+          )}
+          onClick={event => {
+            event.preventDefault()
+            if (users.length !== 0) {
+              setOpen(true)
+            }
+          }}
+        >
+          <props.icon className="w-16 text-neutral-300"/>
+          <span className="font-display text-3xl text-neutral-600">
+            {title}
+          </span>
+        </button>
+      </div>
     </>
   )
 }

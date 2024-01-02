@@ -22,7 +22,6 @@ function validateFields(quote: string, authors: User[]): RequiredFields[] {
   return invalidFields
 }
 
-// TODO: Add expiring at
 export default function AddQuoteButton() {
   const {addToast} = useContext(RootLayoutContext)!
 
