@@ -29,7 +29,8 @@ public class AuthenticationConfiguration {
     return userRepository.save(User.builder()
       .password(new BCryptPasswordEncoder().encode("D&Uy=(P@BaApA&fL"))
       .roles(List.of(User.Role.Admin))
-      .displayName("Christoph Derszteler")
+      .firstName("Christoph")
+      .lastName("Derszteler")
       .username("christoph.derszteler")
       .build()
     );
@@ -40,7 +41,8 @@ public class AuthenticationConfiguration {
   User defaultUser(UserRepository userRepository) {
     return userRepository.save(User.builder()
       .password(new BCryptPasswordEncoder().encode("password"))
-      .displayName("John Doe")
+      .firstName("John")
+      .lastName("Doe")
       .username("john.doe")
       .build()
     );

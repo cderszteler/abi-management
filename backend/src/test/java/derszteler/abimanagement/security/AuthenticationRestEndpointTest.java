@@ -37,7 +37,8 @@ public final class AuthenticationRestEndpointTest {
   private static final String password = "D&Uy=(P@BaApA&fL";
   private static final User user = User.builder()
     .password(new BCryptPasswordEncoder().encode(password))
-    .displayName("Christoph Derszteler")
+    .firstName("Christoph")
+    .lastName("Derszteler")
     .username("christoph.derszteler")
     .build();
 

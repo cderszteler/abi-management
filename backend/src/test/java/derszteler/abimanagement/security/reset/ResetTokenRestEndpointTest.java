@@ -43,7 +43,8 @@ public final class ResetTokenRestEndpointTest {
   private static final UUID resetToken = UUID.randomUUID();
   private static final User user = User.builder()
     .password(new BCryptPasswordEncoder().encode("D&Uy=(P@BaApA&fL"))
-    .displayName("Christoph Derszteler")
+    .firstName("Christoph")
+    .lastName("Derszteler")
     .username("christoph.derszteler")
     .build();
 

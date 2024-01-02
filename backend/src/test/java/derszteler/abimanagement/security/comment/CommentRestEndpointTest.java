@@ -2,21 +2,21 @@ package derszteler.abimanagement.security.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import derszteler.abimanagement.Application;
-import derszteler.abimanagement.comment.Comment;
-import derszteler.abimanagement.comment.CommentService;
-import derszteler.abimanagement.comment.ListCommentsResponse;
-import derszteler.abimanagement.comment.ReviewCommentRequest;
+import derszteler.abimanagement.comment.*;
 import derszteler.abimanagement.security.AuthenticationConfiguration;
+import derszteler.abimanagement.user.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +37,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Slf4j
 public final class CommentRestEndpointTest {
   private final ObjectMapper mapper;
+  @Qualifier("default")
+  private final User defaultUser;
   private final MockMvc mvc;
 
   private static final String listPath = "/api/v1/comments";
@@ -140,5 +142,49 @@ public final class CommentRestEndpointTest {
         .content(mapper.writeValueAsString(new ReviewCommentRequest(Comment.Status.Accepted)))
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  private static final String createPath = "/api/v1/comment";
+
+  @Order(5)
+  @Test
+  void testCreateRequest() throws Exception {
+    mvc.perform(post(createPath)
+      .contentType("application/json")
+      .content(mapper.writeValueAsString(new CreateCommentRequest(null, null)))
+    )
+    .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    mvc.perform(post(createPath)
+      .contentType("application/json")
+      .content(mapper.writeValueAsString(new CreateCommentRequest(
+        "content", 3
+      )))
+      .with(SecurityMockMvcRequestPostProcessors.user(defaultUser))
+    )
+    .andExpect(MockMvcResultMatchers.status().isForbidden());
+
+    mvc.perform(post(createPath)
+      .contentType("application/json")
+      .content(mapper.writeValueAsString(new CreateCommentRequest(
+        "content", 100
+      )))
+    )
+    .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    mvc.perform(post(createPath)
+      .contentType("application/json")
+      .content(mapper.writeValueAsString(new CreateCommentRequest(
+        "My favorite comment", 1
+      )))
+    )
+    .andExpect(MockMvcResultMatchers.status().isOk());
+    mvc.perform(post(createPath)
+      .contentType("application/json")
+      .content(mapper.writeValueAsString(new CreateCommentRequest(
+        "Not so nice.. :<", 1
+      )))
+    )
+    .andExpect(MockMvcResultMatchers.status().isOk());
   }
 }

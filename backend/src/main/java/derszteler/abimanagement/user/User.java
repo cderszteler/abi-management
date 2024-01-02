@@ -46,10 +46,13 @@ public final class User implements UserDetails {
   @Column(nullable = false)
   private String password;
 
-  @Schema(description = "The display name of the user", example = "Christoph Derszteler")
-  @JsonProperty
+  @JsonIgnore
   @Column(nullable = false)
-  private String displayName;
+  private String firstName;
+
+  @JsonIgnore
+  @Column(nullable = false)
+  private String lastName;
 
   @Schema(description = "Boolean if the user is disabled", example = "false")
   @ColumnDefault("false")
@@ -63,6 +66,12 @@ public final class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private Collection<Role> roles = Lists.newArrayList(Default);
+
+  @Schema(description = "The display name of the user", example = "Christoph Derszteler")
+  @JsonProperty
+  public String displayName() {
+    return "%s %s".formatted(firstName, lastName);
+  }
 
   @Override
   public int hashCode() {

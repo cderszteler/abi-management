@@ -35,7 +35,8 @@ public final class JwtServiceTest {
 
   private static final String password = "D&Uy=(P@BaApA&fL";
   private static final User user = User.builder()
-    .displayName("Christoph Derszteler")
+    .firstName("Christoph")
+    .lastName("Derszteler")
     .username("christoph.derszteler")
     .password(new BCryptPasswordEncoder().encode(password))
     .build();

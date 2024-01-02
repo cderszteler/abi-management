@@ -33,7 +33,8 @@ public final class QuoteDataConfiguration {
   void createMockData() {
     var secondUser = User.builder()
       .password(new BCryptPasswordEncoder().encode("G0oDfR!end"))
-      .displayName("Good Friend")
+      .firstName("Good")
+      .lastName("Friend")
       .username("good.friend")
       .build();
 
