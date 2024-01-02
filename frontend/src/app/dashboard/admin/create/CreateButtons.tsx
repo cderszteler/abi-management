@@ -30,8 +30,7 @@ export default function CreateButtons() {
   useEffect(() => {
     if (error) {
       addToast(<ErrorToast
-        content={"Das Admin Dashboard konnte nicht vollständig geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
-        }
+        content="Das erweiterte Dashboard konnte nicht vollständig geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
         retry={false}
       />)
     }
