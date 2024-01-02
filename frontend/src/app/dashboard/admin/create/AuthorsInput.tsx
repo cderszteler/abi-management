@@ -1,7 +1,13 @@
 'use client'
 
-import {User} from "@/lib/auth";
-import {Dispatch, Fragment, SetStateAction, useMemo, useState} from "react";
+import {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useContext,
+  useMemo,
+  useState
+} from "react";
 import {Combobox, Transition} from "@headlessui/react";
 import {
   CheckIcon,
@@ -9,37 +15,12 @@ import {
   ChevronUpIcon
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import {
+  DisplayUser,
+  DisplayUsersContext
+} from "@/app/dashboard/admin/create/CreateButtons";
 
-// TODO: Fetch
-const users: User[] = [
-  {
-    id: 1,
-    roles: [],
-    displayName: 'Christoph Derszteler'
-  },
-  {
-    id: 2,
-    roles: [],
-    displayName: 'S. P.'
-  },
-  {
-    id: 5,
-    roles: [],
-    displayName: 'A. B.'
-  },
-  {
-    id: 4,
-    roles: [],
-    displayName: 'John Doe'
-  },
-  {
-    id: 3,
-    roles: [],
-    displayName: 'H. K.'
-  },
-]
-
-type AuthorsType = User[] | (User | undefined)
+type AuthorsType = DisplayUser[] | (DisplayUser | undefined)
 
 export default function AuthorsInput<Type extends AuthorsType>(
 {
@@ -55,6 +36,7 @@ export default function AuthorsInput<Type extends AuthorsType>(
   setAuthors: Dispatch<SetStateAction<Type>>
   onInput?: (() => void) | undefined
 }) {
+  const users = useContext(DisplayUsersContext)
   const [query, setQuery] = useState('')
 
   const filteredAuthors = query !== ''
