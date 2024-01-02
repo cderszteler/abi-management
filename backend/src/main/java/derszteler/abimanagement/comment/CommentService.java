@@ -1,17 +1,19 @@
 package derszteler.abimanagement.comment;
 
 import derszteler.abimanagement.user.User;
-import lombok.AccessLevel;
+import derszteler.abimanagement.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Service
-public final class CommentService {
+public class CommentService {
+  private final UserRepository userRepository;
   private final CommentRepository repository;
 
   public ListCommentsResponse list(User user, Filter filter, int page, int limit) {
@@ -40,6 +42,22 @@ public final class CommentService {
 
     comment.status(request.status());
     repository.save(comment);
+  }
+
+  @PreAuthorize("hasAnyAuthority(" +
+    "T(derszteler.abimanagement.user.User$Role).Moderator, " +
+    "T(derszteler.abimanagement.user.User$Role).Admin" +
+    ")")
+  public Comment create(CreateCommentRequest request) {
+    var user = userRepository.findById(request.userId())
+      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "authors not found"));
+
+    return repository.save(Comment.builder()
+      .content(request.content())
+      .status(Comment.Status.Pending)
+      .user(user)
+      .build()
+    );
   }
 
   public enum Filter {

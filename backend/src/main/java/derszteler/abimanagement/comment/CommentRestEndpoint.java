@@ -2,7 +2,6 @@ package derszteler.abimanagement.comment;
 
 import derszteler.abimanagement.ErrorSchema;
 import derszteler.abimanagement.comment.CommentService.Filter;
-import derszteler.abimanagement.quote.review.ReviewQuoteRequest;
 import derszteler.abimanagement.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -100,7 +99,7 @@ public final class CommentRestEndpoint {
       name = "id"
     ),
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-      content = @Content(schema = @Schema(implementation = ReviewQuoteRequest.class)),
+      content = @Content(schema = @Schema(implementation = ReviewCommentRequest.class)),
       description = "The status (review) the user wants give a comment",
       required = true
     ),
@@ -141,5 +140,46 @@ public final class CommentRestEndpoint {
 
     service.review(user, id, request);
     return ResponseEntity.ok().build();
+  }
+
+  @Operation(
+    summary = "Create a comment",
+    description = """
+      This endpoint is used to create a comment. It requires the `Moderator`
+      or `Admin` role.
+      """,
+    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      content = @Content(schema = @Schema(implementation = CreateCommentRequest.class)),
+      description = "The comment to be created",
+      required = true
+    ),
+    responses = {
+      @ApiResponse(
+        content = @Content(schema = @Schema(implementation = ErrorSchema.class)),
+        description = "The request body is invalid.",
+        responseCode = "400"
+      ),
+      @ApiResponse(
+        content = @Content(schema = @Schema(implementation = ErrorSchema.class)),
+        description = "The specified user could not be found.",
+        responseCode = "404"
+      ),
+      @ApiResponse(
+        content = @Content(schema = @Schema(implementation = Comment.class)),
+        description = "The created comment",
+        responseCode = "200"
+      )
+    }
+  )
+  @PostMapping(value = "/comment", produces = "application/json")
+  public ResponseEntity<Comment> create(@RequestBody CreateCommentRequest request) {
+    if (!request.valid()) {
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        "invalid request body"
+      );
+    }
+
+    return ResponseEntity.ok(service.create(request));
   }
 }
