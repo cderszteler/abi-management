@@ -1,11 +1,13 @@
 'use client'
 
-import {useMemo, useState} from "react";
+import {useContext, useMemo, useState} from "react";
 import {ChatBubbleOvalLeftEllipsisIcon} from "@heroicons/react/24/outline";
 import {User} from "@/lib/auth";
 import clsx from "clsx";
 import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
 import CreateButton from "./CreateButton";
+import {ErrorToast, SuccessToast} from "@/components/Toast";
+import {RootLayoutContext} from "@/components/RootLayout";
 
 type RequiredFields = 'quote' | 'authors'
 
@@ -22,11 +24,15 @@ function validateFields(quote: string, authors: User[]): RequiredFields[] {
 
 // TODO: Add expiring at
 export default function AddQuoteButton() {
+  const {addToast} = useContext(RootLayoutContext)!
+
   const [quote, setQuote] = useState('')
   const [context, setContext] = useState('')
   const [authors, setAuthors] = useState<User[]>([])
   const [notAllowed, setNotAllowed] = useState(false)
+
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
+  const [submitting, setSubmitting] = useState(false)
 
   const modified = useMemo(
     () => !!(quote || context || authors.length != 0 || notAllowed),
@@ -39,6 +45,32 @@ export default function AddQuoteButton() {
       setInvalidFields(invalidFields)
       return
     }
+    setSubmitting(true)
+    const response = await fetch(`/api/v1/quote`, {
+      body: JSON.stringify({
+        content: quote,
+        context: context === '' ? undefined : context,
+        status: notAllowed ? 'NotAllowed' : undefined,
+        authors: authors.map(author => ({
+          id: author.id,
+          expiringAt: undefined
+        }))
+      }),
+      method: 'POST'
+    })
+    setSubmitting(false)
+    if (response.ok) {
+      setQuote('')
+      setContext('')
+      setAuthors([])
+      setNotAllowed(false)
+      addToast(<SuccessToast content="Das Zitat wurde erfolgreich erstellt!"/>)
+    } else {
+      addToast(<ErrorToast
+        content="Das Zitat konnte nicht erstellt werden. Bitte probiere es erneut oder kontaktiere uns!"
+        onRetry={async () => submit()}
+      />)
+    }
   }
 
   return (
@@ -49,6 +81,7 @@ export default function AddQuoteButton() {
       onClose={() => {
         setInvalidFields([])
       }}
+      submitting={submitting}
       submit={submit}
     >
       <div className="col-span-full">

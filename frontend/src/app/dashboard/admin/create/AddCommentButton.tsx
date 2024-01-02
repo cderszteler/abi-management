@@ -27,9 +27,9 @@ export default function AddCommentButton() {
   const {addToast} = useContext(RootLayoutContext)!
   const [comment, setComment] = useState('')
   const [user, setUser] = useState<User | undefined>()
-  const [submitting, setSubmitting] = useState(false)
 
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
+  const [submitting, setSubmitting] = useState(false)
 
   const modified = useMemo(
     () => !!(comment || user),

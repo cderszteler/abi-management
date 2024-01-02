@@ -27,12 +27,10 @@ public record CreateQuoteRequest(
   @Nullable
   Quote.Status staus
 ) {
-  // Suppress warning is wrong in this case
-  @SuppressWarnings("ConstantValue")
   boolean valid() {
     return (content != null && !content.isBlank())
       && (authors != null && !authors.isEmpty())
-      && (context == null || !content.isBlank());
+      && (context == null || !context.isBlank());
   }
 
   public record QuoteAuthor(
