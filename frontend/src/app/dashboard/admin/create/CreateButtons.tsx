@@ -2,13 +2,13 @@
 
 import {
   ChatBubbleOvalLeftEllipsisIcon,
-  PencilSquareIcon,
   UserCircleIcon
 } from "@heroicons/react/24/outline"
 import {useContext} from "react";
 import {hasRoles} from "@/lib/auth";
 import {DashboardContext} from "../../DashboardContextProvider";
 import AddQuoteButton from "@/app/dashboard/admin/create/AddQuoteButton";
+import AddCommentButton from "./AddCommentButton";
 
 export function Button({content, onClick, ...props}: {
   content: string
@@ -48,7 +48,7 @@ export default function CreateButtons() {
         <Button icon={UserCircleIcon} content="Benutzer hinzufügen"/>
       )}
       <AddQuoteButton/>
-      <Button icon={PencilSquareIcon} content="Kommentar hinzufügen"/>
+      <AddCommentButton/>
     </div>
   )
 }
