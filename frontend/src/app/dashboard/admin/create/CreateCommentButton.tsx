@@ -23,7 +23,7 @@ function validateFields(comment: string, user: User | undefined): RequiredFields
   return invalidFields
 }
 
-export default function AddCommentButton() {
+export default function CreateCommentButton() {
   const {addToast} = useContext(RootLayoutContext)!
   const [comment, setComment] = useState('')
   const [user, setUser] = useState<User | undefined>()

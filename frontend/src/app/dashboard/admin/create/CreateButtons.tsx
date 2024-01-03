@@ -3,13 +3,13 @@
 import {createContext, useContext, useEffect} from "react";
 import {hasRoles} from "@/lib/auth";
 import {DashboardContext} from "../../DashboardContextProvider";
-import AddQuoteButton from "@/app/dashboard/admin/create/AddQuoteButton";
-import AddCommentButton from "./AddCommentButton";
+import CreateQuoteButton from "@/app/dashboard/admin/create/CreateQuoteButton";
+import CreateCommentButton from "./CreateCommentButton";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {fetcher} from "@/lib/backend";
 import {ErrorToast} from "@/components/Toast";
 import useSWR from "swr";
-import AddUserButton from "./AddUserButton";
+import CreateUserButton from "./CreateUserButton";
 
 export type DisplayUser = {
   id: number,
@@ -40,9 +40,9 @@ export default function CreateButtons() {
   return (
     <DisplayUsersContext.Provider value={data || []}>
       <div className="h-[55vh] lg:h-[60vh] flex flex-col w-full gap-y-8 lg:gap-y-16">
-        {isAdmin && (<AddUserButton/>)}
-        <AddQuoteButton/>
-        <AddCommentButton/>
+        {isAdmin && (<CreateUserButton/>)}
+        <CreateQuoteButton/>
+        <CreateCommentButton/>
       </div>
     </DisplayUsersContext.Provider>
   )

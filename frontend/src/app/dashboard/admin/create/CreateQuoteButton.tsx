@@ -22,7 +22,7 @@ function validateFields(quote: string, authors: User[]): RequiredFields[] {
   return invalidFields
 }
 
-export default function AddQuoteButton() {
+export default function CreateQuoteButton() {
   const {addToast} = useContext(RootLayoutContext)!
 
   const [quote, setQuote] = useState('')

@@ -63,7 +63,7 @@ function Input({label, value, onChange, invalid, error}: {
   )
 }
 
-export default function AddCommentButton() {
+export default function CreateUserButton() {
   const {addToast} = useContext(RootLayoutContext)!
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
