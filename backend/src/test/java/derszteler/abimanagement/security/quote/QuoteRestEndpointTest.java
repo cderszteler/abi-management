@@ -36,9 +36,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = Application.class)
+@ContextConfiguration(classes = {Application.class, QuoteDataConfiguration.class})
 @TestPropertySource(locations = "classpath:application-testing.properties")
-@Import({AuthenticationConfiguration.class, QuoteDataConfiguration.class})
+@Import(AuthenticationConfiguration.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class QuoteRestEndpointTest {
@@ -116,7 +116,7 @@ public final class QuoteRestEndpointTest {
     Assertions.assertEquals(3, quote.id(), "expected different processed quote's id");
   }
 
-  @Order(3)
+  @Order(4)
   @Test
   void testNotAllowedListRequest() throws Exception {
     var response = mvc.perform(get(listPath)
@@ -137,7 +137,7 @@ public final class QuoteRestEndpointTest {
 
   private static final String createPath = "/api/v1/quote";
 
-  @Order(4)
+  @Order(5)
   @Test
   void testCreateRequest() throws Exception {
     mvc.perform(post(createPath)

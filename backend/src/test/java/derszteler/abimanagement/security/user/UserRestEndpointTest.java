@@ -22,6 +22,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -31,7 +33,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = Application.class)
 @TestPropertySource(locations = "classpath:application-testing.properties")
-@Import({AuthenticationConfiguration.class})
+@Import(AuthenticationConfiguration.class)
+@NotThreadSafe
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class UserRestEndpointTest {

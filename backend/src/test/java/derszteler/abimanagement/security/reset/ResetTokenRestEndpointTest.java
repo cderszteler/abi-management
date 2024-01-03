@@ -2,6 +2,7 @@ package derszteler.abimanagement.security.reset;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import derszteler.abimanagement.Application;
+import derszteler.abimanagement.security.AuthenticationConfiguration;
 import derszteler.abimanagement.user.User;
 import derszteler.abimanagement.user.UserRepository;
 import lombok.AccessLevel;
@@ -9,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,38 +31,31 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = Application.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @TestPropertySource(locations = "classpath:application-testing.properties")
+@Import(AuthenticationConfiguration.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class ResetTokenRestEndpointTest {
   private final ResetTokenRepository repository;
   private final UserRepository userRepository;
   private final ObjectMapper mapper;
+  private final User primaryUser;
   private final MockMvc mockMvc;
 
   private static final UUID resetToken = UUID.randomUUID();
-  private static final User user = User.builder()
-    .password(new BCryptPasswordEncoder().encode("D&Uy=(P@BaApA&fL"))
-    .firstName("Christoph")
-    .lastName("Derszteler")
-    .username("christoph.derszteler")
-    .build();
 
   @BeforeAll
-  void setupTokens() {
-    var user = userRepository.save(ResetTokenRestEndpointTest.user);
-
+  void setupToken() {
     repository.save(ResetToken.builder()
       .expiresAt(LocalDateTime.now().plus(ResetToken.expirationDuration))
       .token(resetToken)
-      .user(user)
+      .user(primaryUser)
       .build()
     );
   }
 
+  private static final String newPassword = AuthenticationConfiguration.primaryUserPassword;
   private static final String resetPath = "/api/v1/auth/reset";
-  private static final String newPassword = user.password();
 
   @Order(1)
   @Test
@@ -69,6 +63,7 @@ public final class ResetTokenRestEndpointTest {
     mockMvc.perform(post(resetPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new ResetRequest("invalid", newPassword)))
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     mockMvc.perform(post(resetPath)
@@ -77,6 +72,7 @@ public final class ResetTokenRestEndpointTest {
         UUID.randomUUID().toString(),
         newPassword
       )))
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -89,9 +85,10 @@ public final class ResetTokenRestEndpointTest {
         resetToken.toString(),
         newPassword
       )))
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andExpect(MockMvcResultMatchers.status().isOk());
 
-    var user = userRepository.findByUsername(ResetTokenRestEndpointTest.user.username())
+    var user = userRepository.findByUsername(primaryUser.username())
       .orElseThrow(() -> new IllegalStateException("user not found"));
 
     Assertions.assertFalse(

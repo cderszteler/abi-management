@@ -3,7 +3,6 @@ package derszteler.abimanagement.security;
 import com.google.common.collect.Maps;
 import derszteler.abimanagement.Application;
 import derszteler.abimanagement.user.User;
-import derszteler.abimanagement.user.UserRepository;
 import io.jsonwebtoken.Jwts;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
@@ -23,35 +22,26 @@ import java.util.Date;
 @SpringBootTest
 @ContextConfiguration(classes = Application.class)
 @TestPropertySource(locations = "classpath:application-testing.properties")
+@Import(AuthenticationConfiguration.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class JwtServiceTest {
   private final AuthenticationService authenticationService;
-  private final UserRepository userRepository;
   private final JwtService jwtService;
+  private final User primaryUser;
   private final SecretKey key;
 
   private TokenPair tokenPair;
 
-  private static final String password = "D&Uy=(P@BaApA&fL";
-  private static final User user = User.builder()
-    .firstName("Christoph")
-    .lastName("Derszteler")
-    .username("christoph.derszteler")
-    .password(new BCryptPasswordEncoder().encode(password))
-    .build();
-
   @BeforeAll
   void createUser() {
-    userRepository.save(user);
-
-    tokenPair = authenticationService.createTokenPair(user);
+    tokenPair = authenticationService.createTokenPair(primaryUser);
   }
 
   @Order(1)
   @Test
   void testFindDetailsByToken() {
-    var expiredToken = createExpiredToken(user);
+    var expiredToken = createExpiredToken(primaryUser);
     var details = jwtService.findValidDetailsByToken(tokenPair.accessToken())
       .orElseThrow(() -> new IllegalStateException("user not found by token"));
 
@@ -60,7 +50,7 @@ public final class JwtServiceTest {
       "expired token was accepted"
     );
     Assertions.assertEquals(
-      user.username(),
+      primaryUser.username(),
       details.getUsername(),
       "wrong user has been associated with this token"
     );

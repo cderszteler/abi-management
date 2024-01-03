@@ -30,9 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = Application.class)
+@ContextConfiguration(classes = {Application.class, CommentDataConfiguration.class})
 @TestPropertySource(locations = "classpath:application-testing.properties")
-@Import({AuthenticationConfiguration.class, CommentDataConfiguration.class})
+@Import(AuthenticationConfiguration.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class CommentRestEndpointTest {

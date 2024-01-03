@@ -24,10 +24,12 @@ public class AuthenticationConfiguration {
     );
   }
 
+  public static final String primaryUserPassword = "D&Uy=(P@BaApA&fL";
+
   @Bean
   User primaryUser(UserRepository userRepository) {
     return userRepository.save(User.builder()
-      .password(new BCryptPasswordEncoder().encode("D&Uy=(P@BaApA&fL"))
+      .password(new BCryptPasswordEncoder().encode(primaryUserPassword))
       .roles(List.of(User.Role.Admin))
       .firstName("Christoph")
       .lastName("Derszteler")

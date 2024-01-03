@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IncrementGenerator;
+import org.hibernate.id.IdentityGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -24,8 +24,8 @@ import java.util.Collection;
 public class Quote {
   @Schema(description = "The unique id of a quote", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "increment", type = IncrementGenerator.class)
-  @GeneratedValue(generator = "increment")
+  @GenericGenerator(name = "identity", type = IdentityGenerator.class)
+  @GeneratedValue(generator = "identity")
   @Id
   private Integer id;
 

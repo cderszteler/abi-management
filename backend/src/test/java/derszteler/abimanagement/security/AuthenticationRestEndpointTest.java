@@ -3,7 +3,6 @@ package derszteler.abimanagement.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import derszteler.abimanagement.Application;
 import derszteler.abimanagement.user.User;
-import derszteler.abimanagement.user.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,25 +27,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = Application.class)
 @TestPropertySource(locations = "classpath:application-testing.properties")
+@Import(AuthenticationConfiguration.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
 @Slf4j
 public final class AuthenticationRestEndpointTest {
-  private final UserRepository userRepository;
   private final ObjectMapper mapper;
+  private final User primaryUser;
   private final MockMvc mvc;
-
-  private static final String password = "D&Uy=(P@BaApA&fL";
-  private static final User user = User.builder()
-    .password(new BCryptPasswordEncoder().encode(password))
-    .firstName("Christoph")
-    .lastName("Derszteler")
-    .username("christoph.derszteler")
-    .build();
-
-  @BeforeAll
-  void createUser() {
-    userRepository.save(user);
-  }
 
   private static final String authenticationPath = "/api/v1/auth/authenticate";
 
@@ -54,10 +42,12 @@ public final class AuthenticationRestEndpointTest {
   void testInvalidAuthenticationRequests() throws Exception {
     mvc.perform(post(authenticationPath)
       .contentType("application/json")
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andExpect(MockMvcResultMatchers.status().isBadRequest());
     mvc.perform(post(authenticationPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new AuthenticationRequest("", "weakPW")))
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
@@ -67,17 +57,19 @@ public final class AuthenticationRestEndpointTest {
     mvc.perform(post(authenticationPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new AuthenticationRequest(
-        user.getUsername(),
-        password.substring(1)
+        primaryUser.getUsername(),
+        AuthenticationConfiguration.primaryUserPassword.substring(1)
       )))
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andExpect(MockMvcResultMatchers.status().isForbidden());
 
     var response = mvc.perform(post(authenticationPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new AuthenticationRequest(
-        user.getUsername(),
-        password
+        primaryUser.getUsername(),
+        AuthenticationConfiguration.primaryUserPassword
       )))
+      .with(SecurityMockMvcRequestPostProcessors.anonymous())
     ).andReturn().getResponse();
     Assertions.assertEquals(
       200,
