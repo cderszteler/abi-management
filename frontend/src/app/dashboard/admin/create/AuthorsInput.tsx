@@ -81,7 +81,7 @@ export default function AuthorsInput<Type extends AuthorsType>(
                     : "ring-1 ring-neutral-300 focus:ring-neutral-700"
                 )}
                 onChange={(event) => setQuery(event.target.value)}
-                displayValue={() => selectedAuthorsName}
+                displayValue={() => open ? "" : selectedAuthorsName}
               />
               <Combobox.Button
                 className="absolute inset-y-0 right-0 flex items-center pr-2">
