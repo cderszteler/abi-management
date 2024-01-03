@@ -30,6 +30,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, UserDetail
     """
   )
   Optional<User> findByUsername(String username);
+  boolean existsByUsernameIgnoreCase(String username);
 
   @Override
   default UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

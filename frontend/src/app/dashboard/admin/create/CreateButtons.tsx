@@ -9,6 +9,7 @@ import {RootLayoutContext} from "@/components/RootLayout";
 import {fetcher} from "@/lib/backend";
 import {ErrorToast} from "@/components/Toast";
 import useSWR from "swr";
+import AddUserButton from "./AddUserButton";
 
 export type DisplayUser = {
   id: number,
@@ -39,9 +40,7 @@ export default function CreateButtons() {
   return (
     <DisplayUsersContext.Provider value={data || []}>
       <div className="h-[55vh] lg:h-[60vh] flex flex-col w-full gap-y-8 lg:gap-y-16">
-        {/* TODO: Implement adding user isAdmin && (
-          <Button icon={UserCircleIcon} content="Benutzer hinzufügen"/>
-        )*/}
+        {isAdmin && (<AddUserButton/>)}
         <AddQuoteButton/>
         <AddCommentButton/>
       </div>

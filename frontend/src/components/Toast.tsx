@@ -76,12 +76,14 @@ export function ErrorToast(
   content,
   retry = true,
   onRetry,
+  contact = true,
   autoRemove = true,
   cooldown = 5000
 }: {
   content: string
   retry?: boolean
   onRetry?: () => void
+  contact?: boolean
   autoRemove?: boolean
   cooldown?: number
 }) {
@@ -120,30 +122,34 @@ export function ErrorToast(
                 <p className="text-sm text-neutral-600">
                   {content}
                 </p>
-                <div className="mt-1.5 flex space-x-7">
-                  {retry ? (
-                    <button
-                      className="rounded-md bg-white text-sm font-medium text-neutral-950 hover:text-neutral-700"
-                      type="button"
-                      onClick={() => {
-                        if (onRetry) {
-                          onRetry()
-                          return
-                        }
-                        setShow(false)
-                      }}
-                    >
-                      Erneut versuchen
-                    </button>
-                  ) : (<></>)}
-                  <button
-                    className="rounded-md bg-white text-sm font-medium text-red-500 hover:text-red-400"
-                    onClick={() => router.push("/contact")}
-                    type="button"
-                  >
-                    Kontakt
-                  </button>
-                </div>
+                {(retry || contact) && (
+                  <div className="mt-1.5 flex space-x-7">
+                    {retry && (
+                      <button
+                        className="rounded-md bg-white text-sm font-medium text-neutral-950 hover:text-neutral-700"
+                        type="button"
+                        onClick={() => {
+                          if (onRetry) {
+                            onRetry()
+                            return
+                          }
+                          setShow(false)
+                        }}
+                      >
+                        Erneut versuchen
+                      </button>
+                    )}
+                    {contact && (
+                      <button
+                        className="rounded-md bg-white text-sm font-medium text-red-500 hover:text-red-400"
+                        onClick={() => router.push("/contact")}
+                        type="button"
+                      >
+                        Kontakt
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="ml-4 flex flex-shrink-0">
                 <button
