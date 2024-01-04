@@ -1,6 +1,6 @@
 'use client'
 
-import {useContext, useId, useMemo, useState} from "react";
+import {useContext, useEffect, useId, useMemo, useState} from "react";
 import {UserCircleIcon} from "@heroicons/react/24/outline";
 
 import {RootLayoutContext} from "@/components/RootLayout";
@@ -68,6 +68,7 @@ export default function CreateUserButton() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
+  const [editedUsername, setEditedUsername] = useState(false)
 
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
   const [submitting, setSubmitting] = useState(false)
@@ -76,6 +77,12 @@ export default function CreateUserButton() {
     () => !!(firstName || lastName || username),
     [firstName, lastName, username]
   )
+
+  useEffect(() => {
+    if (!editedUsername) {
+      setUsername(`${firstName.toLowerCase()}.${lastName.toLowerCase()}`)
+    }
+  }, [editedUsername, firstName, lastName]);
 
   const submit = async () => {
     const invalidFields = validateFields(firstName, lastName, username)
@@ -141,6 +148,7 @@ export default function CreateUserButton() {
         value={username}
         onChange={(value) => {
           setUsername(value)
+          setEditedUsername(true)
           setInvalidFields(invalidFields.filter(invalid => invalid !== 'username'))
         }}
         invalid={invalidFields.includes('username')}
