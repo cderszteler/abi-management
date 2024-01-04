@@ -7,6 +7,7 @@ import {RootLayoutContext} from "@/components/RootLayout";
 import clsx from "clsx";
 import CreateButton from "@/app/dashboard/admin/create/CreateButton";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
+import {useSWRConfig} from "swr";
 
 type RequiredFields = 'firstName' | 'lastName' | 'username'
 
@@ -65,6 +66,7 @@ function Input({label, value, onChange, invalid, error}: {
 
 export default function CreateUserButton() {
   const {addToast} = useContext(RootLayoutContext)!
+  const { mutate } = useSWRConfig()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
@@ -100,6 +102,8 @@ export default function CreateUserButton() {
       setFirstName('')
       setLastName('')
       setUsername('')
+      setEditedUsername(false)
+      mutate('/api/v1/user/dashboard/admin/users')
       addToast(<SuccessToast content="Der Benutzer wurde erfolgreich erstellt!"/>)
     } else if (response.status === 409) {
       addToast(<ErrorToast
