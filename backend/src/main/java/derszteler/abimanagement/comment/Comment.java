@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentityGenerator;
 
 import java.time.LocalDateTime;
 
@@ -27,8 +25,7 @@ import java.time.LocalDateTime;
 public class Comment {
   @Schema(description = "The unique id of a comment", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "identity", type = IdentityGenerator.class)
-  @GeneratedValue(generator = "identity")
+  @GeneratedValue
   @Id
   private Integer id;
 

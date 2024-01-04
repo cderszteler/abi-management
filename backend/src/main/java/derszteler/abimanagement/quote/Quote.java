@@ -8,8 +8,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentityGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -24,8 +22,7 @@ import java.util.Collection;
 public class Quote {
   @Schema(description = "The unique id of a quote", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "identity", type = IdentityGenerator.class)
-  @GeneratedValue(generator = "identity")
+  @GeneratedValue
   @Id
   private Integer id;
 

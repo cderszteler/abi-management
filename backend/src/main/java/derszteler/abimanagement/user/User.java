@@ -11,8 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentityGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,8 +31,7 @@ import static derszteler.abimanagement.user.User.Role.Default;
 public final class User implements UserDetails {
   @Schema(description = "The unique id of a user", example = "1")
   @JsonProperty
-  @GenericGenerator(name = "identity", type = IdentityGenerator.class)
-  @GeneratedValue(generator = "identity")
+  @GeneratedValue
   @Id
   private Integer id;
 
