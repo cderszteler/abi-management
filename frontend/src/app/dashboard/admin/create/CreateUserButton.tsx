@@ -82,7 +82,10 @@ export default function CreateUserButton() {
 
   useEffect(() => {
     if (!editedUsername) {
-      setUsername(`${firstName.toLowerCase()}.${lastName.toLowerCase()}`)
+      setUsername(firstName && lastName
+        ? `${firstName.toLowerCase()}.${lastName.toLowerCase()}`
+        : firstName || lastName
+      )
     }
   }, [editedUsername, firstName, lastName]);
 
