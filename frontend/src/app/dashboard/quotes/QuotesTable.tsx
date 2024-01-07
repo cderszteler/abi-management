@@ -41,6 +41,8 @@ const statusDescriptions: { [key:string]: { color: Color, name: string, descript
   }
 }
 
+const limit = 10
+
 export function QuotesTable(
 {
   title,
@@ -61,10 +63,11 @@ export function QuotesTable(
   const [page, setPage] = useState(1)
   const {mutate} = useSWRConfig()
   const {data, error, isLoading} = useSWR<{quotes: Quote[], total: number}>(
-    `/api/v1/quotes?filter=${filter}&page=${page - 1}&limit=20`,
+    `/api/v1/quotes?filter=${filter}&page=${page - 1}&limit=${limit}`,
     fetcher
   )
   const loading = isLoading || error
+  const total = data?.total || 1
 
   useEffect(() => {
     if (error) {
@@ -149,11 +152,11 @@ export function QuotesTable(
           }
         ]}
       />
-      {page > 1 && (
+      {Math.ceil(total/limit) > 1 && (
         <Pagination
           page={page}
           setPage={setPage}
-          total={loading ? 1 : Math.ceil(data!.total/20)}
+          total={Math.ceil(total/limit)}
           className="mt-8"
         />
       )}
