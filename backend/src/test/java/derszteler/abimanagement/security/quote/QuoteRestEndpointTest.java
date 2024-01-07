@@ -33,10 +33,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest
+@SpringBootTest(classes = QuoteDataConfiguration.class)
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = {Application.class, QuoteDataConfiguration.class})
+@ContextConfiguration(classes = {Application.class})
 @TestPropertySource(locations = "classpath:application-testing.properties")
 @Import(AuthenticationConfiguration.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @Autowired)
@@ -173,7 +173,7 @@ public final class QuoteRestEndpointTest {
     mvc.perform(post(createPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new CreateQuoteRequest(
-        "Be quick!", null, Set.of(new QuoteAuthor(1, LocalDateTime.now().plusHours(1))), null
+        "Be quick!", null, Set.of(new QuoteAuthor(1, LocalDateTime.now().plusMinutes(10))), null
       )))
     )
     .andExpect(MockMvcResultMatchers.status().isOk());

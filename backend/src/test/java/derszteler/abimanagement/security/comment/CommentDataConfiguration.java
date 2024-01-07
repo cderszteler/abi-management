@@ -27,7 +27,7 @@ public final class CommentDataConfiguration {
         .build(),
       Comment.builder()
         .content("Expired comment... :(")
-        .expiringAt(LocalDateTime.now().minusHours(1))
+        .expiringAt(LocalDateTime.now().minusMinutes(10))
         .status(Comment.Status.Pending)
         .user(primaryUser)
         .build(),

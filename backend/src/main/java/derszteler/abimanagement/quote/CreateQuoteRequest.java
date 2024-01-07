@@ -25,7 +25,7 @@ public record CreateQuoteRequest(
     nullable = true
   )
   @Nullable
-  Quote.Status staus
+  Quote.Status status
 ) {
   boolean valid() {
     return (content != null && !content.isBlank())

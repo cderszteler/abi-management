@@ -54,7 +54,7 @@ public class QuoteService {
     var quote = repository.save(Quote.builder()
       .content(request.content())
       .context(request.context())
-      .status(request.staus())
+      .status(request.status())
       .authors(authors.values())
       .build()
     );
