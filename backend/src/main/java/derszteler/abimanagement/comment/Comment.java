@@ -31,7 +31,7 @@ public class Comment {
 
   @Schema(description = "The content of the comment", example = "I love you")
   @JsonProperty
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "text not null")
   private String content;
 
   @Enumerated(EnumType.STRING)
