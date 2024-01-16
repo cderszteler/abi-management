@@ -1,12 +1,4 @@
-import rehypeShiki from '@leafac/rehype-shiki'
-import nextMDX from '@next/mdx'
-import {Parser} from 'acorn'
-import jsx from 'acorn-jsx'
-import {recmaImportImages} from 'recma-import-images'
-import remarkGfm from 'remark-gfm'
-import {remarkRehypeWrap} from 'remark-rehype-wrap'
-import remarkUnwrapImages from 'remark-unwrap-images'
-import shiki from 'shiki'
+import {withSentryConfig} from "@sentry/nextjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -14,57 +6,47 @@ const nextConfig = {
   output: 'standalone'
 }
 
-function remarkMDXLayout(source, metaName) {
-  let parser = Parser.extend(jsx())
-  let parseOptions = { ecmaVersion: 'latest', sourceType: 'module' }
+export default withSentryConfig(withSentryConfig(nextConfig, {
+silent: true,
+org: "qetz-private",
+project: "abi-management",
+}, {
+widenClientFileUpload: true,
+transpileClientSDK: true,
+tunnelRoute: "/monitoring",
+hideSourceMaps: true,
+disableLogger: true,
+automaticVercelMonitors: true,
+}), {
+// For all available options, see:
+// https://github.com/getsentry/sentry-webpack-plugin#options
 
-  return (tree) => {
-    let imp = `import _Layout from '${source}'`
-    let exp = `export default function Layout(props) {
-      return <_Layout {...props} ${metaName}={${metaName}} />
-    }`
+// Suppresses source map uploading logs during build
+silent: true,
+org: "qetz-private",
+project: "abi-management",
+}, {
+// For all available options, see:
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-    tree.children.push(
-      {
-        type: 'mdxjsEsm',
-        value: imp,
-        data: { estree: parser.parse(imp, parseOptions) },
-      },
-      {
-        type: 'mdxjsEsm',
-        value: exp,
-        data: { estree: parser.parse(exp, parseOptions) },
-      },
-    )
-  }
-}
+// Upload a larger set of source maps for prettier stack traces (increases build time)
+widenClientFileUpload: true,
 
-export default async function config() {
-  let highlighter = await shiki.getHighlighter({
-    theme: 'css-variables',
-  })
+// Transpiles SDK to be compatible with IE11 (increases bundle size)
+transpileClientSDK: true,
 
-  let withMDX = nextMDX({
-    extension: /\.mdx$/,
-    options: {
-      recmaPlugins: [recmaImportImages],
-      rehypePlugins: [
-        [rehypeShiki, { highlighter }],
-        [
-          remarkRehypeWrap,
-          {
-            node: { type: 'mdxJsxFlowElement', name: 'Typography' },
-            start: ':root > :not(mdxJsxFlowElement)',
-            end: ':root > mdxJsxFlowElement',
-          },
-        ],
-      ],
-      remarkPlugins: [
-        remarkGfm,
-        remarkUnwrapImages,
-      ],
-    },
-  })
+// Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+tunnelRoute: "/monitoring",
 
-  return withMDX(nextConfig)
-}
+// Hides source maps from generated client bundles
+hideSourceMaps: true,
+
+// Automatically tree-shake Sentry logger statements to reduce bundle size
+disableLogger: true,
+
+// Enables automatic instrumentation of Vercel Cron Monitors.
+// See the following for more information:
+// https://docs.sentry.io/product/crons/
+// https://vercel.com/docs/cron-jobs
+automaticVercelMonitors: true,
+});
