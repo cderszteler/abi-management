@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import {PasswordInput, PasswordToggle} from "@/components/Input";
 import {ErrorToast} from "@/components/Toast";
+import {mutator} from "@/lib/backend";
+import useSWRMutation from "swr/mutation";
 
 function CardHeader({className, children}: {className?: string, children: React.ReactNode}) {
   return (
@@ -69,6 +71,11 @@ function validToken(token: string | null) {
 export default function ResetForm() {
   const params = useSearchParams()
   const {addToast} = useContext(RootLayoutContext)!
+  const { trigger } = useSWRMutation(
+    '/api/v1/auth/reset',
+    mutator,
+    { throwOnError: false, onSuccess: () => onSuccess(), onError: (error) => onError(error)}
+  )
   const [ok, setOk] = useState(false)
   const [first, setFirst] = useState('')
   const [second, setSecond] = useState('')
@@ -89,22 +96,16 @@ export default function ResetForm() {
       setInvalid(reasonDescriptions[invalid])
       return
     }
-    const response = await fetch('/api/v1/auth/reset', {
-      method: 'POST',
-      body: JSON.stringify({
-        token: token,
-        password: first
-      })
-    })
-
-    if (response.ok) {
-      setOk(true)
-    } else if (response.status === 404) {
+    trigger({token: token, password: first})
+  }
+  const onSuccess = () => setOk(true)
+  const onError = (error: any) => {
+    if (error.status === 404) {
       addToast(<ErrorToast
         content="Der angegebene Link ist ungültig. Bitte probiere es erneut oder kontaktiere uns!"
         onRetry={async () => await reset()}
       />)
-    } else if (response.status === 410) {
+    } else if (error.status === 410) {
       addToast(<ErrorToast
         content="Der angegebene Link ist abgelaufen. Bitte kontaktiere uns!"
         retry={false}
