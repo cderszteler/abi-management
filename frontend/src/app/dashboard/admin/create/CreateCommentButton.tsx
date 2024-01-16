@@ -9,6 +9,8 @@ import clsx from "clsx";
 import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
 import CreateButton from "@/app/dashboard/admin/create/CreateButton";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
+import {mutator} from "@/lib/backend";
+import useSWRMutation from "swr/mutation";
 
 type RequiredFields = 'comment' | 'user'
 
@@ -25,11 +27,14 @@ function validateFields(comment: string, user: User | undefined): RequiredFields
 
 export default function CreateCommentButton() {
   const {addToast} = useContext(RootLayoutContext)!
+  const { trigger, isMutating, error } = useSWRMutation(
+    '/api/v1/comment',
+    mutator,
+    { throwOnError: false, onSuccess: () => onSuccess(), onError: () => onError()}
+  )
   const [comment, setComment] = useState('')
   const [user, setUser] = useState<User | undefined>()
-
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
-  const [submitting, setSubmitting] = useState(false)
 
   const modified = useMemo(
     () => !!(comment || user),
@@ -42,22 +47,18 @@ export default function CreateCommentButton() {
       setInvalidFields(invalidFields)
       return
     }
-    setSubmitting(true)
-    const response = await fetch(`/api/v1/comment`, {
-      body: JSON.stringify({content: comment, userId: user?.id}),
-      method: 'POST'
-    })
-    setSubmitting(false)
-    if (response.ok) {
-      setComment('')
-      setUser(undefined)
-      addToast(<SuccessToast content="Der Kommentar wurde erfolgreich erstellt!"/>)
-    } else {
-      addToast(<ErrorToast
-        content="Der Kommentar konnte nicht erstellt werden. Bitte probiere es erneut oder kontaktiere uns!"
-        onRetry={async () => submit()}
-      />)
-    }
+    trigger({content: comment, userId: user?.id})
+  }
+  const onSuccess = () => {
+    setComment('')
+    setUser(undefined)
+    addToast(<SuccessToast content="Der Kommentar wurde erfolgreich erstellt!"/>)
+  }
+  const onError = () => {
+    addToast(<ErrorToast
+      content="Der Kommentar konnte nicht erstellt werden. Bitte probiere es erneut oder kontaktiere uns!"
+      onRetry={async () => submit()}
+    />)
   }
 
   return (
@@ -66,7 +67,8 @@ export default function CreateCommentButton() {
       icon={PencilSquareIcon}
       warnBeforeClosing={modified}
       onClose={() => setInvalidFields([])}
-      submitting={submitting}
+      keepOpen={isMutating || error}
+      submitting={isMutating}
       submit={submit}
     >
       <div className="col-span-full">

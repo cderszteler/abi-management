@@ -7,12 +7,13 @@ import clsx from "clsx";
 import {CenteredLoading} from "@/components/Loading";
 import {DisplayUsersContext} from "@/app/dashboard/admin/create/CreateButtons";
 
-export default function CreateButton({title, onClose, submitting, ...props}:
+export default function CreateButton({title, onClose, submitting, keepOpen, ...props}:
 {
   title: string
   icon: typeof HomeIcon
   warnBeforeClosing: boolean
   onClose: (() => void) | undefined
+  keepOpen?: boolean
   submitting: boolean
   submit: () => Promise<void>
   children: React.ReactNode
@@ -33,10 +34,10 @@ export default function CreateButton({title, onClose, submitting, ...props}:
   }, [props.warnBeforeClosing]);
 
   useEffect(() => {
-    if (!submitting) {
+    if (!submitting && !keepOpen) {
       setOpen(false)
     }
-  }, [submitting]);
+  }, [submitting, keepOpen]);
 
   return (
     <>

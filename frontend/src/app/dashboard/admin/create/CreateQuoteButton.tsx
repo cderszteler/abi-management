@@ -8,6 +8,8 @@ import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
 import CreateButton from "./CreateButton";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
 import {RootLayoutContext} from "@/components/RootLayout";
+import {mutator} from "@/lib/backend";
+import useSWRMutation from "swr/mutation";
 
 type RequiredFields = 'quote' | 'authors'
 
@@ -24,14 +26,16 @@ function validateFields(quote: string, authors: User[]): RequiredFields[] {
 
 export default function CreateQuoteButton() {
   const {addToast} = useContext(RootLayoutContext)!
-
+  const { trigger, isMutating, error } = useSWRMutation(
+    '/api/v1/quote',
+    mutator,
+    { throwOnError: false, onSuccess: () => onSuccess(), onError: () => onError()}
+  )
   const [quote, setQuote] = useState('')
   const [context, setContext] = useState('')
   const [authors, setAuthors] = useState<User[]>([])
   const [notAllowed, setNotAllowed] = useState(false)
-
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
-  const [submitting, setSubmitting] = useState(false)
 
   const modified = useMemo(
     () => !!(quote || context || authors.length != 0 || notAllowed),
@@ -44,32 +48,28 @@ export default function CreateQuoteButton() {
       setInvalidFields(invalidFields)
       return
     }
-    setSubmitting(true)
-    const response = await fetch(`/api/v1/quote`, {
-      body: JSON.stringify({
-        content: quote,
-        context: context === '' ? undefined : context,
-        status: notAllowed ? 'NotAllowed' : undefined,
-        authors: authors.map(author => ({
-          id: author.id,
-          expiringAt: undefined
-        }))
-      }),
-      method: 'POST'
+    trigger({
+      content: quote,
+      context: context === '' ? undefined : context,
+      status: notAllowed ? 'NotAllowed' : undefined,
+      authors: authors.map(author => ({
+        id: author.id,
+        expiringAt: undefined
+      }))
     })
-    setSubmitting(false)
-    if (response.ok) {
-      setQuote('')
-      setContext('')
-      setAuthors([])
-      setNotAllowed(false)
-      addToast(<SuccessToast content="Das Zitat wurde erfolgreich erstellt!"/>)
-    } else {
-      addToast(<ErrorToast
-        content="Das Zitat konnte nicht erstellt werden. Bitte probiere es erneut oder kontaktiere uns!"
-        onRetry={async () => submit()}
-      />)
-    }
+  }
+  const onSuccess = () => {
+    setQuote('')
+    setContext('')
+    setAuthors([])
+    setNotAllowed(false)
+    addToast(<SuccessToast content="Das Zitat wurde erfolgreich erstellt!"/>)
+  }
+  const onError = () => {
+    addToast(<ErrorToast
+      content="Das Zitat konnte nicht erstellt werden. Bitte probiere es erneut oder kontaktiere uns!"
+      onRetry={async () => submit()}
+    />)
   }
 
   return (
@@ -80,7 +80,8 @@ export default function CreateQuoteButton() {
       onClose={() => {
         setInvalidFields([])
       }}
-      submitting={submitting}
+      keepOpen={isMutating || error}
+      submitting={isMutating}
       submit={submit}
     >
       <div className="col-span-full">
@@ -143,13 +144,13 @@ export default function CreateQuoteButton() {
       <div className="mt-4 sm:mt-12 col-span-full relative flex gap-x-2">
         <div className="flex h-6 items-center">
         <input
-            className="h-4 w-4 cursor-pointer rounded border-neutral-300 text-neutral-950 focus:ring-neutral-700"
-            onChange={event => setNotAllowed(event.target.checked)}
-            defaultChecked={notAllowed}
-            name="not-allowed"
-            id="not-allowed"
-            type="checkbox"
-          />
+          className="h-4 w-4 cursor-pointer rounded border-neutral-300 text-neutral-950 focus:ring-neutral-700"
+          onChange={event => setNotAllowed(event.target.checked)}
+          defaultChecked={notAllowed}
+          name="not-allowed"
+          id="not-allowed"
+          type="checkbox"
+        />
         </div>
         <div className="leading-6">
           <label htmlFor="not-allowed" className="font-medium cursor-pointer text-gray-900">

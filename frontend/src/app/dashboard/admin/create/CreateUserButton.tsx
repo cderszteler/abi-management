@@ -8,6 +8,8 @@ import clsx from "clsx";
 import CreateButton from "@/app/dashboard/admin/create/CreateButton";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
 import {useSWRConfig} from "swr";
+import useSWRMutation from "swr/mutation"
+import {mutator} from "@/lib/backend";
 
 type RequiredFields = 'firstName' | 'lastName' | 'username'
 
@@ -67,13 +69,16 @@ function Input({label, value, onChange, invalid, error}: {
 export default function CreateUserButton() {
   const {addToast} = useContext(RootLayoutContext)!
   const { mutate } = useSWRConfig()
+  const { trigger, isMutating, error } = useSWRMutation(
+    '/api/v1/user',
+    mutator,
+    { throwOnError: false, onSuccess: () => onSuccess(), onError: (error) => onError(error)}
+  )
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
   const [editedUsername, setEditedUsername] = useState(false)
-
   const [invalidFields, setInvalidFields] = useState<RequiredFields[]>([])
-  const [submitting, setSubmitting] = useState(false)
 
   const modified = useMemo(
     () => !!(firstName || lastName || username),
@@ -95,20 +100,18 @@ export default function CreateUserButton() {
       setInvalidFields(invalidFields)
       return
     }
-    setSubmitting(true)
-    const response = await fetch(`/api/v1/user`, {
-      body: JSON.stringify({firstName, lastName, username}),
-      method: 'POST'
-    })
-    setSubmitting(false)
-    if (response.ok) {
-      setFirstName('')
-      setLastName('')
-      setUsername('')
-      setEditedUsername(false)
-      mutate('/api/v1/user/dashboard/admin/users')
-      addToast(<SuccessToast content="Der Benutzer wurde erfolgreich erstellt!"/>)
-    } else if (response.status === 409) {
+    trigger({firstName, lastName, username})
+  }
+  const onSuccess = () => {
+    setFirstName('')
+    setLastName('')
+    setUsername('')
+    setEditedUsername(false)
+    mutate('/api/v1/user/dashboard/admin/users')
+    addToast(<SuccessToast content="Der Benutzer wurde erfolgreich erstellt!"/>)
+  }
+  const onError = (error: any) => {
+    if (error.status === 409) {
       addToast(<ErrorToast
         content="Ein Benutzer mit diesem Nutzernamen existiert bereits. Bitte wähle einen anderen!"
         retry={false}
@@ -127,7 +130,8 @@ export default function CreateUserButton() {
       icon={UserCircleIcon}
       warnBeforeClosing={modified}
       onClose={() => setInvalidFields([])}
-      submitting={submitting}
+      keepOpen={isMutating || error}
+      submitting={isMutating}
       submit={submit}
     >
       <Input
