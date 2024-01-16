@@ -15,12 +15,20 @@ import Link from "next/link";
 import {PasswordInput, PasswordToggle} from "@/components/Input";
 import {ErrorToast} from "@/components/Toast";
 
-function InvalidToken({disabled}: {disabled: boolean}) {
+function CardHeader({className, children}: {className?: string, children: React.ReactNode}) {
   return (
     <div className={clsx(
-      "flex flex-col gap-4 items-center -mt-6 text-red-500 text-center",
-      disabled ? '' : 'hidden'
+      "flex flex-col gap-4 items-center -mt-6 text-center",
+      className
     )}>
+      {children}
+    </div>
+  )
+}
+
+function InvalidToken({disabled}: {disabled: boolean}) {
+  return (
+    <CardHeader className={clsx("text-red-500", disabled ? '' : 'hidden')}>
       <ExclamationCircleIcon className="w-6"/>
       <p>Der verwendete Link ist ungültig.</p>
       <p className="-mt-4">
@@ -31,16 +39,13 @@ function InvalidToken({disabled}: {disabled: boolean}) {
         > kontaktiere uns</Link>
         .
       </p>
-    </div>
+    </CardHeader>
   )
 }
 
 function SuccessfulReset({ok}: {ok: boolean}) {
   return (
-    <div className={clsx(
-      "flex flex-col gap-4 items-center -mt-6 text-green-700 text-center",
-      ok ? '' : 'hidden'
-    )}>
+    <CardHeader className={clsx("text-green-700", ok ? '' : 'hidden')}>
       <CheckCircleIcon className="w-6"/>
       <p>Du hast dein Passwort zurückgesetzt.</p>
       <p className="-mt-4">
@@ -51,7 +56,7 @@ function SuccessfulReset({ok}: {ok: boolean}) {
         > logge dich ein</Link>
         , um auf das Dashboard zugreifen zu können.
       </p>
-    </div>
+    </CardHeader>
   )
 }
 
@@ -116,6 +121,12 @@ export default function ResetForm() {
     <Card className="flex flex-col gap-10" title="Setze dein Passwort zurück" logo>
       <InvalidToken disabled={disabled}/>
       <SuccessfulReset ok={ok}/>
+      {!ok && !disabled && (
+        <CardHeader className="text-neutral-500">
+          Wähle hier das Passwort für deinen Account aus, mit dem du dich danach
+          einloggen kannst.
+        </CardHeader>
+      )}
 
       <form className="space-y-6">
         <PasswordInput
