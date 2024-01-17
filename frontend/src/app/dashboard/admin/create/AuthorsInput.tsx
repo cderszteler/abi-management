@@ -18,23 +18,25 @@ import clsx from "clsx";
 import {
   DisplayUser,
   DisplayUsersContext
-} from "@/app/dashboard/admin/create/CreateButtons";
+} from "@/app/dashboard/admin/AdminDashboardContainer";
 
 type AuthorsType = DisplayUser[] | (DisplayUser | undefined)
 
 export default function AuthorsInput<Type extends AuthorsType>(
 {
   multiple,
-  invalid,
+  invalid = false,
   authors,
   setAuthors,
-  onInput
+  onInput,
+  ...props
 }: {
   multiple: boolean
-  invalid: boolean
+  invalid?: boolean
   authors: Type
   setAuthors: Dispatch<SetStateAction<Type>>
   onInput?: (() => void) | undefined
+  className?: string | undefined
 }) {
   const users = useContext(DisplayUsersContext)
   const [query, setQuery] = useState('')
@@ -57,7 +59,7 @@ export default function AuthorsInput<Type extends AuthorsType>(
   }, [authors])
 
   return (
-    <>
+    <div className={props.className}>
       <Combobox
         value={authors}
         onChange={(authors) => {
@@ -145,6 +147,6 @@ export default function AuthorsInput<Type extends AuthorsType>(
           Bitte wähl mindestens eine zitierte Person aus!
         </p>
       )}
-    </>
+    </div>
   )
 }
