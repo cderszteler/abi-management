@@ -17,7 +17,7 @@ export const fetcher = async (url: string) => {
 }
 
 export const mutator = async (url: string, { arg: body }: { arg?: any }) => {
-  const res = await fetch(
+  const response = await fetch(
     url,
     {
       method: 'POST',
@@ -25,15 +25,19 @@ export const mutator = async (url: string, { arg: body }: { arg?: any }) => {
     }
   )
 
-  if (!res.ok) {
+  if (!response.ok) {
     const error = new Error('An error occurred while mutating the data.')
     // Attach extra info to the error object.
     // @ts-ignore
-    error.info = await res.json()
+    error.info = await response.json()
     // @ts-ignore
-    error.status = res.status
+    error.status = response.status
     throw error
   }
 
-  return res.json()
+  try {
+    return JSON.parse(await response.text())
+  } catch (error) {
+    return JSON.stringify({})
+  }
 }
