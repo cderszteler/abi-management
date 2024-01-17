@@ -131,7 +131,7 @@ export default function ResetForm() {
 
       <form className="space-y-6">
         <PasswordInput
-          label="Passwort"
+          label="Neues Passwort"
           autoComplete="new-password"
           show={show}
           invalid={!!invalid}
@@ -142,7 +142,7 @@ export default function ResetForm() {
           <PasswordToggle show={show} setShow={setShow} disabled={disabled}/>
         </PasswordInput>
         <PasswordInput
-          label="Passwort wiederholen"
+          label="Neues Passwort wiederholen"
           autoComplete="new-password"
           show={show}
           invalid={!!invalid}
