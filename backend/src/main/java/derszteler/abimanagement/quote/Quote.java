@@ -1,6 +1,8 @@
 package derszteler.abimanagement.quote;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import derszteler.abimanagement.quote.review.QuoteReview;
 import derszteler.abimanagement.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -60,6 +62,11 @@ public class Quote {
   )
   @ToString.Exclude
   private Collection<User> authors;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "quote", fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private Collection<QuoteReview> reviews;
 
   @Builder.Default
   @CreationTimestamp
