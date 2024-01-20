@@ -23,7 +23,8 @@ public class AdminQuoteService {
   private final QuoteReviewRepository reviewRepository;
   private final EntityManager entityManager;
 
-  @PreAuthorize("hasAuthority(" +
+  @PreAuthorize("hasAnyAuthority(" +
+    "T(derszteler.abimanagement.user.User$Role).Moderator, " +
     "T(derszteler.abimanagement.user.User$Role).Admin" +
   ")")
   ListAdminQuotesResponse listQuotes(ListAdminQuotesRequest request) {

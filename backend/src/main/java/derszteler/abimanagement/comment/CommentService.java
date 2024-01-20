@@ -47,7 +47,7 @@ public class CommentService {
   @PreAuthorize("hasAnyAuthority(" +
     "T(derszteler.abimanagement.user.User$Role).Moderator, " +
     "T(derszteler.abimanagement.user.User$Role).Admin" +
-    ")")
+  ")")
   public Comment create(CreateCommentRequest request) {
     var user = userRepository.findById(request.userId())
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "authors not found"));

@@ -53,7 +53,7 @@ public final class QuoteRestEndpoint {
         description = "The limit for the paginated request. Must be true: 1 <= x <= 100.",
         required = true,
         example = "20",
-        name = "filter"
+        name = "limit"
       )
     },
     responses = {

@@ -49,14 +49,8 @@ public record UserQuote(
   }
 
   @Schema(
-    description = """
-      The (user-specific) status of a quote. Possible values:
-        - 'NotAllowed' if the status of the quote is 'NotAllowed'
-        - 'Expired' if the quote's review has expired and the quote has not been reviewed yet
-        - 'Pending' if no review from the user exists for this quote
-        - 'Accepted' if the user accepted this quote
-        - 'Rejected' if the user rejected this quote
-    """,
+    description = "The (user-specific) status of a quote. Can also include: " +
+      "'NotAllowed' (if the status of the quote is 'NotAllowed').",
     allowableValues = {"Accepted", "Pending", "Rejected", "Expired", "NotAllowed"},
     example = "Pending"
   )
@@ -77,6 +71,15 @@ public record UserQuote(
     return review.hasExpired();
   }
 
+  @Schema(
+    description = """
+      The user-specific status of the quote's review. Possible values:
+        - 'Expired' if the quote's review has expired and the quote has not been reviewed yet
+        - 'Pending' if no review from the user exists for this quote
+        - 'Accepted' if the user accepted this quote
+        - 'Rejected' if the user rejected this quote
+      """
+  )
   public enum Status {
     Accepted,
     Pending,
