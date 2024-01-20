@@ -1,101 +1,84 @@
 package derszteler.abimanagement.quote.admin;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import derszteler.abimanagement.quote.Quote;
 import derszteler.abimanagement.quote.UserQuote;
 import derszteler.abimanagement.quote.review.QuoteReview;
-import jakarta.annotation.Nullable;
+import derszteler.abimanagement.quote.review.QuoteReviewRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.JoinType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Service
 public class AdminQuoteService {
+  private final QuoteReviewRepository reviewRepository;
   private final EntityManager entityManager;
 
   @PreAuthorize("hasAuthority(" +
     "T(derszteler.abimanagement.user.User$Role).Admin" +
   ")")
   ListAdminQuotesResponse listQuotes(ListAdminQuotesRequest request) {
-    var paginated = PageRequest.of(request.page(), request.limit());
-    System.out.println("off: " + paginated.getOffset());
-    var results = entityManager.createQuery(createListCriteria(request))
+    var quotes = entityManager.createQuery(createListCriteria(request))
       .setMaxResults(request.limit())
       .setFirstResult(request.page() * request.limit())
       .getResultList();
+    var reviews = reviewRepository.findByQuotes(quotes);
     int total = calculateTotalAdminQuotes(request);
-    return new ListAdminQuotesResponse(parseAdminQuoteTuples(results), total);
+    return new ListAdminQuotesResponse(
+      mapReviewsToAdminQuotes(quotes, reviews),
+      total
+    );
   }
 
-  // TODO: Problem if page limiting separates two quotes of the same id
-  private Collection<AdminQuote> parseAdminQuoteTuples(Collection<Tuple> tuples) {
-    return tuples.stream()
+  private Collection<AdminQuote> mapReviewsToAdminQuotes(
+    Collection<Quote> quotes,
+    Collection<QuoteReview> reviews
+  ) {
+    var mapped = reviews.stream()
       .collect(Collectors.toMap(
-        tuple -> tuple.get(0, Integer.class),
-        tuple -> new AdminQuote(
-          tuple.get(0, Integer.class),
-          tuple.get(1, String.class),
-          tuple.get(2, String.class),
-          tuple.get(3, Quote.Status.class),
-          parseTupleToReview(tuple)
-        ),
-        (first, second) -> new AdminQuote(
-          first.id(),
-          first.content(),
-          first.context(),
-          first.status(),
-          Stream.concat(first.reviews().stream(), second.reviews().stream())
-            .toList()
-        ),
-        Maps::newLinkedHashMap
+        review -> review.quote().id(),
+        List::of,
+        (first, second) -> {
+          var combined = Lists.newArrayList(first);
+          combined.addAll(second);
+          return combined;
+        }
+      ));
+    return quotes.stream()
+      .map(quote -> new AdminQuote(
+        quote.id(),
+        quote.content(),
+        quote.context(),
+        quote.status(),
+        mapped.getOrDefault(quote.id(), List.of()).stream()
+          .map(review -> new AdminQuote.Review(
+            review.user().displayName(),
+            UserQuote.Status.parseFromReview(review)
+          ))
+          .toList()
       ))
-        .values();
+      .collect(Collectors.toCollection(Lists::newLinkedList));
   }
 
-  private Collection<AdminQuote.Review> parseTupleToReview(@Nullable Tuple tuple) {
-    //noinspection DataFlowIssue
-    var review = tuple.get(4, QuoteReview.class);
-    if (review == null) {
-      return List.of();
-    }
-    return List.of(new AdminQuote.Review(
-      review.user().displayName(),
-      UserQuote.Status.parseFromReview(review)
-    ));
-  }
-
-  private CriteriaQuery<Tuple> createListCriteria(ListAdminQuotesRequest request) {
+  private CriteriaQuery<Quote> createListCriteria(ListAdminQuotesRequest request) {
     var builder = entityManager.getCriteriaBuilder();
-    var criteria = builder.createTupleQuery();
+    var criteria = builder.createQuery(Quote.class);
     var root = criteria.from(Quote.class);
     var authors = root.joinCollection("authors", JoinType.LEFT);
-    var reviews = root.joinCollection("reviews", JoinType.LEFT);
     var query = criteria
-      .multiselect(
-        root.get("id"),
-        root.get("content"),
-        root.get("context"),
-        root.get("status"),
-        reviews
-      )
+      .select(root)
       .distinct(true)
       .orderBy(switch (request.orderBy()) {
-        case CreatedAt -> {
-          System.out.println("ordering by createdAt...");
-          yield builder.asc(root.get("createdAt"));
-        }
+        case CreatedAt -> builder.asc(root.get("createdAt"));
         case Username -> builder.asc(authors.get("lastName"));
       });
     if (request.hasUserFilter()) {
