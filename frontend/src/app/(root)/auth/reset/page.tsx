@@ -98,7 +98,12 @@ export default function ResetForm() {
     }
     trigger({token: token, password: first})
   }
-  const onSuccess = () => setOk(true)
+  const onSuccess = () => {
+    setOk(true)
+    setFirst('')
+    setSecond('')
+    setShow(false)
+  }
   const onError = (error: any) => {
     if (error.status === 404) {
       addToast(<ErrorToast
@@ -135,18 +140,18 @@ export default function ResetForm() {
           autoComplete="new-password"
           show={show}
           invalid={!!invalid}
-          disabled={disabled}
+          disabled={disabled || ok}
           password={first}
           setPassword={setFirst}
         >
-          <PasswordToggle show={show} setShow={setShow} disabled={disabled}/>
+          <PasswordToggle show={show} setShow={setShow} disabled={disabled || ok}/>
         </PasswordInput>
         <PasswordInput
           label="Neues Passwort wiederholen"
           autoComplete="new-password"
           show={show}
           invalid={!!invalid}
-          disabled={disabled}
+          disabled={disabled || ok}
           password={second}
           setPassword={setSecond}
         />
@@ -166,7 +171,7 @@ export default function ResetForm() {
               "flex w-full justify-center rounded-full bg-neutral-950 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm transition hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-750",
               "disabled:cursor-not-allowed disabled:bg-neutral-950/40"
             )}
-            disabled={disabled || !!invalid || !first || !second}
+            disabled={disabled || ok || !!invalid || !first || !second}
             type="submit"
             onClick={async event => {
               event.preventDefault()
