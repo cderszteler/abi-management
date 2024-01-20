@@ -61,8 +61,7 @@ public class Comment {
   // Only used for JSON deserialization
   @Schema(description = "The status of the comment", example = "Pending")
   @JsonProperty("status")
-  @Deprecated
-  private DeserializationStatus deserializationStatus() {
+  public DeserializationStatus deserializationStatus() {
     if (status == Status.Pending && hasExpired()) {
       return DeserializationStatus.Expired;
     }
@@ -85,7 +84,7 @@ public class Comment {
     Rejected
   }
 
-  private enum DeserializationStatus {
+  public enum DeserializationStatus {
     Pending,
     Accepted,
     Rejected,
