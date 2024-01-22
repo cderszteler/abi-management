@@ -8,9 +8,11 @@ const theme: CustomFlowbiteTheme['tooltip'] = {
   base: 'py-1 px-2 rounded-md inline text-sm font-normal leading-tight min-w-32 max-w-96 w-max z-10',
 }
 
-export function Tooltip({content, className, children}: {
+// TODO: Fix click tooltip
+export function Tooltip({content, className, trigger, children}: {
   content: string,
   className?: string | undefined
+  trigger?: 'hover' | 'click'
   children: React.ReactNode
 }) {
   return (
@@ -20,6 +22,7 @@ export function Tooltip({content, className, children}: {
         theme={theme}
         content={content}
         className={className}
+        trigger={trigger}
       >
         {children}
       </FlowbiteTooltip>
