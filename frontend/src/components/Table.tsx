@@ -56,8 +56,8 @@ export function TableWithBorder({
             <TableRow key={rowIndex}>
               {loadingRow.map((column, index) =>
                 mapColumnToElement({column, index, separator,
-                  isLast: (rowIndex + 1 === loadingRows),
-                  side: index === 0 ? "left" : index === 2 ? "right" : null
+                  isLast: (rowIndex + 1 === loadingRow.length),
+                  side: calculateSide(index, loadingRow)
                 })
               )}
             </TableRow>
@@ -70,9 +70,7 @@ export function TableWithBorder({
                   index,
                   isLast: (rowIndex + 1 === rows.length),
                   separator,
-                  side: index !== 0
-                    ? index === (columns.length - 1) ? 'right' : null
-                    : "left"
+                  side: calculateSide(index, columns)
                 })
               )}
             </TableRow>
@@ -91,6 +89,12 @@ export function TableWithBorder({
       </table>
     </div>
   )
+}
+
+function calculateSide(index: number, array: any[]) {
+  return index === 0
+    ? "left"
+    : index === (array.length - 1) ? "right" : null
 }
 
 function mapColumnToElement({column, index, isLast, separator, side}: {
