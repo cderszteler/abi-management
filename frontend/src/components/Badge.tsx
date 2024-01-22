@@ -9,15 +9,17 @@ const classNames = {
   'gray': "bg-gray-50 text-gray-600 ring-gray-500/10"
 }
 
-export function PillWithBorder({color, children}: {
-  color: Color,
+export function PillWithBorder({color, className, children}: {
+  color?: Color | undefined
+  className?: string | undefined
   children: React.ReactNode
 }) {
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-center ring-1 ring-inset cursor-pointer lg:whitespace-nowrap",
-        classNames[color]
+        "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-center ring-1 ring-inset cursor-default lg:whitespace-nowrap",
+        color && classNames[color],
+        className
       )}
       data-tooltip-target="tooltip-animation"
     >

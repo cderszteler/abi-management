@@ -168,7 +168,7 @@ function createStatus(status: string) {
   const description = statusDescriptions[status]
   return (
     <Tooltip content={description?.description || "Fehler"}>
-      <PillWithBorder color={description?.color || 'red'}>
+      <PillWithBorder color={description?.color || 'red'} className="cursor-pointer">
         {description?.name || "Fehler"}
       </PillWithBorder>
     </Tooltip>
