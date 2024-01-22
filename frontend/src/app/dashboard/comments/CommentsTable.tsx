@@ -112,7 +112,7 @@ export function CommentsTable(
           {
             children: (
               <Tooltip
-                className={comment.expired ? "" : "hidden"}
+                className={comment.expired ? "" : "!hidden"}
                 content="Du kannst diesen Kommentar nicht mehr bearbeiten"
               >
                 <BooleanActionButtonGroup

@@ -1,31 +1,32 @@
-import {CustomFlowbiteTheme, Tooltip as FlowbiteTooltip} from 'flowbite-react';
+import clsx from 'clsx';
+import {useId} from 'react';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 
-const theme: CustomFlowbiteTheme['tooltip'] = {
-  style: {
-    dark: 'bg-neutral-950 text-white',
-    light: 'border border-neutral-200 bg-white text-neutral-900'
-  },
-  base: 'py-1 px-2 rounded-md inline text-sm font-normal leading-tight min-w-32 max-w-96 w-max z-10',
-}
-
-// TODO: Fix click tooltip
 export function Tooltip({content, className, trigger, children}: {
   content: string,
   className?: string | undefined
   trigger?: 'hover' | 'click'
   children: React.ReactNode
 }) {
+  const id = useId()
+
   return (
     <>
-      <FlowbiteTooltip
-        style="light"
-        theme={theme}
+      <a data-tooltip-id={id}>{children}</a>
+      <ReactTooltip
+        id={id}
+        place='top'
+        openEvents={{
+          mouseenter: trigger !== 'click',
+          click: trigger === 'click'
+        }}
         content={content}
-        className={className}
-        trigger={trigger}
-      >
-        {children}
-      </FlowbiteTooltip>
+        className={clsx(
+          '!py-1 !px-2 !rounded-md !inline !text-sm !font-normal !leading-tight min-w-32 max-w-96 w-max z-10 !opacity-100',
+          '!border !border-neutral-200 !bg-white !text-neutral-900',
+          className
+        )}
+      />
     </>
   )
 }
