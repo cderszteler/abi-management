@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,7 @@ public class AdminQuoteService {
             review.user().displayName(),
             UserQuote.Status.parseFromReview(review)
           ))
+          .sorted(Comparator.comparing(AdminQuote.Review::displayName))
           .toList()
       ))
       .collect(Collectors.toCollection(Lists::newLinkedList));
