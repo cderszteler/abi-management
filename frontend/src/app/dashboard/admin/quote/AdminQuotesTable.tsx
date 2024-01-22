@@ -90,7 +90,6 @@ export function AdminQuotesTable(
           },
           {
             children: (
-              // TODO: Implement detailed hover
               <AdminQuoteStatus quote={quote}/>
             )
           }

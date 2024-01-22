@@ -120,7 +120,7 @@ export function QuotesTable(
           {
             children: (
               <Tooltip
-                className={quote.expired ? "" : "!hidden"}
+                hidden={!quote.expired}
                 content="Du kannst diesen Kommentar nicht mehr bearbeiten"
               >
                 <BooleanActionButtonGroup

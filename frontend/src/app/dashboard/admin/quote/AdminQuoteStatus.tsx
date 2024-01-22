@@ -3,11 +3,34 @@
 import {AdminQuote} from "@/lib/quotes";
 import {Color, PillWithBorder} from "@/components/Badge";
 import {useMemo} from "react";
+import {Tooltip} from "@/components/Tooltip";
 
 export function AdminQuoteStatus({quote}: {quote: AdminQuote}) {
-  const description = useMemo(() => reviewStatusDescriptions[resolveStatus(quote)], [quote])
+  const status = useMemo(() => resolveStatus(quote), [quote])
   return (
-    <PillWithBorder color={description?.color || 'red'}>
+    <Tooltip
+      hidden={quote.reviews.length === 0}
+      content={(
+        <div className="relative flex flex-col items-start gap-y-2 text-sm py-2 px-1">
+          {quote.reviews.map((review, index) => (
+            <span key={index} className="inline-flex justify-between gap-x-4 w-full">
+              {review.displayName}:
+              <StatusPill status={review.status}/>
+            </span>
+          ))}
+        </div>
+      )}
+    >
+      <StatusPill status={status}/>
+    </Tooltip>
+  )
+}
+
+function StatusPill({status}: {status: string}) {
+  const description = reviewStatusDescriptions[status]
+
+  return (
+    <PillWithBorder color={description?.color || 'red'} className="cursor-pointer">
       {description?.name || "Fehler"}
     </PillWithBorder>
   )
