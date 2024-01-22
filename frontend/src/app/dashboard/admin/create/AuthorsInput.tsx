@@ -20,11 +20,12 @@ import {
   DisplayUsersContext
 } from "@/app/dashboard/admin/AdminDashboardContainer";
 
-type AuthorsType = DisplayUser[] | (DisplayUser | undefined)
+type AuthorsType = DisplayUser[] | (DisplayUser | undefined | null)
 
 export default function AuthorsInput<Type extends AuthorsType>(
 {
   multiple,
+  nullable = false,
   invalid = false,
   authors,
   setAuthors,
@@ -32,6 +33,7 @@ export default function AuthorsInput<Type extends AuthorsType>(
   ...props
 }: {
   multiple: boolean
+  nullable?: boolean
   invalid?: boolean
   authors: Type
   setAuthors: Dispatch<SetStateAction<Type>>
@@ -62,8 +64,13 @@ export default function AuthorsInput<Type extends AuthorsType>(
     <div className={props.className}>
       <Combobox
         value={authors}
-        onChange={(authors) => {
-          setAuthors(authors)
+        onChange={(selectedAuthors) => {
+          if (!Array.isArray(authors)) {
+            // @ts-ignore
+            setAuthors(selectedAuthors === authors ? null : selectedAuthors)
+          } else {
+            setAuthors(selectedAuthors)
+          }
           if (onInput) {
             onInput()
           }
@@ -71,6 +78,8 @@ export default function AuthorsInput<Type extends AuthorsType>(
         // @ts-ignore
         multiple={multiple}
         name="authors"
+        // @ts-ignore
+        nullable={nullable}
       >
         {({open}) => (
           <>

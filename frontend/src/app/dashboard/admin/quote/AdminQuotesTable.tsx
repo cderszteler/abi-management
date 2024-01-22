@@ -12,19 +12,20 @@ import {DashboardContext} from "@/app/dashboard/DashboardContextProvider";
 import {hasRoles} from "@/lib/auth";
 import {Copyable} from "@/components/Copyable";
 import {AdminQuoteStatus} from "@/app/dashboard/admin/quote/AdminQuoteStatus";
-
-export type OrderBy = 'CreatedAt' | 'Username'
+import {OrderBy} from "@/app/dashboard/admin/OrderSelector";
 
 const limit = 20
 
 export function AdminQuotesTable(
 {
   orderBy,
+  userId,
   fallback,
   errorMessages,
   className
 }: {
   orderBy: OrderBy
+  userId: number | undefined
   fallback: string
   errorMessages: {fetch: string}
   className?: string
@@ -34,7 +35,7 @@ export function AdminQuotesTable(
   const isAdmin = hasRoles(user?.roles, ['Admin'])
   const [page, setPage] = useState(1)
   const {data, error, isLoading} = useSWR<{quotes: AdminQuote[], total: number}>(
-    `/api/v1/admin/quotes?orderBy=${orderBy}&page=${page - 1}&limit=${limit}`,
+    `/api/v1/admin/quotes?orderBy=${orderBy}${userId ? `&userId=${userId}` : ''}&page=${page - 1}&limit=${limit}`,
     fetcher
   )
   const loading = isLoading || error
