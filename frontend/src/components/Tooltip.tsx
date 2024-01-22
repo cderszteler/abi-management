@@ -2,17 +2,27 @@ import clsx from 'clsx';
 import {useId} from 'react';
 import {Tooltip as ReactTooltip} from 'react-tooltip';
 
-export function Tooltip({content, className, trigger, children}: {
-  content: string,
-  className?: string | undefined
+export function Tooltip({content, trigger, onClick, className, children}: {
+  content: React.ReactNode,
   trigger?: 'hover' | 'click'
+  onClick?: () => void
+  className?: string | undefined
   children: React.ReactNode
 }) {
   const id = useId()
 
   return (
     <>
-      <a data-tooltip-id={id}>{children}</a>
+      <span
+        onClick={() => {
+          if (onClick) {
+            onClick()
+          }
+        }}
+        data-tooltip-id={id}
+      >
+        {children}
+      </span>
       <ReactTooltip
         id={id}
         place='top'
@@ -20,13 +30,15 @@ export function Tooltip({content, className, trigger, children}: {
           mouseenter: trigger !== 'click',
           click: trigger === 'click'
         }}
-        content={content}
+        disableStyleInjection={true}
         className={clsx(
-          '!py-1 !px-2 !rounded-md !inline !text-sm !font-normal !leading-tight min-w-32 max-w-96 w-max z-10 !opacity-100',
-          '!border !border-neutral-200 !bg-white !text-neutral-900',
+          'py-1 px-2 rounded-md inline text-sm font-normal leading-tight min-w-16 max-w-96 w-max z-10 !opacity-100',
+          'border border-neutral-200 bg-white text-neutral-900',
           className
         )}
-      />
+      >
+        {content}
+      </ReactTooltip>
     </>
   )
 }
