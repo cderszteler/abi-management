@@ -106,35 +106,37 @@ export function QuotesTable(
         separator={true}
         fallback={fallback}
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
-        rows={loading ? [] : data!.quotes.map((quote) => [
-          {
-            text: quote.content,
-            className: "w-full",
-            children: quote.context
-              ? (<span className="italic block">({quote.context})</span>)
-              : (<></>)
-          },
-          {
-            children: createStatus(quote.status)
-          },
-          {
-            children: (
-              <Tooltip
-                hidden={!quote.expired}
-                content="Du kannst diesen Kommentar nicht mehr bearbeiten"
-              >
-                <BooleanActionButtonGroup
-                  disabled={quote.status === 'NotAllowed' || quote.expired}
-                  onClick={async (allowed) => handleReview({
-                    id: quote.id,
-                    status: allowed ? 'Accepted' : 'Rejected'
-                  })}
-                />
-              </Tooltip>
-            ),
-            className: "lg:whitespace-nowrap"
-          }
-        ])}
+        rows={loading ? [] : data!.quotes.map((quote) => ({
+          columns: [
+            {
+              text: quote.content,
+              className: "w-full",
+              children: quote.context
+                ? (<span className="italic block">({quote.context})</span>)
+                : (<></>)
+            },
+            {
+              children: createStatus(quote.status)
+            },
+            {
+              children: (
+                <Tooltip
+                  hidden={!quote.expired}
+                  content="Du kannst diesen Kommentar nicht mehr bearbeiten"
+                >
+                  <BooleanActionButtonGroup
+                    disabled={quote.status === 'NotAllowed' || quote.expired}
+                    onClick={async (allowed) => handleReview({
+                      id: quote.id,
+                      status: allowed ? 'Accepted' : 'Rejected'
+                    })}
+                  />
+                </Tooltip>
+              ),
+              className: "lg:whitespace-nowrap"
+            }
+          ]
+        }))}
         loadingRow={[
           {
             children: (
