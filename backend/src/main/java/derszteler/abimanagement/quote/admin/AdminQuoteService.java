@@ -8,6 +8,7 @@ import derszteler.abimanagement.quote.review.QuoteReviewRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,10 +80,13 @@ public class AdminQuoteService {
     var authors = root.joinCollection("authors", JoinType.LEFT);
     var query = criteria
       .select(root)
-      .distinct(true)
+      .groupBy(root)
       .orderBy(switch (request.orderBy()) {
-        case CreatedAt -> builder.asc(root.get("createdAt"));
-        case Username -> builder.asc(authors.get("lastName"));
+        case CreatedAt -> new Order[]{builder.asc(root.get("createdAt"))};
+        case Username -> new Order[]{
+          builder.asc(builder.min(authors.get("lastName"))),
+          builder.asc(root.get("createdAt"))
+        };
       });
     if (request.hasUserFilter()) {
       query.where(builder.equal(authors.get("id"), request.userId()));
