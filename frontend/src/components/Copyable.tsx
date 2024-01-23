@@ -19,7 +19,7 @@ export function Copyable({children, content, className}: {
   return (
     <>
       <Tooltip
-        className="!text-green-600"
+        className="!text-green-600 !font-medium"
         content={(
           <div className="flex items-center gap-x-2">
             <ClipboardIcon className="h-4"/>

@@ -38,14 +38,7 @@ export default function AdminQuotes() {
           <OrderSelector orderBy={orderBy} setOrderBy={setOrderBy}/>
         </div>
       </div>
-      <AdminQuotesTable
-        orderBy={orderBy}
-        userId={user?.id}
-        fallback="Es sind keine ausstehende Zitate vorhanden."
-        errorMessages={{
-          fetch: "Die ausstehenden Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
-        }}
-      />
+      <AdminQuotesTable orderBy={orderBy} userId={user?.id}/>
     </>
   )
 }

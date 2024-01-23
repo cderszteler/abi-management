@@ -20,14 +20,10 @@ export function AdminQuotesTable(
 {
   orderBy,
   userId,
-  fallback,
-  errorMessages,
   className
 }: {
   orderBy: OrderBy
   userId: number | undefined
-  fallback: string
-  errorMessages: {fetch: string}
   className?: string
 }) {
   const {addToast} = useContext(RootLayoutContext)!
@@ -43,7 +39,10 @@ export function AdminQuotesTable(
 
   useEffect(() => {
     if (error) {
-      addToast(<ErrorToast content={errorMessages.fetch} retry={false}/>)
+      addToast(<ErrorToast
+        content="Die Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
+        retry={false}/>
+      )
     }
   }, [error]);
 
@@ -52,7 +51,7 @@ export function AdminQuotesTable(
       <TableWithBorder
         loading={loading}
         separator={true}
-        fallback={fallback}
+        fallback="Es konnten keine Zitate mit den ausgewählten Filter gefunden werden."
         headers={[
           ...(isAdmin ? [{name: "Id"}] : []),
           {name: "Zitat"},

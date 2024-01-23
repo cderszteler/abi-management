@@ -30,10 +30,11 @@ export function Tooltip({content, trigger, onClick, className, children, ...prop
           mouseenter: trigger !== 'click',
           click: trigger === 'click'
         }}
+        opacity={100}
         hidden={props.hidden}
         disableStyleInjection={true}
         className={clsx(
-          'py-1 px-2 rounded-md inline text-sm font-normal leading-tight min-w-16 max-w-96 w-max z-10 !opacity-100',
+          'py-1 px-2 rounded-md inline text-sm font-normal leading-tight min-w-16 max-w-96 w-max z-10',
           'border border-neutral-200 bg-white text-neutral-900',
           className
         )}
