@@ -46,7 +46,7 @@ export function OrderSelector({orderBy, setOrderBy}:
       name="types"
     >
       {({open}) => (
-        <div className="relative min-w-40 sm:min-w-52 md:min-w-72 max-w-72">
+        <div className="relative min-w-40 sm:min-w-52 max-w-72">
           <Listbox.Button className={clsx(
             "relative w-full min-h-[29.5px] pl-3 pr-10 py-1.5 text-left text-neutral-950 !leading-tight cursor-pointer",
             "rounded-md border-0 ring-1 ring-neutral-300 ring-inset focus:ring-2 focus:ring-inset focus:ring-neutral-700 shadow-sm"

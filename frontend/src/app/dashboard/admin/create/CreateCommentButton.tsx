@@ -6,11 +6,11 @@ import {PencilSquareIcon} from "@heroicons/react/24/outline";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {User} from "@/lib/auth";
 import clsx from "clsx";
-import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
-import CreateButton from "@/app/dashboard/admin/create/CreateButton";
+import AuthorsInput from "@/components/AuthorsInput";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
 import {mutator} from "@/lib/backend";
 import useSWRMutation from "swr/mutation";
+import {BigCreateButton} from "@/components/admin/CreateButton";
 
 type RequiredFields = 'comment' | 'user'
 

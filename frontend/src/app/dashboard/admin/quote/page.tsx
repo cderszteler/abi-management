@@ -26,9 +26,10 @@ export default function AdminQuotes() {
             nullable={true}
             multiple={false}
             invalid={false}
+            size='normal'
             authors={user}
             setAuthors={setUser}
-            className="relative min-w-40 sm:min-w-52 md:min-w-72 max-w-72"
+            className="relative min-w-40 sm:min-w-52 max-w-72"
           />
         </div>
         <div className="flex items-center gap-x-2">
