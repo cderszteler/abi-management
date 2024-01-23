@@ -3,7 +3,7 @@
 import {TableWithBorder} from "@/components/Table";
 import {BooleanActionButtonGroup} from "@/components/Button";
 import Pagination from "@/components/Pagination";
-import {Quote} from "@/lib/quotes";
+import {UserQuote} from "@/lib/quotes";
 import {fetcher} from "@/lib/backend";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {ErrorToast} from "@/components/Toast";
@@ -62,7 +62,7 @@ export function QuotesTable(
   const {addToast} = useContext(RootLayoutContext)!
   const [page, setPage] = useState(1)
   const {mutate} = useSWRConfig()
-  const {data, error, isLoading} = useSWR<{quotes: Quote[], total: number}>(
+  const {data, error, isLoading} = useSWR<{quotes: UserQuote[], total: number}>(
     `/api/v1/quotes?filter=${filter}&page=${page - 1}&limit=${limit}`,
     fetcher
   )
@@ -106,35 +106,37 @@ export function QuotesTable(
         separator={true}
         fallback={fallback}
         headers={[{name: "Zitat"}, {name: "Status"}, {screenReader: "Aktionen"}]}
-        rows={loading ? [] : data!.quotes.map((quote) => [
-          {
-            text: quote.content,
-            className: "w-full",
-            children: quote.context
-              ? (<span className="italic block">({quote.context})</span>)
-              : (<></>)
-          },
-          {
-            children: createStatus(quote.status)
-          },
-          {
-            children: (
-              <Tooltip
-                className={quote.expired ? "" : "hidden"}
-                content="Du kannst diesen Kommentar nicht mehr bearbeiten"
-              >
-                <BooleanActionButtonGroup
-                  disabled={quote.status === 'NotAllowed' || quote.expired}
-                  onClick={async (allowed) => handleReview({
-                    id: quote.id,
-                    status: allowed ? 'Accepted' : 'Rejected'
-                  })}
-                />
-              </Tooltip>
-            ),
-            className: "lg:whitespace-nowrap"
-          }
-        ])}
+        rows={loading ? [] : data!.quotes.map((quote) => ({
+          columns: [
+            {
+              text: quote.content,
+              className: "w-full",
+              children: quote.context
+                ? (<span className="italic block">({quote.context})</span>)
+                : (<></>)
+            },
+            {
+              children: createStatus(quote.status)
+            },
+            {
+              children: (
+                <Tooltip
+                  hidden={!quote.expired}
+                  content="Du kannst diesen Kommentar nicht mehr bearbeiten"
+                >
+                  <BooleanActionButtonGroup
+                    disabled={quote.status === 'NotAllowed' || quote.expired}
+                    onClick={async (allowed) => handleReview({
+                      id: quote.id,
+                      status: allowed ? 'Accepted' : 'Rejected'
+                    })}
+                  />
+                </Tooltip>
+              ),
+              className: "lg:whitespace-nowrap"
+            }
+          ]
+        }))}
         loadingRow={[
           {
             children: (
@@ -168,7 +170,7 @@ function createStatus(status: string) {
   const description = statusDescriptions[status]
   return (
     <Tooltip content={description?.description || "Fehler"}>
-      <PillWithBorder color={description?.color || 'red'}>
+      <PillWithBorder color={description?.color || 'red'} className="cursor-pointer">
         {description?.name || "Fehler"}
       </PillWithBorder>
     </Tooltip>
@@ -176,7 +178,7 @@ function createStatus(status: string) {
 }
 
 async function reviewQuote({status, id}: {
-  status: Extract<Quote['status'], 'Accepted' | 'Rejected'>
+  status: Extract<UserQuote['status'], 'Accepted' | 'Rejected'>
   id: number
 }): Promise<boolean> {
   const response = await fetch(`/api/v1/quote/${id}/review`, {

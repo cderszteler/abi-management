@@ -4,7 +4,6 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 export default {
   content: [
     './src/**/*.{js,jsx,mdx,ts,tsx}',
-    './node_modules/flowbite-react/lib/**/*.js'
   ],
   theme: {
     fontSize: {
@@ -39,6 +38,5 @@ export default {
   plugins: [
     require('@tailwindcss/forms'),
     require('tailwind-scrollbar')({nocompatible: true}),
-    require('flowbite/plugin'),
   ],
 } satisfies Config

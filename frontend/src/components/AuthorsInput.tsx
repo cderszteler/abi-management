@@ -18,23 +18,29 @@ import clsx from "clsx";
 import {
   DisplayUser,
   DisplayUsersContext
-} from "@/app/dashboard/admin/create/CreateButtons";
+} from "@/app/dashboard/admin/AdminDashboardContainer";
 
-type AuthorsType = DisplayUser[] | (DisplayUser | undefined)
+type AuthorsType = DisplayUser[] | (DisplayUser | undefined | null)
 
 export default function AuthorsInput<Type extends AuthorsType>(
 {
   multiple,
-  invalid,
+  nullable = false,
+  invalid = false,
+  size = 'small',
   authors,
   setAuthors,
-  onInput
+  onInput,
+  ...props
 }: {
   multiple: boolean
-  invalid: boolean
+  nullable?: boolean
+  invalid?: boolean
+  size?: 'small' | 'normal'
   authors: Type
   setAuthors: Dispatch<SetStateAction<Type>>
   onInput?: (() => void) | undefined
+  className?: string | undefined
 }) {
   const users = useContext(DisplayUsersContext)
   const [query, setQuery] = useState('')
@@ -57,11 +63,16 @@ export default function AuthorsInput<Type extends AuthorsType>(
   }, [authors])
 
   return (
-    <>
+    <div className={props.className}>
       <Combobox
         value={authors}
-        onChange={(authors) => {
-          setAuthors(authors)
+        onChange={(selectedAuthors) => {
+          if (!Array.isArray(authors)) {
+            // @ts-ignore
+            setAuthors(selectedAuthors === authors ? null : selectedAuthors)
+          } else {
+            setAuthors(selectedAuthors)
+          }
           if (onInput) {
             onInput()
           }
@@ -69,16 +80,19 @@ export default function AuthorsInput<Type extends AuthorsType>(
         // @ts-ignore
         multiple={multiple}
         name="authors"
+        // @ts-ignore
+        nullable={nullable}
       >
         {({open}) => (
           <>
             <div className="relative min-h-[29.5px] w-full mt-1 cursor-pointer text-neutral-950 shadow-sm">
               <Combobox.Input
                 className={clsx(
-                  "w-full pl-3 pr-10 py-1.5 text-left rounded-md border-0 ring-inset focus:ring-2 focus:ring-inset text-sm !leading-tight",
+                  "w-full pl-3 pr-10 py-1.5 text-left rounded-md border-0 ring-inset focus:ring-2 focus:ring-inset !leading-tight",
                   invalid
                     ? "ring-2 ring-red-500 focus:ring-red-500"
-                    : "ring-1 ring-neutral-300 focus:ring-neutral-700"
+                    : "ring-1 ring-neutral-300 focus:ring-neutral-700",
+                  size === 'small' ? "text-sm" : "text-base"
                 )}
                 onChange={(event) => setQuery(event.target.value)}
                 displayValue={() => open ? "" : selectedAuthorsName}
@@ -145,6 +159,6 @@ export default function AuthorsInput<Type extends AuthorsType>(
           Bitte wähl mindestens eine zitierte Person aus!
         </p>
       )}
-    </>
+    </div>
   )
 }

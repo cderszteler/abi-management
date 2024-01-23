@@ -101,20 +101,21 @@ export function CommentsTable(
         separator={true}
         fallback={fallback}
         headers={[{name: "Kommentar"}, {name: "Status"}, {screenReader: "Aktionen"}]}
-        rows={loading ? [] : data!.comments.map((comment) => [
-          {
-            text: comment.content,
-            className: "w-full"
-          },
-          {
-            children: createStatus(comment.status)
-          },
-          {
-            children: (
-              <Tooltip
-                className={comment.expired ? "" : "hidden"}
-                content="Du kannst diesen Kommentar nicht mehr bearbeiten"
-              >
+        rows={loading ? [] : data!.comments.map((comment) => ({
+          columns: [
+            {
+              text: comment.content,
+              className: "w-full"
+            },
+            {
+              children: createStatus(comment.status)
+            },
+            {
+              children: (
+                <Tooltip
+                  hidden={!comment.expired}
+                  content="Du kannst diesen Kommentar nicht mehr bearbeiten"
+                >
                 <BooleanActionButtonGroup
                   disabled={comment.expired}
                   onClick={async (allowed) => handleReview({
@@ -123,10 +124,11 @@ export function CommentsTable(
                   })}
                 />
               </Tooltip>
-            ),
-            className: "lg:whitespace-nowrap"
-          }
-        ])}
+              ),
+              className: "lg:whitespace-nowrap"
+            }
+          ]
+        }))}
         loadingRow={[
           {
             children: (
@@ -160,7 +162,7 @@ function createStatus(status: string) {
   const description = statusDescriptions[status]
   return (
     <Tooltip content={description?.description || "Fehler"}>
-      <PillWithBorder color={description?.color || 'red'}>
+      <PillWithBorder color={description?.color || 'red'} className="cursor-pointer">
         {description?.name || "Fehler"}
       </PillWithBorder>
     </Tooltip>

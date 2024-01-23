@@ -20,6 +20,7 @@ import {
 } from "@heroicons/react/24/outline";
 import {signOut} from "next-auth/react";
 import {DashboardContext} from "./DashboardContextProvider";
+import {PillWithBorder} from "@/components/Badge";
 
 type NavigationPath = {
   name: string
@@ -45,11 +46,18 @@ const navigation: NavigationPath[] = [
   }
 ]
 
+// TODO: Remove unused pages
 const adminNavigation: (NavigationPath & {roles: Role[]})[] = [
   {
     name: "Hinzufügen",
     path: "/dashboard/admin/create",
     icon: PlusCircleIcon,
+    roles: ['Moderator', 'Admin']
+  },
+  {
+    name: "Zitate",
+    path: "/dashboard/admin/quote",
+    icon: ChatBubbleOvalLeftEllipsisIcon,
     roles: ['Moderator', 'Admin']
   }
 ]
@@ -122,6 +130,9 @@ function Items({className, children}: {
                     >
                       <item.icon className="h-6 w-6 shrink-0 text-white" aria-hidden="true"/>
                       {item.name}
+                      <PillWithBorder className="bg-gray-900/60 text-gray-400 ring-gray-500/10">
+                        Verwaltung
+                      </PillWithBorder>
                     </Link>
                   </li>
                 ))}

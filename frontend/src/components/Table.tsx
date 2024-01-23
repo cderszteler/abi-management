@@ -6,6 +6,12 @@ type TableHeader = {
   screenReader?: string
 }
 
+type TableRow = {
+  columns: TableColumn[]
+  alternatingBackground?: boolean
+  className?: string | undefined
+}
+
 type TableColumn = {
   text?: string
   className?: string
@@ -26,7 +32,7 @@ export function TableWithBorder({
   loading?: boolean
   fallback?: string
   headers: TableHeader[]
-  rows: TableColumn[][]
+  rows: TableRow[]
   loadingRow: Omit<TableColumn, 'text'>[]
 }) {
   return (
@@ -56,23 +62,21 @@ export function TableWithBorder({
             <TableRow key={rowIndex}>
               {loadingRow.map((column, index) =>
                 mapColumnToElement({column, index, separator,
-                  isLast: (rowIndex + 1 === loadingRows),
-                  side: index === 0 ? "left" : index === 2 ? "right" : null
+                  isLast: (rowIndex + 1 === loadingRow.length),
+                  side: calculateSide(index, loadingRow)
                 })
               )}
             </TableRow>
           )}
-          {!loading && rows.map((columns, rowIndex) =>
-            <TableRow key={rowIndex}>
-              {columns.map((column, index) =>
+          {!loading && rows.map((row, rowIndex) =>
+            <TableRow key={rowIndex} {...row}>
+              {row.columns.map((column, index) =>
                 mapColumnToElement({
                   column,
                   index,
                   isLast: (rowIndex + 1 === rows.length),
                   separator,
-                  side: index !== 0
-                    ? index === (columns.length - 1) ? 'right' : null
-                    : "left"
+                  side: calculateSide(index, row.columns)
                 })
               )}
             </TableRow>
@@ -91,6 +95,12 @@ export function TableWithBorder({
       </table>
     </div>
   )
+}
+
+function calculateSide(index: number, array: any[]) {
+  return index === 0
+    ? "left"
+    : index === (array.length - 1) ? "right" : null
 }
 
 function mapColumnToElement({column, index, isLast, separator, side}: {
@@ -113,9 +123,11 @@ function mapColumnToElement({column, index, isLast, separator, side}: {
   )
 }
 
-function TableRow({className, children}: {className?: string, children: React.ReactNode}) {
+function TableRow({className, alternatingBackground = true, children}:
+  Omit<TableRow, 'columns'> & {children: React.ReactNode}
+) {
   return (
-    <tr className={clsx("even:bg-neutral-50 min", className)}>
+    <tr className={clsx("min", alternatingBackground && "even:bg-neutral-50", className)}>
       {children}
     </tr>
   )

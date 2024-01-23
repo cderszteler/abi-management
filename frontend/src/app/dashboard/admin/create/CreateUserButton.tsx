@@ -5,11 +5,11 @@ import {UserCircleIcon} from "@heroicons/react/24/outline";
 
 import {RootLayoutContext} from "@/components/RootLayout";
 import clsx from "clsx";
-import CreateButton from "@/app/dashboard/admin/create/CreateButton";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
 import {useSWRConfig} from "swr";
 import useSWRMutation from "swr/mutation"
 import {mutator} from "@/lib/backend";
+import {BigCreateButton} from "@/components/admin/CreateButton";
 
 type RequiredFields = 'firstName' | 'lastName' | 'username'
 
@@ -125,7 +125,7 @@ export default function CreateUserButton() {
   }
 
   return (
-    <CreateButton
+    <BigCreateButton
       title="Benutzer hinzufügen"
       icon={UserCircleIcon}
       warnBeforeClosing={modified}
@@ -165,6 +165,6 @@ export default function CreateUserButton() {
         invalid={invalidFields.includes('username')}
         error="Bitte gib einen Nutzernamen ein!"
       />
-    </CreateButton>
+    </BigCreateButton>
   )
 }

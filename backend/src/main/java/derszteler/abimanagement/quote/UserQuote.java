@@ -13,7 +13,8 @@ import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 
-import static derszteler.abimanagement.quote.UserQuote.Status.*;
+import static derszteler.abimanagement.quote.Quote.Status.NotAllowed;
+import static derszteler.abimanagement.quote.UserQuote.Status.parseFromReview;
 
 @JsonDeserialize(using = UserQuote.UserQuoteDeserializer.class)
 public record UserQuote(
@@ -48,31 +49,17 @@ public record UserQuote(
   }
 
   @Schema(
-    description = """
-      The (user-specific) status of a quote. Possible values:
-        - 'NotAllowed' if the status of the quote is 'NotAllowed'
-        - 'Expired' if the quote's review has expired and the quote has not been reviewed yet
-        - 'Pending' if no review from the user exists for this quote
-        - 'Accepted' if the user accepted this quote
-        - 'Rejected' if the user rejected this quote
-    """,
+    description = "The (user-specific) status of a quote. Can also include: " +
+      "'NotAllowed' (if the status of the quote is 'NotAllowed').",
+    allowableValues = {"Accepted", "Pending", "Rejected", "Expired", "NotAllowed"},
     example = "Pending"
   )
   @JsonProperty
-  Status status() {
-    if (quote.status() == Quote.Status.NotAllowed) {
+  Object status() {
+    if (quote.status() == NotAllowed) {
       return NotAllowed;
     }
-    if (review == null) {
-      return Pending;
-    } else if (review.status() == QuoteReview.Status.Pending && review.hasExpired()) {
-      return Expired;
-    }
-    return switch (review.status()) {
-      case Accepted -> Accepted;
-      case Pending -> Pending;
-      case Rejected -> Rejected;
-    };
+    return parseFromReview(review);
   }
 
   @Schema(description = "Boolean if the quote's review has expired", example = "false")
@@ -84,14 +71,36 @@ public record UserQuote(
     return review.hasExpired();
   }
 
-  enum Status {
+  @Schema(
+    description = """
+      The user-specific status of the quote's review. Possible values:
+        - 'Expired' if the quote's review has expired and the quote has not been reviewed yet
+        - 'Pending' if no review from the user exists for this quote
+        - 'Accepted' if the user accepted this quote
+        - 'Rejected' if the user rejected this quote
+      """
+  )
+  public enum Status {
     Accepted,
     Pending,
     Rejected,
-    Expired,
-    NotAllowed
+    Expired;
+
+    public static Status parseFromReview(QuoteReview review) {
+      if (review == null) {
+        return Pending;
+      } else if (review.status() == QuoteReview.Status.Pending && review.hasExpired()) {
+        return Expired;
+      }
+      return switch (review.status()) {
+        case Accepted -> Accepted;
+        case Pending -> Pending;
+        case Rejected -> Rejected;
+      };
+    }
   }
 
+  // Required for testing purposes
   static final class UserQuoteDeserializer extends StdDeserializer<UserQuote> {
     @SuppressWarnings("unused")
     public UserQuoteDeserializer() {
