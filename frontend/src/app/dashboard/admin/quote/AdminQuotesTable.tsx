@@ -80,10 +80,10 @@ export function AdminQuotesTable(
                 <Copyable
                   content={(quote.context ? `(${quote.context})\n` : '') + quote.content}
                 >
-                  <>
+                  <div className="font-medium text-gray-900 whitespace-pre-line">
                     {quote.context && (<span className="italic block">({quote.context})</span>)}
                     {quote.content}
-                  </>
+                  </div>
                 </Copyable>
               )
             },
