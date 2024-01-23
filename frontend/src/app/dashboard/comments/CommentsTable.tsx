@@ -11,7 +11,7 @@ import useSWR, {useSWRConfig} from 'swr'
 import {Color, PillWithBorder} from "@/components/Badge";
 import {Tooltip} from "@/components/Tooltip";
 import {SectionHeader} from "@/components/SectionIntro";
-import {Comment} from "@/lib/comments";
+import {UserComment} from "@/lib/comments";
 
 const statusDescriptions: { [key:string]: { color: Color, name: string, description: string } } = {
   'Accepted': {
@@ -57,7 +57,7 @@ export function CommentsTable(
   const {addToast} = useContext(RootLayoutContext)!
   const [page, setPage] = useState(1)
   const {mutate} = useSWRConfig()
-  const {data, error, isLoading} = useSWR<{comments: Comment[], total: number}>(
+  const {data, error, isLoading} = useSWR<{comments: UserComment[], total: number}>(
     `/api/v1/comments?filter=${filter}&page=${page - 1}&limit=${limit}`,
     fetcher
   )
@@ -170,7 +170,7 @@ function createStatus(status: string) {
 }
 
 async function reviewComment({status, id}: {
-  status: Extract<Comment['status'], 'Accepted' | 'Rejected'>
+  status: Extract<UserComment['status'], 'Accepted' | 'Rejected'>
   id: number
 }): Promise<boolean> {
   const response = await fetch(`/api/v1/comment/${id}/review`, {

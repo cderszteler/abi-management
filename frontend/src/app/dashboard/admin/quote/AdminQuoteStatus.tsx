@@ -1,7 +1,7 @@
 'use client'
 
 import {AdminQuote} from "@/lib/quotes";
-import {Color, PillWithBorder} from "@/components/Badge";
+import {Color, StatusPill} from "@/components/Badge";
 import {Tooltip} from "@/components/Tooltip";
 
 export const reviewStatusDescriptions: { [key:string]: {
@@ -63,15 +63,5 @@ export function AdminQuoteStatus({quote}: {quote: AdminQuote}) {
     >
       <StatusPill status={quote.reviewStatus}/>
     </Tooltip>
-  )
-}
-
-function StatusPill({status}: {status: AdminQuote['reviewStatus']}) {
-  const description = reviewStatusDescriptions[status]
-
-  return (
-    <PillWithBorder color={description?.color || 'red'} className="cursor-pointer">
-      {description?.name || "Fehler"}
-    </PillWithBorder>
   )
 }

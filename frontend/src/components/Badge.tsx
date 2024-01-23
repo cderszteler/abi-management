@@ -1,4 +1,8 @@
 import clsx from "clsx"
+import {AdminQuote} from "@/lib/quotes";
+import {
+  reviewStatusDescriptions
+} from "@/app/dashboard/admin/quote/AdminQuoteStatus";
 
 export type Color = 'red' | 'yellow' | 'green' | 'gray'
 
@@ -25,5 +29,21 @@ export function PillWithBorder({color, className, children}: {
     >
       {children}
     </span>
+  )
+}
+
+export function StatusPill({status, clickable = true}: {
+  status: AdminQuote['reviewStatus']
+  clickable?: boolean
+}) {
+  const description = reviewStatusDescriptions[status]
+
+  return (
+    <PillWithBorder
+      color={description?.color || 'red'}
+      className={clsx(clickable && "cursor-pointer")}
+    >
+      {description?.name || "Fehler"}
+    </PillWithBorder>
   )
 }
