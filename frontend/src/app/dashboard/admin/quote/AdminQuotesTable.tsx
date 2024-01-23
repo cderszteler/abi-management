@@ -49,6 +49,10 @@ export function AdminQuotesTable(
     }
   }, [error]);
 
+  useEffect(() => {
+    setPage(1)
+  }, [userId]);
+
   return (
     <div className={className}>
       <TableWithBorder
