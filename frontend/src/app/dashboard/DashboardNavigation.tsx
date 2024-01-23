@@ -12,7 +12,6 @@ import {
   ArrowLeftStartOnRectangleIcon,
   Bars3Icon,
   ChatBubbleOvalLeftEllipsisIcon,
-  CircleStackIcon,
   HomeIcon,
   PencilSquareIcon,
   PlusCircleIcon,
@@ -53,12 +52,6 @@ const adminNavigation: (NavigationPath & {roles: Role[]})[] = [
     name: "Hinzufügen",
     path: "/dashboard/admin/create",
     icon: PlusCircleIcon,
-    roles: ['Moderator', 'Admin']
-  },
-  {
-    name: "Erfassungen",
-    path: "/dashboard/admin/list",
-    icon: CircleStackIcon,
     roles: ['Moderator', 'Admin']
   },
   {
