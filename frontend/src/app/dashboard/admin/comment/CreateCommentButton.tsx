@@ -10,7 +10,7 @@ import AuthorsInput from "@/components/AuthorsInput";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
 import {mutator} from "@/lib/backend";
 import useSWRMutation from "swr/mutation";
-import {BigCreateButton} from "@/components/admin/CreateButton";
+import {SmallCreateButton} from "@/components/admin/CreateButton";
 
 type RequiredFields = 'comment' | 'user'
 
@@ -62,7 +62,7 @@ export default function CreateCommentButton() {
   }
 
   return (
-    <BigCreateButton
+    <SmallCreateButton
       title="Kommentar hinzufügen"
       icon={PencilSquareIcon}
       warnBeforeClosing={modified}
@@ -111,6 +111,6 @@ export default function CreateCommentButton() {
           onInput={() => setInvalidFields(invalidFields.filter(invalid => invalid !== 'user'))}
         />
       </div>
-    </BigCreateButton>
+    </SmallCreateButton>
   )
 }

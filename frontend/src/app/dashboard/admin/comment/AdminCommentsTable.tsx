@@ -2,7 +2,6 @@
 
 import {TableWithBorder} from "@/components/Table";
 import Pagination from "@/components/Pagination";
-import {AdminQuote} from "@/lib/quotes";
 import {fetcher} from "@/lib/backend";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {ErrorToast} from "@/components/Toast";
@@ -12,14 +11,15 @@ import {DashboardContext} from "@/app/dashboard/DashboardContextProvider";
 import {hasRoles} from "@/lib/auth";
 import {Copyable} from "@/components/Copyable";
 import {
-  AdminQuoteStatus,
   reviewStatusDescriptions
 } from "@/app/dashboard/admin/quote/AdminQuoteStatus";
 import {OrderBy} from "@/app/dashboard/admin/OrderSelector";
+import {AdminComment} from "@/lib/comments";
+import {StatusPill} from "@/components/Badge";
 
 const limit = 20
 
-export function AdminQuotesTable(
+export function AdminCommentsTable(
 {
   orderBy,
   userId,
@@ -33,8 +33,8 @@ export function AdminQuotesTable(
   const { user } = useContext(DashboardContext)
   const isAdmin = hasRoles(user?.roles, ['Admin'])
   const [page, setPage] = useState(1)
-  const {data, error, isLoading} = useSWR<{quotes: AdminQuote[], total: number}>(
-    `/api/v1/admin/quotes?orderBy=${orderBy}${userId ? `&userId=${userId}` : ''}&page=${page - 1}&limit=${limit}`,
+  const {data, error, isLoading} = useSWR<{comments: AdminComment[], total: number}>(
+    `/api/v1/admin/comments?orderBy=${orderBy}${userId ? `&userId=${userId}` : ''}&page=${page - 1}&limit=${limit}`,
     fetcher
   )
   const loading = isLoading || error
@@ -43,7 +43,7 @@ export function AdminQuotesTable(
   useEffect(() => {
     if (error) {
       addToast(<ErrorToast
-        content="Die Zitate konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
+        content="Die Kommentare konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
         retry={false}/>
       )
     }
@@ -58,49 +58,41 @@ export function AdminQuotesTable(
       <TableWithBorder
         loading={loading}
         separator={true}
-        fallback="Es konnten keine Zitate mit den ausgewählten Filter gefunden werden."
+        fallback="Es konnten keine Kommentare mit den ausgewählten Filter gefunden werden."
         headers={[
           ...(isAdmin ? [{name: "Id"}] : []),
-          {name: "Zitat"},
-          {name: "Autoren"},
+          {name: "Kommentar"},
+          {name: "Adressat"},
           {name: "Status"}
         ]}
-        rows={loading ? [] : data!.quotes.map((quote) => ({
-          className: reviewStatusDescriptions[quote.reviewStatus]?.backgroundColor,
+        rows={loading ? [] : data!.comments.map((comment) => ({
+          className: reviewStatusDescriptions[comment.status]?.backgroundColor,
           alternatingBackground: false,
           columns: [
             ...(isAdmin ? [
               {
-                children: (<Copyable>{quote.id.toString()}</Copyable>)
+                children: (<Copyable>{comment.id.toString()}</Copyable>)
               }
             ] : []),
             {
               className: "w-4/6",
               children: (
                 <Copyable
-                  content={(quote.context ? `(${quote.context})\n` : '') + quote.content}
+                  content={comment.content}
                 >
                   <div className="font-medium text-gray-900 whitespace-pre-line">
-                    {quote.context && (<span className="italic block">({quote.context})</span>)}
-                    {quote.content}
+                    {comment.content}
                   </div>
                 </Copyable>
               )
             },
             {
               className: "w-1/6",
-              children: (
-                quote.reviews.map((review, index) => (
-                  <span key={index} className="block">
-                    <Copyable className="inline">{review.displayName}</Copyable>
-                    {quote.reviews.length > 1 && quote.reviews.length - 1 !== index && ', '}
-                  </span>
-                ))
-              ),
+              text: comment.userDisplayName,
             },
             {
               children: (
-                <AdminQuoteStatus quote={quote}/>
+                <StatusPill status={comment.status} clickable={false}/>
               )
             }
           ]
@@ -113,8 +105,7 @@ export function AdminQuotesTable(
             className: "w-4/6",
             children: (
               <>
-                <div className="animate-pulse w-40 lg:w-72 xl:w-10/12 h-2 bg-neutral-300 rounded-md"/>
-                <div className="animate-pulse mt-2 w-12 lg:w-32 xl:w-7/12 h-2 bg-neutral-300 rounded-md"/>
+                <div className="animate-pulse w-40 lg:w-72 xl:w-8/12 h-2 bg-neutral-300 rounded-md"/>
               </>
             )
           },

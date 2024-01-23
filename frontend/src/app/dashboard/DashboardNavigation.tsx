@@ -58,6 +58,12 @@ const adminNavigation: (NavigationPath & {roles: Role[]})[] = [
     path: "/dashboard/admin/quote",
     icon: ChatBubbleOvalLeftEllipsisIcon,
     roles: ['Moderator', 'Admin']
+  },
+  {
+    name: "Kommentare",
+    path: "/dashboard/admin/comment",
+    icon: PencilSquareIcon,
+    roles: ['Moderator', 'Admin']
   }
 ]
 
