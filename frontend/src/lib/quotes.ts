@@ -10,7 +10,7 @@ export type AdminQuote = {
   id: number
   content: string
   context: string | undefined
-  status: 'NotAllowed' | undefined
+  reviewStatus: UserQuote['status'] | 'PartiallyAccepted' | 'PartiallyRejected'
   reviews: {
     displayName: string
     status: 'Accepted' | 'Rejected' | 'Pending' | 'Expired'

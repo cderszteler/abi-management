@@ -6,6 +6,12 @@ type TableHeader = {
   screenReader?: string
 }
 
+type TableRow = {
+  columns: TableColumn[]
+  alternatingBackground?: boolean
+  className?: string | undefined
+}
+
 type TableColumn = {
   text?: string
   className?: string
@@ -26,7 +32,7 @@ export function TableWithBorder({
   loading?: boolean
   fallback?: string
   headers: TableHeader[]
-  rows: TableColumn[][]
+  rows: TableRow[]
   loadingRow: Omit<TableColumn, 'text'>[]
 }) {
   return (
@@ -62,15 +68,15 @@ export function TableWithBorder({
               )}
             </TableRow>
           )}
-          {!loading && rows.map((columns, rowIndex) =>
-            <TableRow key={rowIndex}>
-              {columns.map((column, index) =>
+          {!loading && rows.map((row, rowIndex) =>
+            <TableRow key={rowIndex} {...row}>
+              {row.columns.map((column, index) =>
                 mapColumnToElement({
                   column,
                   index,
                   isLast: (rowIndex + 1 === rows.length),
                   separator,
-                  side: calculateSide(index, columns)
+                  side: calculateSide(index, row.columns)
                 })
               )}
             </TableRow>
@@ -117,9 +123,11 @@ function mapColumnToElement({column, index, isLast, separator, side}: {
   )
 }
 
-function TableRow({className, children}: {className?: string, children: React.ReactNode}) {
+function TableRow({className, alternatingBackground = true, children}:
+  Omit<TableRow, 'columns'> & {children: React.ReactNode}
+) {
   return (
-    <tr className={clsx("even:bg-neutral-50 min", className)}>
+    <tr className={clsx("min", alternatingBackground && "even:bg-neutral-50", className)}>
       {children}
     </tr>
   )

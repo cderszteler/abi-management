@@ -2,11 +2,51 @@
 
 import {AdminQuote} from "@/lib/quotes";
 import {Color, PillWithBorder} from "@/components/Badge";
-import {useMemo} from "react";
 import {Tooltip} from "@/components/Tooltip";
 
+export const reviewStatusDescriptions: { [key:string]: {
+  color: Color,
+  backgroundColor: string,
+  name: string
+} } = {
+  'Accepted': {
+    color: "green",
+    backgroundColor: "bg-green-50",
+    name: "Angenommen"
+  },
+  'PartiallyAccepted': {
+    color: "green",
+    backgroundColor: "bg-green-50",
+    name: "Teilweise Angenommen"
+  },
+  'Pending': {
+    color: "yellow",
+    backgroundColor: "bg-yellow-50",
+    name: "Ausstehend"
+  },
+  'Rejected': {
+    color: "red",
+    backgroundColor: "bg-red-50",
+    name: "Abgelehnt"
+  },
+  'PartiallyRejected': {
+    color: "red",
+    backgroundColor: "bg-red-50",
+    name: "Teilweise Abgelehnt"
+  },
+  'Expired': {
+    color: "gray",
+    backgroundColor: "bg-gray-50",
+    name: "Abgelaufen"
+  },
+  'NotAllowed': {
+    color: "red",
+    backgroundColor: "bg-red-100",
+    name: "Nicht erlaubt"
+  }
+}
+
 export function AdminQuoteStatus({quote}: {quote: AdminQuote}) {
-  const status = useMemo(() => resolveStatus(quote), [quote])
   return (
     <Tooltip
       hidden={quote.reviews.length === 0}
@@ -21,12 +61,12 @@ export function AdminQuoteStatus({quote}: {quote: AdminQuote}) {
         </div>
       )}
     >
-      <StatusPill status={status}/>
+      <StatusPill status={quote.reviewStatus}/>
     </Tooltip>
   )
 }
 
-function StatusPill({status}: {status: string}) {
+function StatusPill({status}: {status: AdminQuote['reviewStatus']}) {
   const description = reviewStatusDescriptions[status]
 
   return (
@@ -34,70 +74,4 @@ function StatusPill({status}: {status: string}) {
       {description?.name || "Fehler"}
     </PillWithBorder>
   )
-}
-
-const reviewStatusDescriptions: { [key:string]: { color: Color, name: string } } = {
-  'Accepted': {
-    color: "green",
-    name: "Angenommen"
-  },
-  'PartiallyAccepted': {
-    color: "green",
-    name: "Teilweise Angenommen"
-  },
-  'Pending': {
-    color: "yellow",
-    name: "Ausstehend"
-  },
-  'Rejected': {
-    color: "red",
-    name: "Abgelehnt"
-  },
-  'PartiallyRejected': {
-    color: "red",
-    name: "Teilweise Abgelehnt"
-  },
-  'Expired': {
-    color: "gray",
-    name: "Abgelaufen"
-  },
-  'NotAllowed': {
-    color: "red",
-    name: "Nicht erlaubt"
-  }
-}
-
-function resolveStatus(quote: AdminQuote) {
-  if (quote.status === 'NotAllowed') {
-    return 'NotAllowed'
-  }
-  if (quote.reviews.length === 0) {
-    return 'Pending'
-  }
-  let accepted = false
-  let rejected = false
-  let pending = false
-  for (const review of quote.reviews) {
-    switch (review.status) {
-      case 'Accepted':
-      case 'Expired' : {
-        accepted = true
-        break
-      }
-      case 'Rejected': {
-        rejected = true
-        break
-      }
-      case 'Pending': {
-        pending = true
-        break
-      }
-    }
-  }
-  if (rejected) {
-    return pending || accepted ? 'PartiallyRejected' : 'Rejected'
-  } else if (accepted) {
-   return pending ? 'PartiallyAccepted' : 'Accepted'
-  }
-  return 'Pending'
 }

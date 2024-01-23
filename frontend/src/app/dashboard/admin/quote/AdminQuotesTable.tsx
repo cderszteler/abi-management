@@ -11,7 +11,10 @@ import useSWR from 'swr'
 import {DashboardContext} from "@/app/dashboard/DashboardContextProvider";
 import {hasRoles} from "@/lib/auth";
 import {Copyable} from "@/components/Copyable";
-import {AdminQuoteStatus} from "@/app/dashboard/admin/quote/AdminQuoteStatus";
+import {
+  AdminQuoteStatus,
+  reviewStatusDescriptions
+} from "@/app/dashboard/admin/quote/AdminQuoteStatus";
 import {OrderBy} from "@/app/dashboard/admin/OrderSelector";
 
 const limit = 20
@@ -58,42 +61,46 @@ export function AdminQuotesTable(
           {name: "Autoren"},
           {name: "Status"}
         ]}
-        rows={loading ? [] : data!.quotes.map((quote) => [
-          ...(isAdmin ? [
+        rows={loading ? [] : data!.quotes.map((quote) => ({
+          className: reviewStatusDescriptions[quote.reviewStatus]?.backgroundColor,
+          alternatingBackground: false,
+          columns: [
+            ...(isAdmin ? [
+              {
+                children: (<Copyable>{quote.id.toString()}</Copyable>)
+              }
+            ] : []),
             {
-              children: (<Copyable>{quote.id.toString()}</Copyable>)
+              className: "w-4/6",
+              children: (
+                <Copyable
+                  content={(quote.context ? `(${quote.context})\n` : '') + quote.content}
+                >
+                  <>
+                    {quote.context && (<span className="italic block">({quote.context})</span>)}
+                    {quote.content}
+                  </>
+                </Copyable>
+              )
+            },
+            {
+              className: "w-1/6",
+              children: (
+                quote.reviews.map((review, index) => (
+                  <span key={index} className="block">
+                    <Copyable className="inline">{review.displayName}</Copyable>
+                    {quote.reviews.length > 1 && quote.reviews.length - 1 !== index && ', '}
+                  </span>
+                ))
+              ),
+            },
+            {
+              children: (
+                <AdminQuoteStatus quote={quote}/>
+              )
             }
-          ] : []),
-          {
-            className: "w-4/6",
-            children: (
-              <Copyable
-                content={(quote.context ? `(${quote.context})\n` : '') + quote.content}
-              >
-                <>
-                  {quote.context && (<span className="italic block">({quote.context})</span>)}
-                  {quote.content}
-                </>
-              </Copyable>
-            )
-          },
-          {
-            className: "w-1/6",
-            children: (
-              quote.reviews.map((review, index) => (
-                <span key={index} className="block">
-                  <Copyable className="inline">{review.displayName}</Copyable>
-                  {quote.reviews.length > 1 && quote.reviews.length - 1 !== index && ', '}
-                </span>
-              ))
-            ),
-          },
-          {
-            children: (
-              <AdminQuoteStatus quote={quote}/>
-            )
-          }
-        ])}
+          ]
+        }))}
         loadingRow={[
           ...(isAdmin ? [{
             children: <div className="animate-pulse w-8 h-2 bg-neutral-300 rounded-md"/>
