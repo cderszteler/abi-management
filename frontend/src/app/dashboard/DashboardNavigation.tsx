@@ -46,7 +46,6 @@ const navigation: NavigationPath[] = [
   }
 ]
 
-// TODO: Remove unused pages
 const adminNavigation: (NavigationPath & {roles: Role[]})[] = [
   {
     name: "Hinzufügen",
