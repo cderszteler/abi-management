@@ -3,6 +3,7 @@
 import {AdminQuote} from "@/lib/quotes";
 import {Color, PillWithBorder} from "@/components/Badge";
 import {Tooltip} from "@/components/Tooltip";
+import clsx from "clsx";
 
 export const reviewStatusDescriptions: { [key:string]: {
   color: Color,
@@ -66,11 +67,17 @@ export function AdminQuoteStatus({quote}: {quote: AdminQuote}) {
   )
 }
 
-function StatusPill({status}: {status: AdminQuote['reviewStatus']}) {
+function StatusPill({status, clickable}: {
+  status: AdminQuote['reviewStatus']
+  clickable?: boolean
+}) {
   const description = reviewStatusDescriptions[status]
 
   return (
-    <PillWithBorder color={description?.color || 'red'} className="cursor-pointer">
+    <PillWithBorder
+      color={description?.color || 'red'}
+      className={clsx(clickable && "cursor-pointer")}
+    >
       {description?.name || "Fehler"}
     </PillWithBorder>
   )
