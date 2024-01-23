@@ -49,7 +49,7 @@ export const reviewStatusDescriptions: { [key:string]: {
 export function AdminQuoteStatus({quote}: {quote: AdminQuote}) {
   return (
     <Tooltip
-      hidden={quote.reviews.length === 0}
+      hidden={quote.reviewStatus === 'NotAllowed' || quote.reviews.length === 0}
       content={(
         <div className="relative flex flex-col items-start gap-y-2 text-sm py-2 px-1">
           {quote.reviews.map((review, index) => (
