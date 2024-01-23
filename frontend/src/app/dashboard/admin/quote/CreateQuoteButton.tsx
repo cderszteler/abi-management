@@ -4,12 +4,12 @@ import {useContext, useMemo, useState} from "react";
 import {ChatBubbleOvalLeftEllipsisIcon} from "@heroicons/react/24/outline";
 import {User} from "@/lib/auth";
 import clsx from "clsx";
-import AuthorsInput from "@/app/dashboard/admin/create/AuthorsInput";
-import CreateButton from "./CreateButton";
+import AuthorsInput from "@/components/AuthorsInput";
 import {ErrorToast, SuccessToast} from "@/components/Toast";
 import {RootLayoutContext} from "@/components/RootLayout";
 import {mutator} from "@/lib/backend";
 import useSWRMutation from "swr/mutation";
+import {SmallCreateButton} from "@/components/admin/CreateButton";
 
 type RequiredFields = 'quote' | 'authors'
 
@@ -73,7 +73,7 @@ export default function CreateQuoteButton() {
   }
 
   return (
-    <CreateButton
+    <SmallCreateButton
       icon={ChatBubbleOvalLeftEllipsisIcon}
       warnBeforeClosing={modified}
       title="Zitat hinzufügen"
@@ -161,6 +161,6 @@ export default function CreateQuoteButton() {
           </p>
         </div>
       </div>
-    </CreateButton>
+    </SmallCreateButton>
   )
 }

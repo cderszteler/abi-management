@@ -62,7 +62,7 @@ export default function CreateCommentButton() {
   }
 
   return (
-    <CreateButton
+    <BigCreateButton
       title="Kommentar hinzufügen"
       icon={PencilSquareIcon}
       warnBeforeClosing={modified}
@@ -111,6 +111,6 @@ export default function CreateCommentButton() {
           onInput={() => setInvalidFields(invalidFields.filter(invalid => invalid !== 'user'))}
         />
       </div>
-    </CreateButton>
+    </BigCreateButton>
   )
 }

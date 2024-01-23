@@ -2,14 +2,21 @@
 
 import {HomeIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import {Modal} from "@/components/Modal";
-import {useContext, useEffect, useRef, useState} from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import clsx from "clsx";
 import {CenteredLoading} from "@/components/Loading";
 import {
   DisplayUsersContext
 } from "@/app/dashboard/admin/AdminDashboardContainer";
 
-export default function CreateButton({title, onClose, submitting, keepOpen, ...props}:
+export function SmallCreateButton({title, keepOpen, ...props}:
 {
   title: string
   icon: typeof HomeIcon
@@ -22,6 +29,96 @@ export default function CreateButton({title, onClose, submitting, keepOpen, ...p
 }) {
   const users = useContext(DisplayUsersContext)
   const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <CreateModal title={title} open={open} setOpen={setOpen} {...props}>
+        {props.children}
+      </CreateModal>
+      <div className={clsx(
+        "py-0.5 px-1 border-2 border-dashed rounded-lg border-neutral-900/25 transition",
+        users.length !== 0 ? "hover:scale-105" : ""
+      )}>
+        <button
+          className={clsx(
+            "flex items-center justify-center gap-x-2",
+            users.length === 0 ? "cursor-not-allowed" : ""
+          )}
+          onClick={event => {
+            event.preventDefault()
+            if (users.length !== 0) {
+              setOpen(true)
+            }
+          }}
+        >
+          <props.icon className="w-6 text-neutral-300"/>
+          <span className="font-display text-md text-neutral-600">
+            {title}
+          </span>
+        </button>
+      </div>
+    </>
+  )
+}
+
+export function BigCreateButton({title, keepOpen, ...props}:
+{
+  title: string
+  icon: typeof HomeIcon
+  warnBeforeClosing: boolean
+  onClose: (() => void) | undefined
+  keepOpen?: boolean
+  submitting: boolean
+  submit: () => Promise<void>
+  children: React.ReactNode
+}) {
+  const users = useContext(DisplayUsersContext)
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <CreateModal title={title} open={open} setOpen={setOpen} {...props}>
+        {props.children}
+      </CreateModal>
+      <div className={clsx(
+        "h-full max-h-80 border-2 border-dashed rounded-3xl border-neutral-900/25 transition",
+        users.length !== 0 ? "hover:scale-105" : ""
+      )}>
+        <button
+          className={clsx(
+            "w-full h-full p-2 sm:p-4 flex flex-col items-center justify-center gap-y-4 sm:gap-y-8 focus:rounded-3xl",
+            users.length === 0 ? "cursor-not-allowed" : ""
+          )}
+          onClick={event => {
+            event.preventDefault()
+            if (users.length !== 0) {
+              setOpen(true)
+            }
+          }}
+        >
+          <props.icon className="w-16 text-neutral-300"/>
+          <span className="font-display text-3xl text-neutral-600">
+            {title}
+          </span>
+        </button>
+      </div>
+    </>
+  )
+}
+
+function CreateModal({title, onClose, setOpen, submitting, keepOpen, ...props}:
+{
+  title: string
+  icon: typeof HomeIcon
+  warnBeforeClosing: boolean
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
+  onClose: (() => void) | undefined
+  keepOpen?: boolean
+  submitting: boolean
+  submit: () => Promise<void>
+  children: React.ReactNode
+}) {
   const closeButtonRef = useRef(null)
 
   useEffect(() => {
@@ -44,7 +141,7 @@ export default function CreateButton({title, onClose, submitting, keepOpen, ...p
   return (
     <>
       <Modal
-        open={open}
+        open={props.open}
         setOpen={setOpen}
         onClose={() => {
           if (onClose) {
@@ -95,28 +192,6 @@ export default function CreateButton({title, onClose, submitting, keepOpen, ...p
           </div>
         </form>
       </Modal>
-      <div className={clsx(
-        "h-full max-h-80 border-2 border-dashed rounded-3xl border-neutral-900/25 transition",
-        users.length !== 0 ? "hover:scale-105" : ""
-      )}>
-        <button
-          className={clsx(
-            "w-full h-full p-2 sm:p-4 flex flex-col items-center justify-center gap-y-4 sm:gap-y-8 focus:rounded-3xl",
-            users.length === 0 ? "cursor-not-allowed" : ""
-          )}
-          onClick={event => {
-            event.preventDefault()
-            if (users.length !== 0) {
-              setOpen(true)
-            }
-          }}
-        >
-          <props.icon className="w-16 text-neutral-300"/>
-          <span className="font-display text-3xl text-neutral-600">
-            {title}
-          </span>
-        </button>
-      </div>
     </>
   )
 }
