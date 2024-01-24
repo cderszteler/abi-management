@@ -13,7 +13,9 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
   @Query("""
     select comment.expiringAt
     from Comment comment
-    where comment.user = :user and comment.expiringAt is not null
+    where comment.user = :user
+      and comment.expiringAt is not null
+      and comment.expiringAt > current_timestamp()
     order by comment.expiringAt
     limit 1
     """

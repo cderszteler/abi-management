@@ -13,7 +13,9 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
   @Query("""
     select review.expiringAt
     from QuoteReview review
-    where review.user = :user and review.expiringAt is not null
+    where review.user = :user
+      and review.expiringAt is not null
+      and review.expiringAt > current_timestamp()
     order by review.expiringAt
     limit 1
     """
