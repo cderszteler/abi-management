@@ -26,7 +26,7 @@ public final class QuoteDataConfiguration {
 
   // Nanos need to be 0, because H2 doesn't store as many decimals as the runtime
   public static final LocalDateTime expiringAt = LocalDateTime.now()
-    .minusHours(1)
+    .plusHours(1)
     .withNano(0);
 
   @EventListener(ApplicationReadyEvent.class)
@@ -68,6 +68,7 @@ public final class QuoteDataConfiguration {
         .quote(doubleAuthorsQuote)
         .status(QuoteReview.Status.Rejected)
         .user(primaryUser)
+        .expiringAt(LocalDateTime.now().minusMinutes(10))
         .build(),
       QuoteReview.builder()
         .quote(doubleAuthorsQuote)

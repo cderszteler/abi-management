@@ -173,7 +173,7 @@ public final class QuoteRestEndpointTest {
     mvc.perform(post(createPath)
       .contentType("application/json")
       .content(mapper.writeValueAsString(new CreateQuoteRequest(
-        "Be quick!", null, Set.of(new QuoteAuthor(1, LocalDateTime.now().plusMinutes(10))), null
+        "Be quick or not be quick!", null, Set.of(new QuoteAuthor(1, LocalDateTime.now().plusHours(24))), null
       )))
     )
     .andExpect(MockMvcResultMatchers.status().isOk());

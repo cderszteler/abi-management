@@ -58,7 +58,7 @@ public final class QuoteReviewRestEndpointTest {
         .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )
       .andExpect(MockMvcResultMatchers.status().isNotFound());
-    mvc.perform(post(reviewPath.formatted(2))
+    mvc.perform(post(reviewPath.formatted(3))
         .contentType("application/json")
         .content(mapper.writeValueAsString(new ReviewQuoteRequest(QuoteReview.Status.Rejected)))
       )
