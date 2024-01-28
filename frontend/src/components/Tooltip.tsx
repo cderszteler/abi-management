@@ -21,6 +21,7 @@ export function Tooltip({content, trigger, onClick, className, children, ...prop
           }
         }}
         data-tooltip-id={id}
+        className="relative"
       >
         {children}
       </span>

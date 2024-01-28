@@ -1,57 +1,28 @@
 'use client'
 
 import {TableWithBorder} from "@/components/Table";
-import Pagination from "@/components/Pagination";
-import {fetcher} from "@/lib/backend";
-import {RootLayoutContext} from "@/components/RootLayout";
-import {ErrorToast} from "@/components/Toast";
-import {useContext, useEffect, useState} from "react";
-import useSWR from 'swr'
+import {useContext} from "react";
 import {DashboardContext} from "@/app/dashboard/DashboardContextProvider";
 import {hasRoles} from "@/lib/auth";
 import {Copyable} from "@/components/Copyable";
 import {
   reviewStatusDescriptions
 } from "@/app/dashboard/admin/quote/AdminQuoteStatus";
-import {OrderBy} from "@/app/dashboard/admin/OrderSelector";
-import {AdminComment} from "@/lib/comments";
 import {StatusPill} from "@/components/Badge";
-
-const limit = 20
+import {AdminComments} from "@/app/dashboard/admin/comment/page";
 
 export function AdminCommentsTable(
 {
-  orderBy,
-  userId,
+  data,
+  loading,
   className
 }: {
-  orderBy: OrderBy
-  userId: number | undefined
+  data: AdminComments | undefined
+  loading: boolean
   className?: string
 }) {
-  const {addToast} = useContext(RootLayoutContext)!
   const { user } = useContext(DashboardContext)
   const isAdmin = hasRoles(user?.roles, ['Admin'])
-  const [page, setPage] = useState(1)
-  const {data, error, isLoading} = useSWR<{comments: AdminComment[], total: number}>(
-    `/api/v1/admin/comments?orderBy=${orderBy}${userId ? `&userId=${userId}` : ''}&page=${page - 1}&limit=${limit}`,
-    fetcher
-  )
-  const loading = isLoading || error
-  const total = data?.total || 1
-
-  useEffect(() => {
-    if (error) {
-      addToast(<ErrorToast
-        content="Die Kommentare konnten nicht geladen werden. Bitte lade die Seite neu oder kontaktiere uns."
-        retry={false}/>
-      )
-    }
-  }, [error]);
-
-  useEffect(() => {
-    setPage(1)
-  }, [userId]);
 
   return (
     <div className={className}>
@@ -118,14 +89,6 @@ export function AdminCommentsTable(
           }
         ]}
       />
-      {Math.ceil(total/limit) > 1 && (
-        <Pagination
-          page={page}
-          setPage={setPage}
-          total={Math.ceil(total/limit)}
-          className="mt-8"
-        />
-      )}
     </div>
   )
 }

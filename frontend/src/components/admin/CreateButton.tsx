@@ -41,7 +41,7 @@ export function SmallCreateButton({title, keepOpen, ...props}:
       )}>
         <button
           className={clsx(
-            "flex items-center justify-center gap-x-2",
+            "flex items-center justify-center gap-x-2 whitespace-nowrap",
             users.length === 0 ? "cursor-not-allowed" : ""
           )}
           onClick={event => {
