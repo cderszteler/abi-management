@@ -1,5 +1,6 @@
 package derszteler.abimanagement.comment.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import derszteler.abimanagement.comment.Comment;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -20,6 +21,12 @@ record AdminComment(
   )
   String userDisplayName
 ) {
+  @JsonIgnore
+  boolean hasAccepted() {
+    return status == Comment.DeserializationStatus.Accepted
+      || status == Comment.DeserializationStatus.Expired;
+  }
+
   @Override
   public boolean equals(Object object) {
     if (object == this) {

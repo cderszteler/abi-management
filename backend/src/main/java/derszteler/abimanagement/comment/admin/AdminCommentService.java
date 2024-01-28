@@ -26,9 +26,11 @@ public class AdminCommentService {
       .setMaxResults(request.limit())
       .setFirstResult(request.page() * request.limit())
       .getResultList();
+    var mapped = mapComments(comments);
     int total = calculateTotalAdminComments(request);
     return new ListAdminCommentsResponse(
-      mapComments(comments),
+      mapped,
+      request.hasUserFilter() ? joinComments(mapped) : null,
       total
     );
   }
@@ -74,5 +76,12 @@ public class AdminCommentService {
       ));
     }
     return ((Long) entityManager.createQuery(query).getSingleResult()).intValue();
+  }
+
+  private String joinComments(Collection<AdminComment> comments) {
+    return comments.stream()
+      .filter(AdminComment::hasAccepted)
+      .map(AdminComment::content)
+      .collect(Collectors.joining(" | "));
   }
 }
