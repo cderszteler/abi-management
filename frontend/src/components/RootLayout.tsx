@@ -131,10 +131,12 @@ function NavigationRow({ children }: { children: React.ReactNode }) {
 function NavigationItem({
   href,
   disabled,
+  centered,
   children,
 }: {
   href: string
   disabled?: boolean
+  centered?: boolean
   children: React.ReactNode
 }) {
   return (
@@ -142,13 +144,15 @@ function NavigationItem({
       href={href}
       className={clsx(
         "group relative isolate -mx-6 bg-neutral-950 px-6 py-10 even:mt-px sm:mx-0 sm:px-0 sm:py-16 sm:odd:pr-16 sm:even:mt-0 sm:even:border-l sm:even:border-neutral-800 sm:even:pl-16",
-        disabled ? "cursor-default pointer-events-none" : ""
+        disabled ? "cursor-default pointer-events-none" : "",
+        centered ? "col-span-2" : ""
       )}
     >
       {children}
       <span className={clsx(
-        "absolute inset-y-0 -z-10 w-screen bg-neutral-900 opacity-0 group-odd:right-0 group-even:left-0 transition",
-        disabled ? "" : "group-hover:opacity-100"
+        "absolute inset-y-0 -z-10 bg-neutral-900 opacity-0 transition",
+        disabled ? "" : "group-hover:opacity-100",
+        centered ? "-left-[50vw] w-[200vw]" : "w-screen group-odd:right-0 group-even:left-0"
         )}
       />
     </Link>
@@ -161,6 +165,9 @@ function Navigation() {
       <NavigationRow>
         <NavigationItem href="/dashboard/quotes">Zitate</NavigationItem>
         <NavigationItem href="/dashboard/comments">Kommentare</NavigationItem>
+      </NavigationRow>
+      <NavigationRow>
+        <NavigationItem href="/game" centered>Gameshow</NavigationItem>
       </NavigationRow>
     </nav>
   )

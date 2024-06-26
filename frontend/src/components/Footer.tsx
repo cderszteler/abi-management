@@ -10,6 +10,8 @@ const navigation = [
     title: 'Services',
     links: [
       { title: 'Zitate', href: '/dashboard/quotes' },
+      { title: 'Kommentare', href: '/dashboard/comments' },
+      { title: 'Gameshow', href: '/game' },
       {
         title: (
           <>

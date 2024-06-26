@@ -18,6 +18,7 @@ export default {
       '5xl': ['2.5rem', { lineHeight: '3rem' }],
       '6xl': ['3rem', { lineHeight: '3.5rem' }],
       '7xl': ['4rem', { lineHeight: '4.5rem' }],
+      '8xl': ['5.5rem', { lineHeight: '5.5rem' }],
     },
     extend: {
       borderRadius: {
