@@ -12,7 +12,7 @@ export function ActionButton({className, disabled, onClick, children}: {
   return (
     <button
       className={clsx(
-        "group rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold ring-1 ring-inset shadow-inner lg:enabled:hover:-translate-y-1 lg:enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-30 transition",
+        "group rounded-md px-2.5 py-1.5 text-sm font-semibold ring-1 ring-inset shadow-inner lg:enabled:hover:-translate-y-1 lg:enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-30 transition",
         className
       )}
       onClick={(event) => {
