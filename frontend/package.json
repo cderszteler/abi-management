@@ -1,6 +1,6 @@
 {
   "name": "tailwindui-studio",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -33,7 +33,7 @@
     "escape-string-regexp": "^5.0.0",
     "fast-glob": "^3.3.3",
     "framer-motion": "^10.18.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "next": "^14.2.33",
     "next-auth": "^4.24.13",
     "npm-check-updates": "^16.14.20",
@@ -45,7 +45,7 @@
     "remark-rehype-wrap": "0.0.3",
     "remark-unwrap-images": "^4.0.1",
     "shiki": "^0.14.7",
-    "swr": "^2.3.6",
+    "swr": "^2.3.7",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss": "^3.4.18",
     "typescript": "5.3.3",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "eslint": "8.56.0",
     "eslint-config-next": "14.0.4",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "sharp": "^0.33.5"
   },
