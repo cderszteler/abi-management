@@ -1,6 +1,6 @@
 {
   "name": "tailwindui-studio",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -18,14 +18,14 @@
     "@leafac/rehype-shiki": "^2.2.1",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "14.0.4",
+    "@next/mdx": "16.1.6",
     "@sentry/nextjs": "^7.120.4",
     "@tailwindcss/forms": "^0.5.11",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mdx": "^2.0.13",
     "@types/node": "20.10.5",
-    "@types/react": "18.2.45",
-    "@types/react-dom": "18.2.18",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "acorn": "^8.15.0",
     "acorn-jsx": "^5.3.2",
     "autoprefixer": "^10.4.23",
@@ -34,7 +34,7 @@
     "fast-glob": "^3.3.3",
     "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.3",
-    "next": "^14.2.35",
+    "next": "16.1.6",
     "next-auth": "^4.24.13",
     "npm-check-updates": "^16.14.20",
     "react": "18.2.0",
@@ -48,12 +48,12 @@
     "swr": "^2.3.8",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss": "^3.4.19",
-    "typescript": "5.3.3",
+    "typescript": "5.5.3",
     "unified-conditional": "0.0.2"
   },
   "devDependencies": {
-    "eslint": "8.56.0",
-    "eslint-config-next": "14.0.4",
+    "eslint": "^9.8.0",
+    "eslint-config-next": "16.1.6",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "sharp": "^0.33.5"
@@ -62,12 +62,10 @@
     "overrides": {
       "next@>=13.4.0 <14.1.1": ">=14.1.1",
       "micromatch@<4.0.8": ">=4.0.8",
-      "webpack@>=5.0.0-alpha.0 <5.94.0": ">=5.94.0",
       "next@>=14.0.0 <14.2.10": ">=14.2.10",
       "rollup@<2.79.2": ">=2.79.2",
       "@sentry/browser@<7.119.1": ">=7.119.1",
-      "cookie@<0.7.0": ">=0.7.0",
-      "tar@<=7.5.2": ">=7.5.3"
+      "cookie@<0.7.0": ">=0.7.0"
     },
     "ignoredBuiltDependencies": [
       "@sentry/cli"
