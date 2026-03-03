@@ -1,0 +1,61 @@
+name: "Release: build and deploy"
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.app_version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Read version from package.json
+        id: app_version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p 'require("./frontend/package.json").version')"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Validate release tag matches package.json
+        if: github.event_name == 'release'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG='${{ github.event.release.tag_name }}'
+          TAG="${TAG#v}" # allow vX.Y.Z
+          if [[ "$TAG" != "${{ steps.app_version.outputs.version }}" ]]; then
+            echo "Release tag ($TAG) must match package.json version (${{ steps.app_version.outputs.version }})" >&2
+            exit 1
+          fi
+
+  build-push-deploy:
+    needs: prepare
+    uses: ./.github/workflows/_build-push-deploy.yml
+    with:
+      build_tags: |
+        ${{ vars.DOCKER_IMAGE_NAME }}:${{ needs.prepare.outputs.version }}
+        ${{ vars.DOCKER_IMAGE_NAME }}:latest
+        ${{ vars.DOCKER_IMAGE_NAME }}:sha-${{ github.sha }}
+      deploy_image: ${{ vars.DOCKER_IMAGE_NAME }}:${{ needs.prepare.outputs.version }}
+    secrets: inherit
+

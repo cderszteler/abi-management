@@ -1,0 +1,32 @@
+services:
+  backend:
+    image: qetz/abi-management-backend
+    restart: always
+    pull_policy: always
+    env_file:
+      - .env.backend.prod
+    logging:
+      options:
+        max-size: "10m"
+  frontend:
+    image: ${DOCKER_IMAGE_NAME:-qetz/abi-management-frontend}:${DOCKER_IMAGE_TAG:-latest}
+    restart: always
+    pull_policy: always
+    env_file:
+      - .env.frontend.prod
+    ports:
+      - '127.0.0.1:3000:3000'
+  database:
+    image: postgres
+    restart: always
+    ports:
+      - '127.0.0.1:2345:5432'
+    env_file:
+      - .env.database.prod
+    volumes:
+      - abi-database-data:/var/lib/postgresql/data
+
+volumes:
+  abi-database-data:
+    external: true
+

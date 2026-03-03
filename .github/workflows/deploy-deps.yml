@@ -1,0 +1,116 @@
+name: "Deps: build and deploy"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "frontend/package.json"
+      - "frontend/pnpm-lock.yaml"
+
+concurrency:
+  group: deploy-deps
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.gate.outputs.should_deploy }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Determine whether this is a dependency-only deploy
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          BEFORE_SHA='${{ github.event.before }}'
+          if [[ "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "reason=no_before_sha" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          node <<'NODE'
+          const { execSync } = require("child_process");
+          const fs = require("fs");
+
+          const beforeSha = process.env.BEFORE_SHA;
+          const githubSha = process.env.GITHUB_SHA;
+          const outFile = process.env.GITHUB_OUTPUT;
+
+          const PKG_PATH = "frontend/package.json";
+          const LOCK_PATH = "frontend/pnpm-lock.yaml";
+
+          const readJsonFromGit = (sha, path) => {
+            try {
+              const content = execSync(`git show ${sha}:${path}`, { encoding: "utf8" });
+              return JSON.parse(content);
+            } catch {
+              return null;
+            }
+          };
+
+          const current = JSON.parse(fs.readFileSync(PKG_PATH, "utf8"));
+          const prev = readJsonFromGit(beforeSha, PKG_PATH);
+
+          const currentVersion = current?.version ?? "";
+          const prevVersion = prev?.version ?? "";
+
+          // If version changed, treat this as a "release" change and skip.
+          if (prevVersion && currentVersion && prevVersion !== currentVersion) {
+            fs.appendFileSync(outFile, `should_deploy=false\nreason=version_changed\n`);
+            process.exit(0);
+          }
+
+          const depKeys = ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"];
+          const sortObject = (obj) => {
+            if (!obj || typeof obj !== "object" || Array.isArray(obj)) return obj;
+            const out = {};
+            for (const key of Object.keys(obj).sort()) out[key] = obj[key];
+            return out;
+          };
+
+          const pickDeps = (pkg) =>
+            Object.fromEntries(
+              depKeys.map((k) => [k, sortObject(pkg?.[k] ?? {})])
+            );
+
+          const depsChanged = JSON.stringify(pickDeps(prev)) !== JSON.stringify(pickDeps(current));
+
+          const changedFiles = execSync(`git diff --name-only ${beforeSha} ${githubSha}`, { encoding: "utf8" })
+            .split("\n")
+            .map((s) => s.trim())
+            .filter(Boolean);
+
+          const lockChanged = changedFiles.includes(LOCK_PATH);
+
+          const shouldDeploy = Boolean(lockChanged || depsChanged);
+          const reason = lockChanged ? "lockfile_changed" : depsChanged ? "deps_changed" : "no_dep_changes";
+
+          fs.appendFileSync(outFile, `should_deploy=${shouldDeploy}\nreason=${reason}\n`);
+          NODE
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+
+  build-push-deploy:
+    needs: gate
+    if: needs.gate.outputs.should_deploy == 'true'
+    uses: ./.github/workflows/_build-push-deploy.yml
+    with:
+      build_tags: |
+        ${{ vars.DOCKER_IMAGE_NAME }}:sha-${{ github.sha }}
+      deploy_image: ${{ vars.DOCKER_IMAGE_NAME }}:sha-${{ github.sha }}
+    secrets: inherit
+
