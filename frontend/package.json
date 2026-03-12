@@ -42,7 +42,7 @@
     "react-tooltip": "^5.30.0",
     "recma-import-images": "0.0.3",
     "remark-gfm": "^4.0.1",
-    "remark-rehype-wrap": "0.0.3",
+    "remark-rehype-wrap": "0.0.5",
     "remark-unwrap-images": "^4.0.1",
     "shiki": "^0.14.7",
     "swr": "^2.4.0",
