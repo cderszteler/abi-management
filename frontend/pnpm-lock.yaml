@@ -110,8 +110,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       remark-rehype-wrap:
-        specifier: 0.0.3
-        version: 0.0.3
+        specifier: 0.0.5
+        version: 0.0.5
       remark-unwrap-images:
         specifier: ^4.0.1
         version: 4.0.1
@@ -3480,8 +3480,8 @@ packages:
   remark-parse@11.0.0:
     resolution: {integrity: sha512-FCxlKLNGknS5ba/1lmpYijMUzX2esxW5xQqjWxw2eHFfS2MSdaHVINFmhjo+qN1WhZhNimq0dZATN9pH0IDrpA==}
 
-  remark-rehype-wrap@0.0.3:
-    resolution: {integrity: sha512-hNZ7epC6wFvNWDyPFNTrMzhk7leJSnaGRYZ2y4/YDRalzA0M2jha27wBiKnIQvWGW8vn1bDmSYOAG2grs6uPog==}
+  remark-rehype-wrap@0.0.5:
+    resolution: {integrity: sha512-Za005UA1YB7wqCGXO98NtJLZ1AmFg9Sol4YmIDiFcT70y9uVznygb+Cljb6QM6bnHquR5M2R8HEw/yoh6T0AmA==}
 
   remark-rehype@11.1.2:
     resolution: {integrity: sha512-Dh7l57ianaEoIpzbp0PC9UKAdCSVklD8E5Rpw7ETfbTl3FqcOOgq5q2LVDhgGCkaBv7p24JXikPdvhhmHvKMsw==}
@@ -8082,7 +8082,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  remark-rehype-wrap@0.0.3:
+  remark-rehype-wrap@0.0.5:
     dependencies:
       unist-util-select: 4.0.3
 
