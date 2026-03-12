@@ -54,7 +54,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Deploy (pull + restart on server)
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         env:
           DOCKER_IMAGE: ${{ inputs.deploy_image }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
