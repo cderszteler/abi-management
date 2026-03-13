@@ -32,7 +32,7 @@
     "clsx": "^2.1.1",
     "escape-string-regexp": "^5.0.0",
     "fast-glob": "^3.3.3",
-    "framer-motion": "^10.18.0",
+    "framer-motion": "^12.36.0",
     "jsonwebtoken": "^9.0.3",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
