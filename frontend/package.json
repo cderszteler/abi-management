@@ -34,7 +34,7 @@
     "fast-glob": "^3.3.3",
     "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.3",
-    "next": "16.2.1",
+    "next": "16.2.2",
     "next-auth": "^4.24.13",
     "npm-check-updates": "^16.14.20",
     "react": "18.2.0",
