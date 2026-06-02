@@ -1,0 +1,4 @@
+allowBuilds:
+  '@sentry/cli': false
+  sharp: true
+  unrs-resolver: false
